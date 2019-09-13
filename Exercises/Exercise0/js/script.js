@@ -3,8 +3,7 @@
 Title of Project: Mrs.Sindy
 Author Name: Zahra Ahmadi
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+This is a template. I used circles, triangles and squares to make a human face.
 
 ******************/
 
