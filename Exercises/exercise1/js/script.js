@@ -15,16 +15,17 @@ let squareX;
 let squareY;
 let squareSize = 100;
 
-
+// Declaring an image + Declaring variables to assign the image x & y coordinates and size
+let emojisImage;
+let emojisX;
+let emojisY;
+let emojisSize = 100;
 // preload()
-//
-// Nothing here
 
+// Displaying the image at the start of the program before anything else happens
 function preload() {
-
+  emojisImage = loadImage("assets/images/ewordemojis.png");
 }
-
-
 // setup()
 //
 // Set up the canvas, position the images, set the image mode.
@@ -32,12 +33,14 @@ function preload() {
 function setup() {
   // Create our canvas
   createCanvas(640,640);
-
+  // Start the image off screen to the bottom left
+  // We divide the size by two because we're drawing from the center
+  emojisX = -emojisSize/2;
+  emojisY = height + emojisSize/2;
   // Start the circle off screen to the bottom left
   // We divide the size by two because we're drawing from the center
   circleX = -circleSize/2;
   circleY = height + circleSize/2;
-
   // Start the square off screen to the bottom right
   // We divide the size by two because we're drawing from the center
   squareX = width + squareSize/2;
@@ -47,6 +50,8 @@ function setup() {
   rectMode(CENTER);
   // We won't have a stroke in this
   noStroke();
+  // We'll draw image from the center
+  imageMode(CENTER);
 }
 
 
@@ -57,7 +62,10 @@ function setup() {
 
 function draw() {
   // We don't fill the background so we get a drawing effect
-
+  // Move image up and to the right
+  emojisX += 1;
+  emojisY -= 1;
+  image (emojisImage, emojisX, emojisY, emojisSize, emojisSize);
   // Move circle up and to the right
   circleX += 1;
   circleY -= 1;
