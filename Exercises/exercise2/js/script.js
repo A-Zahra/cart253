@@ -44,6 +44,10 @@ let smileyDog;
 let cuteDog;
 let cuteCate;
 
+// Declare variables for the winner and loser message
+let winnerMessage;
+let loserMessage;
+
 // Import external font +  Four animal images that appears once the player circle is inside their area
 function preload () {
   dodgeCounter = loadFont("assets/fonts/Xpressive Bold.ttf");
@@ -56,7 +60,6 @@ function preload () {
 //
 // Make the canvas, position the avatar and enemy
 function setup() {
-
   // Create our playing area
   createCanvas(500,500);
 
@@ -67,6 +70,10 @@ function setup() {
   // Put the enemy to the left at a random y coordinate within the canvas
   enemyX = 0;
   enemyY = random(0,height);
+
+  // Winner and loser messages
+  winnerMessage = "Are you winning??";
+  loserMessage = "Are you losing??";
 }
 // draw()
 //
@@ -178,6 +185,20 @@ function draw() {
         image(cuteCat, 270, 320, 200, 150);
   }
 
+  // If player is on The middle half of the screen to the left shows the winner message
+  // If player is on The middle half of the screen to the right shows the loser message
+  textFont("calibri");
+  textSize(25);
+  fill(0);
+  noStroke();
+  textAlign(LEFT);
+  if (avatarX < width/2 && avatarY > height/3.2 && avatarY < height/1.5){
+    text(winnerMessage, 15, 260);
+  }
+  else if (avatarX > width/2 && avatarY > height/3.2 && avatarY < height/1.5){
+    text(loserMessage, 305, 260);
+  }
+
   // Display the number of successful dodges in the console
   console.log(dodges);
 
@@ -190,7 +211,6 @@ function draw() {
 
   //Display the number of successful dodges
   textFont(dodgeCounter);
-  textAlign(CENTER);
   textSize(150);
   fill("#2FBFFF");
   stroke(5);
