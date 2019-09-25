@@ -22,6 +22,10 @@ let enemyX;
 let enemyY;
 let enemySize = 50;
 
+// Add to the speed and size of the enemy circle
+let enemyAcceleration = 1;
+let enemyEnlarge = 2;
+
 // The speed and velocity of our enemy circle
 let enemySpeed = 5;
 let enemyVX = 5;
@@ -29,6 +33,25 @@ let enemyVX = 5;
 // How many dodges the player has made
 let dodges = 0;
 
+//dodge counter x and y position
+let dodgeCounter;
+let counterX = 250;
+let counterY = 300;
+
+// Declare variables to import images of animals
+let smileyCat;
+let smileyDog;
+let cuteDog;
+let cuteCate;
+
+// Import external font +  Four animal images that appears once the player circle is inside their area
+function preload () {
+  dodgeCounter = loadFont("assets/fonts/Xpressive Bold.ttf");
+  smileyCat = loadImage ("assets/images/smileyCat.jpg");
+  smileyDog = loadImage("assets/images/smileyDog.jpg");
+  cuteDog = loadImage("assets/images/cuteDog.jpg");
+  cuteCat = loadImage("assets/images/cuteCat.jpeg");
+}
 // setup()
 //
 // Make the canvas, position the avatar and anemy
@@ -43,19 +66,23 @@ function setup() {
   // Put the enemy to the left at a random y coordinate within the canvas
   enemyX = 0;
   enemyY = random(0,height);
-
-  // No stroke so it looks cleaner
-  noStroke();
 }
-
 // draw()
 //
 // Handle moving the avatar and enemy and checking for dodges and
 // game over situations.
 function draw() {
-  // A pink background
-  background(255,220,220);
+  // A orange background
+  background("#FFB67E");
 
+  // Background turns purple if enemyX is over 250
+  if (enemyX > 250){
+    background("#F5B8FF");
+  }
+  //Background turns purple if enemyY is over 250
+  else if (enemyY > 250) {
+    background("#B3FF75");
+  }
   // Default the avatar's velocity to 0 in case no key is pressed this frame
   avatarVX = 0;
   avatarVY = 0;
@@ -103,6 +130,9 @@ function draw() {
     avatarY = height/2;
     // Reset the dodge counter
     dodges = 0;
+    // Reset enemy speed and size
+    enemySpeed = 5;
+    enemySize = 50;
   }
 
   // Check if the avatar has gone off the screen (cheating!)
@@ -125,18 +155,57 @@ function draw() {
     // Reset the enemy's position to the left at a random height
     enemyX = 0;
     enemyY = random(0,height);
+    // Increase the enemy's speed and size after each successful dodge
+    enemySpeed += enemyAcceleration;
+    enemySize += enemyEnlarge;
+
+  }
+
+  //If player goes to the top left half the smiley cat image appears
+  //If player goes to the top right half the smiley dog image appears
+  //If player goes to the bottom left half the cute dog image appears
+  //If player goes to the bottom right half the cute cat image appears
+  if (avatarX < width/2 && avatarY < height/2){
+      image(smileyCat, 30, 30, 200, 150);
+  }
+  else if (avatarX > width/2 && avatarY < height/2){
+        image(smileyDog, 270, 30, 200, 150);
+  }
+  else if (avatarX < width/2 && avatarY > height/2){
+        image(cuteDog, 30, 320, 200, 150);
+  }
+  else if (avatarX > width/2 && avatarY > height/2){
+        image(cuteCat, 270, 320, 200, 150);
   }
 
   // Display the number of successful dodges in the console
   console.log(dodges);
 
-  // The player is black
-  fill(0);
+  //Black border around the canvas
+  fill(0,0,0,0);
+  stroke(10);
+  strokeWeight(5);
+  rectMode(CENTER);
+  rect(250, 250, 500, 500);
+
+  // No stroke so it looks cleaner
+  noStroke();
+
+  //Display the number of successful dodges
+  textFont(dodgeCounter);
+  textAlign(CENTER);
+  textSize(150);
+  fill("#2FBFFF");
+  textAlign(CENTER);
+  text(dodges, counterX, counterY);
+
+  // The player is red
+  fill("#CC4D41");
   // Draw the player as a circle
   ellipse(avatarX,avatarY,avatarSize,avatarSize);
 
-  // The enemy is red
-  fill(255,0,0);
+  // The enemy is dark purple
+  fill(107, 57, 130);
   // Draw the enemy as a circle
   ellipse(enemyX,enemyY,enemySize,enemySize);
 
