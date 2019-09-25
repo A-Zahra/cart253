@@ -56,6 +56,7 @@ function preload () {
 //
 // Make the canvas, position the avatar and enemy
 function setup() {
+
   // Create our playing area
   createCanvas(500,500);
 
@@ -183,28 +184,34 @@ function draw() {
   //Black border around the canvas
   fill(0,0,0,0);
   stroke(10);
-  strokeWeight(5);
+  strokeWeight(2);
   rectMode(CENTER);
   rect(250, 250, 500, 500);
-
-  // No stroke so it looks cleaner
-  noStroke();
 
   //Display the number of successful dodges
   textFont(dodgeCounter);
   textAlign(CENTER);
   textSize(150);
   fill("#2FBFFF");
+  stroke(5);
+  strokeWeight(4);
   textAlign(CENTER);
   text(dodges, counterX, counterY);
 
+  // // No stroke so it looks cleaner
+  // noStroke();
+
   // The player is red
   fill("#CC4D41");
+  stroke(2);
+  strokeWeight(2);
   // Draw the player as a circle
   ellipse(avatarX,avatarY,avatarSize,avatarSize);
 
   // The enemy is dark purple
   fill(107, 57, 130);
+  stroke(2);
+  strokeWeight(2);
   // Draw the enemy as a circle
   ellipse(enemyX,enemyY,enemySize,enemySize);
 
