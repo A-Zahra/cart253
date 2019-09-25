@@ -54,7 +54,7 @@ function preload () {
 }
 // setup()
 //
-// Make the canvas, position the avatar and anemy
+// Make the canvas, position the avatar and enemy
 function setup() {
   // Create our playing area
   createCanvas(500,500);
