@@ -160,10 +160,10 @@ function draw() {
     enemySize += enemyEnlarge;
   }
 
-  //If player goes to the top left half the smiley cat image appears
-  //If player goes to the top right half the smiley dog image appears
-  //If player goes to the bottom left half the cute dog image appears
-  //If player goes to the bottom right half the cute cat image appears
+  //If player goes to the top left half of the canvas, the smiley cat image appears
+  //If player goes to the top right half of the canvas, the smiley dog image appears
+  //If player goes to the bottom left half of the canvas, the cute dog image appears
+  //If player goes to the bottom right half of the canvas, the cute cat image appears
   if (avatarX < width/2 && avatarY < height/2){
       image(smileyCat, 30, 30, 200, 150);
   }
