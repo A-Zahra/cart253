@@ -158,7 +158,6 @@ function draw() {
     // Increase the enemy's speed and size after each successful dodge
     enemySpeed += enemyAcceleration;
     enemySize += enemyEnlarge;
-
   }
 
   //If player goes to the top left half the smiley cat image appears
