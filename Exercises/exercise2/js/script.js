@@ -24,7 +24,7 @@ let enemySize = 50;
 
 // Add to the speed and size of the enemy circle
 let enemyAcceleration = 1;
-let enemyEnlarge = 2;
+let enemyEnlarge = 4;
 
 // The speed and velocity of our enemy circle
 let enemySpeed = 5;
