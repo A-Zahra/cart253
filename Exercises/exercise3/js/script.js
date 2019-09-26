@@ -36,12 +36,12 @@ let numDecoys = 100;
 // Keep track of whether they've won
 let gameOver = false;
 
+let welcomeCaption;
 // preload()
 //
 // Loads the target and decoy images before the program starts
 function preload() {
   targetImage = loadImage("assets/images/animals-target.png");
-
   decoyImage1 = loadImage("assets/images/animals-01.png");
   decoyImage2 = loadImage("assets/images/animals-02.png");
   decoyImage3 = loadImage("assets/images/animals-03.png");
@@ -112,6 +112,8 @@ function setup() {
 
   // And draw it (because it's the last thing drawn, it will always be on top)
   image(targetImage,targetX,targetY);
+
+  welcomeCaption = "Can you find me??";
 }
 
 
@@ -120,6 +122,12 @@ function setup() {
 // Displays the game over screen if the player has won,
 // otherwise nothing (all the gameplay stuff is in mousePressed())
 function draw() {
+  fill(255,0,0);
+  rect(1350,20,150,150);
+  image(targetImage,1430,80);
+  fill(255);
+  textSize(15);
+  text(welcomeCaption, 1360, 150);
   if (gameOver) {
     // Prepare our typography
     textFont("Helvetica");
