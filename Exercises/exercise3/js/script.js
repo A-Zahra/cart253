@@ -16,6 +16,9 @@ https://creativenerds.co.uk/freebies/80-free-wildlife-icons-the-best-ever-animal
 let targetX;
 let targetY;
 let targetImage;
+let guideImageX;
+let guideImageY;
+let guideRectSize;
 
 // The ten decoy images
 let decoyImage1;
@@ -70,6 +73,7 @@ function setup() {
     let y = random(0,height);
     // Generate a random number we can use for probability
     let r = random();
+
     // Use the random number to display one of the ten decoy
     // images, each with a 10% chance of being shown
     // We'll talk more about this nice quality of random soon enough.
@@ -110,10 +114,30 @@ function setup() {
   targetX = random(0,width);
   targetY = random(0,height);
 
-  // And draw it (because it's the last thing drawn, it will always be on top)
-  image(targetImage,targetX,targetY);
+  guideImageX = 1430;
+  guideImageY = 80;
+  guideRectSize = 150;
 
   welcomeCaption = "Can you find me??";
+  // Reset if the target images goes off screen
+  if (targetX > windowWidth-20 || targetY > windowHeight-20){
+    targetX = random(0,width);
+    targetY = random(0,height);
+  }
+  // Draw the target image only if it's not under guide rectangle
+  if (dist(targetX,targetY,guideImageX,guideImageY) > guideRectSize + 50){
+    // And draw it (because it's the last thing drawn, it will always be on top)
+    image(targetImage,targetX,targetY);
+  }
+
+
+  stroke(0);
+  fill(255,0,0);
+  rect(1350,20,guideRectSize,guideRectSize);
+  image(targetImage,guideImageX,guideImageY);
+  fill(255);
+  textSize(15);
+  text(welcomeCaption, 1360, 150);
 }
 
 
@@ -122,12 +146,7 @@ function setup() {
 // Displays the game over screen if the player has won,
 // otherwise nothing (all the gameplay stuff is in mousePressed())
 function draw() {
-  fill(255,0,0);
-  rect(1350,20,150,150);
-  image(targetImage,1430,80);
-  fill(255);
-  textSize(15);
-  text(welcomeCaption, 1360, 150);
+
   if (gameOver) {
     // Prepare our typography
     textFont("Helvetica");
