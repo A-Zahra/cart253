@@ -102,8 +102,8 @@ function setup() {
   for (let i = 0; i < numDecoys; i++) {
     // Choose a random location on the canvas for this decoy
 
-    x = random(0,width-10);
-    y = random(0,height-10);
+    x = random(0,width);
+    y = random(0,height);
 
     // Generate a random number we can use for probability
     let r = random();
