@@ -16,6 +16,7 @@ https://creativenerds.co.uk/freebies/80-free-wildlife-icons-the-best-ever-animal
 let targetX;
 let targetY;
 let targetImage;
+let targetImageRight;
 let guideImageX;
 let guideImageY;
 let guideRectSize;
@@ -25,6 +26,13 @@ let targetImagejumpX;
 let targetImagejumpY;
 let numStars = 1000;
 let addToPosition = 100;
+let animalsX;
+let animalsY;
+let animalsRightX;
+let animalsRightY;
+let turnCounter;
+let turnCounterRight;
+let animalsSize;
 // The ten decoy images
 let decoyImage1;
 let decoyImage2;
@@ -37,6 +45,8 @@ let decoyImage8;
 let decoyImage9;
 let decoyImage10;
 
+let x;
+let y;
 // The number of decoys to show on the screen, randomly
 // chosen from the decoy images
 let numDecoys = 100;
@@ -44,25 +54,29 @@ let numDecoys = 100;
 // Keep track of whether they've won
 let gameOver = false;
 
+// Declare variable for the winning message
 let textEnlargement;
+
+// Declare variable for the short caption in the guide panel
 let welcomeCaption;
+
 // preload()
 //
 // Loads the target and decoy images before the program starts
 function preload() {
   targetImage = loadImage("assets/images/animals-target.png");
+  targetImageRight = loadImage("assets/images/animals-target-flipped.png");
   decoyImage1 = loadImage("assets/images/animals-01.png");
-  decoyImage2 = loadImage("assets/images/animals-02.png");
+  decoyImage2 = loadImage("assets/images/animals-flipped-02.png");
   decoyImage3 = loadImage("assets/images/animals-03.png");
-  decoyImage4 = loadImage("assets/images/animals-04.png");
+  decoyImage4 = loadImage("assets/images/animals-flipped-04.png");
   decoyImage5 = loadImage("assets/images/animals-05.png");
-  decoyImage6 = loadImage("assets/images/animals-06.png");
+  decoyImage6 = loadImage("assets/images/animals-flipped-06.png");
   decoyImage7 = loadImage("assets/images/animals-07.png");
-  decoyImage8 = loadImage("assets/images/animals-08.png");
+  decoyImage8 = loadImage("assets/images/animals-flipped-08.png");
   decoyImage9 = loadImage("assets/images/animals-09.png");
-  decoyImage10 = loadImage("assets/images/animals-10.png");
+  decoyImage10 = loadImage("assets/images/animals-flipped-10.png");
 }
-
 // setup()
 //
 // Creates the canvas, sets basic modes, draws correct number
@@ -72,11 +86,25 @@ function setup() {
   background("#ffff00");
   imageMode(CENTER);
 
+  //Assigning x and y position values for the dog image in the guide panel
+  guideImageX = 1430;
+  guideImageY = 80;
+  guideRectSize = 150;
+
+  // Once we've displayed all decoys, we choose a random location for the target
+  targetX = random(0,width);
+  targetY = random(0,height);
+
+  // Assigning string to the guide panel caption
+  welcomeCaption = "Can you find me??";
+
   // Use a for loop to draw as many decoys as we need
   for (let i = 0; i < numDecoys; i++) {
     // Choose a random location on the canvas for this decoy
-    let x = random(0,width);
-    let y = random(0,height);
+
+    x = random(0,width-10);
+    y = random(0,height-10);
+
     // Generate a random number we can use for probability
     let r = random();
 
@@ -84,6 +112,7 @@ function setup() {
     // images, each with a 10% chance of being shown
     // We'll talk more about this nice quality of random soon enough.
     // But basically each "if" and "else if" has a 10% chance of being true
+    if (dist(x,y,guideImageX,guideImageY) > guideRectSize + 10){
     if (r < 0.1) {
       image(decoyImage1,x,y);
     }
@@ -115,16 +144,8 @@ function setup() {
       image(decoyImage10,x,y);
     }
   }
+}
 
-  // Once we've displayed all decoys, we choose a random location for the target
-  targetX = random(0,width);
-  targetY = random(0,height);
-
-  guideImageX = 1430;
-  guideImageY = 80;
-  guideRectSize = 150;
-
-  welcomeCaption = "Can you find me??";
   // Reset if the target images goes off screen
   if (targetX > windowWidth-20 || targetY > windowHeight-20){
     targetX = random(0,width);
@@ -135,7 +156,7 @@ function setup() {
     // And draw it (because it's the last thing drawn, it will always be on top)
     image(targetImage,targetX,targetY);
   }
-
+  // Small guide panel on the top right corner of the canvas
   stroke(0);
   fill(255,0,0);
   rect(1350,20,guideRectSize,guideRectSize);
@@ -145,24 +166,36 @@ function setup() {
   textSize(15);
   text(welcomeCaption, 1360, 150);
 
+  // Specified jumping dog image x and y position
   targetImagejumpX = 350;
   targetImagejumpY=0;
   counter = 1;
   // 100 iterations
   increase = Math.PI * 2 / 100;
 
+  // To enlarge the winning message
   textEnlargement = 10;
+
+  // Specified moving dog image x and y position
+
+  animalsX = 130;
+  animalsY = 0;
+  animalsRightX = 1370;
+  animalsRightY = 0;
+  animalsSize = 170;
+  turnCounter = [true, true, true, true, true, true];
+  turnCounterRight = [true, true, true, true, true, true];
 }
 // draw()
-//
 // Displays the game over screen if the player has won,
 // otherwise nothing (all the gameplay stuff is in mousePressed())
 function draw() {
-
   if (gameOver) {
     background(0);
     stars();
     jumpingDog();
+    movingAnimalsLeft();
+    movingAnimalsRight();
     // Prepare our typography
     textFont("sourse sans pro");
     if (textEnlargement < 150){
@@ -171,12 +204,20 @@ function draw() {
     textAlign(CENTER,CENTER);
     noStroke();
     fill(0,255,0);
+
     //fill(random(255,0));
     // Tell them they won!
     text("You Winned!",width/2,height/2);
     textEnlargement+=5;
-  }
 
+
+  // if (dogImageMovY > 0 || dogImageMovY < 1000){
+  //       if ( turnCounter === 1){
+  //
+  //       }
+  //
+  // }
+  }
 }
 // mousePressed()
 //
@@ -195,19 +236,16 @@ function mousePressed() {
   }
 }
 function stars () {
-      for (let i = 0; i < numStars; i++) {
-
-        let x = random(0,width*addToPosition);
-        let y = random(0,height*addToPosition);
-        let starSize = random(1,13);
-        fill(random(255),random(255),random(255));
-        ellipse(x,y,starSize,starSize);
-      }
-      if (addToPosition > 2){
-        addToPosition--;
-
-      }
-
+  for (let i = 0; i < numStars; i++) {
+    let x = random(280,(width/2)+470);
+    let y = random(0,height*addToPosition);
+    let starSize = random(1,13);
+    fill(random(255),random(255),random(255));
+    ellipse(x,y,starSize,starSize);
+  }
+  if (addToPosition > 2){
+    addToPosition -= 3;
+  }
 }
 function jumpingDog () {
   if (targetImagejumpX < 1200){
@@ -215,5 +253,146 @@ function jumpingDog () {
     targetImagejumpX += 6;
     targetImagejumpY = Math.abs(Math.pow(Math.sin(counter),3)*200);
     counter -= increase;
+  }
 }
+function movingAnimalsLeft () {
+    if(animalsY < 760){
+      if (turnCounter[0]){
+        image(targetImage,animalsX, animalsY,animalsSize,animalsSize);
+        animalsY += 5;
+        if (animalsY > 758){
+          turnCounter[0] = false;
+        }
+      }
+      else if (turnCounter[0] === false){
+        if (turnCounter[1]){
+          image(decoyImage1,animalsX, animalsY,animalsSize,animalsSize);
+          animalsY += 5;
+          if (animalsY > 758){
+            turnCounter[1] = false;
+          }
+        }
+        else if (turnCounter[1] === false){
+          if (turnCounter[2]){
+            image(decoyImage3,animalsX, animalsY,animalsSize,animalsSize);
+            animalsY += 5;
+            if (animalsY > 758){
+              turnCounter[2] = false;
+            }
+          }
+          else if (turnCounter[2] === false){
+            if (turnCounter[3]){
+              image(decoyImage5,animalsX, animalsY,animalsSize,animalsSize);
+              animalsY += 5;
+              if (animalsY > 758){
+                turnCounter[3] = false;
+              }
+            }
+            else if (turnCounter[3] === false){
+              if(turnCounter[4]){
+                image(decoyImage7,animalsX, animalsY,animalsSize,animalsSize);
+                animalsY += 5;
+                if (animalsY > 758){
+                  turnCounter[4] = false;
+                }
+              }
+              else if (turnCounter[4] === false){
+                if (turnCounter[5]){
+                  image(decoyImage9,animalsX, animalsY,animalsSize,animalsSize);
+                  animalsY += 5;
+                  if (animalsY > 758){
+                    turnCounter[0] = true;
+                    turnCounter[1] = true;
+                    turnCounter[2] = true;
+                    turnCounter[3] = true;
+                    turnCounter[4] = true;
+                    turnCounter[5] = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    else {
+      animalsY = 0;
+    }
+ }
+function movingAnimalsRight() {
+    if(animalsRightY < 760){
+      if (turnCounterRight[0]){
+        image(targetImageRight,animalsRightX, animalsRightY,animalsSize,animalsSize);
+        animalsRightY += 5;
+        if (animalsRightY > 759){
+          turnCounterRight[0] = false;
+        }
+      }
+      else if (turnCounterRight[0] === false){
+        if (turnCounterRight[1]){
+          image(decoyImage2,animalsRightX, animalsRightY,animalsSize,animalsSize);
+          animalsRightY += 5;
+          if (animalsRightY > 758){
+            turnCounterRight[1] = false;
+          }
+        }
+        else if (turnCounterRight[1] === false){
+          if (turnCounterRight[2]){
+            image(decoyImage4,animalsRightX, animalsRightY,animalsSize,animalsSize);
+            animalsRightY += 5;
+            if (animalsRightY > 758){
+              turnCounterRight[2] = false;
+            }
+          }
+          else if (turnCounterRight[2] === false){
+            if (turnCounterRight[3]){
+              image(decoyImage6,animalsRightX, animalsRightY,animalsSize,animalsSize);
+              animalsRightY += 5;
+              if (animalsRightY > 758){
+                turnCounterRight[3] = false;
+              }
+            }
+            else if (turnCounterRight[3] === false){
+              if(turnCounterRight[4]){
+                image(decoyImage8,animalsRightX, animalsRightY,animalsSize,animalsSize);
+                animalsRightY += 5;
+                if (animalsRightY > 758){
+                  turnCounterRight[4] = false;
+                }
+              }
+              else if (turnCounterRight[4] === false){
+                if (turnCounterRight[5]){
+                  image(decoyImage10,animalsRightX, animalsRightY,animalsSize,animalsSize);
+                  animalsRightY += 5;
+                  if (animalsRightY > 758){
+                    turnCounterRight[0] = true
+                    turnCounterRight[1] = true;
+                    turnCounterRight[2] = true;
+                    turnCounterRight[3] = true;
+                    turnCounterRight[4] = true;
+                    turnCounterRight[5] = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    else {
+      animalsRightY = 0;
+    }
 }
+  // else if (dogImageMovX > 1300 &&){
+  //   image(targetImage,dogImageMovX, dogtImageMovY);
+  //   dogImageMovY += 50;
+  //   isDogOffScreenX = false;
+  // }
+  // else if (dogImageMovY > 1000){
+  //   image(targetImage,dogImageMovX, dogtImageMovY);
+  //   dogImageMovX -= 50;
+  // }
+  // else if (dogImageMovX < 30 && isDogOffScreenX === false){
+  //   image(targetImage,dogImageMovX, dogtImageMovY);
+  //   dogImageMovY -= 50;
+  // }
