@@ -19,7 +19,12 @@ let targetImage;
 let guideImageX;
 let guideImageY;
 let guideRectSize;
-
+let counter;
+let increase;
+let targetImagejumpX;
+let targetImagejumpY;
+let numStars = 1000;
+let addToPosition = 100;
 // The ten decoy images
 let decoyImage1;
 let decoyImage2;
@@ -39,6 +44,7 @@ let numDecoys = 100;
 // Keep track of whether they've won
 let gameOver = false;
 
+let textEnlargement;
 let welcomeCaption;
 // preload()
 //
@@ -124,23 +130,29 @@ function setup() {
     targetX = random(0,width);
     targetY = random(0,height);
   }
-  // Draw the target image only if it's not under guide rectangle
+  // Draw the target image only if it's not under the red rectangle
   if (dist(targetX,targetY,guideImageX,guideImageY) > guideRectSize + 50){
     // And draw it (because it's the last thing drawn, it will always be on top)
     image(targetImage,targetX,targetY);
   }
-
 
   stroke(0);
   fill(255,0,0);
   rect(1350,20,guideRectSize,guideRectSize);
   image(targetImage,guideImageX,guideImageY);
   fill(255);
+  noStroke();
   textSize(15);
   text(welcomeCaption, 1360, 150);
+
+  targetImagejumpX = 350;
+  targetImagejumpY=0;
+  counter = 1;
+  // 100 iterations
+  increase = Math.PI * 2 / 100;
+
+  textEnlargement = 10;
 }
-
-
 // draw()
 //
 // Displays the game over screen if the player has won,
@@ -148,25 +160,24 @@ function setup() {
 function draw() {
 
   if (gameOver) {
+    background(0);
+    stars();
+    jumpingDog();
     // Prepare our typography
-    textFont("Helvetica");
-    textSize(128);
+    textFont("sourse sans pro");
+    if (textEnlargement < 150){
+      textSize(textEnlargement);
+    }
     textAlign(CENTER,CENTER);
     noStroke();
-    fill(random(255));
-
+    fill(0,255,0);
+    //fill(random(255,0));
     // Tell them they won!
-    text("YOU WINNED!",width/2,height/2);
-
-    // Draw a circle around the sausage dog to show where it is (even though
-    // they already know because they found it!)
-    noFill();
-    stroke(random(255));
-    strokeWeight(10);
-    ellipse(targetX,targetY,targetImage.width,targetImage.height);
+    text("You Winned!",width/2,height/2);
+    textEnlargement+=5;
   }
-}
 
+}
 // mousePressed()
 //
 // Checks if the player clicked on the target and if so tells them they won
@@ -182,4 +193,27 @@ function mousePressed() {
       gameOver = true;
     }
   }
+}
+function stars () {
+      for (let i = 0; i < numStars; i++) {
+
+        let x = random(0,width*addToPosition);
+        let y = random(0,height*addToPosition);
+        let starSize = random(1,13);
+        fill(random(255),random(255),random(255));
+        ellipse(x,y,starSize,starSize);
+      }
+      if (addToPosition > 2){
+        addToPosition--;
+
+      }
+
+}
+function jumpingDog () {
+  if (targetImagejumpX < 1200){
+    image(targetImage,targetImagejumpX, targetImagejumpY+100);
+    targetImagejumpX += 6;
+    targetImagejumpY = Math.abs(Math.pow(Math.sin(counter),3)*200);
+    counter -= increase;
+}
 }
