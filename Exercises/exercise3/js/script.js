@@ -58,7 +58,7 @@ let y;
 
 // The number of decoys to show on the screen, randomly
 // chosen from the decoy images
-let numDecoys = 100;
+let numDecoys = 300;
 
 // Keep track of whether they've won
 let gameOver = false;
@@ -68,6 +68,12 @@ let textEnlargement;
 
 // Declare variable for the short caption in the guide panel
 let welcomeCaption;
+
+// Found image
+let imageFound;
+
+// Prize button
+let prizeButton;
 
 // preload()
 //
@@ -93,12 +99,12 @@ function preload() {
 // of decoys in random positions, then the target
 function setup() {
   createCanvas(windowWidth,windowHeight);
-  background("#ffff00");
+  background("#268048");
   imageMode(CENTER);
 
   //Assign x and y position values for the dog image in the guide canvas
-  guideImageX = 1430;
-  guideImageY = 80;
+  guideImageX = 1428;
+  guideImageY = 75;
   guideRectSize = 150;
 
   // Once we've displayed all decoys, we choose a random location for the target
@@ -169,12 +175,18 @@ function setup() {
   // Small guide canvas on the top right corner of the canvas
   stroke(0);
   fill(255,0,0);
-  rect(1350,20,guideRectSize,guideRectSize);
+  rect(1352,15,guideRectSize,guideRectSize);
   image(targetImage,guideImageX,guideImageY);
   fill(255);
   noStroke();
   textSize(15);
-  text(welcomeCaption, 1360, 150);
+  text(welcomeCaption, 1365, 140);
+
+  // Found image
+  imageFound = "HaHa, you found me!!";
+
+  // prize button
+  prizeButton = "Get your prize!";
 
   // Specify jumping dog image x and y position
   targetImagejumpX = 350;
@@ -204,6 +216,18 @@ function setup() {
 // Displays the game over screen if the player has won,
 // otherwise nothing (all the gameplay stuff is in mousePressed())
 function draw() {
+  if ( dist(mouseX, mouseY, targetX, targetY) < 50 ){
+    fill(255,0,0);
+    stroke(10);
+    ellipse(targetX,targetY,170,170);
+    imageMode(CENTER);
+    image(targetImage, targetX, targetY-20);
+    fill(255);
+    noStroke();
+    textAlign(CENTER);
+    text(imageFound, targetX, targetY+30);
+    text(prizeButton, targetX, targetY+45);
+  }
   if (gameOver) {
     background(0);
 
@@ -225,6 +249,7 @@ function draw() {
     text("You Winned!",width/2,height/2);
     // Add to the message size
     textEnlargement+=5;
+  }
 }
 
 // mousePressed()
@@ -403,5 +428,4 @@ function movingAnimalsRight() {
     else {
       animalsRightY = 0;
     }
-  }
 }
