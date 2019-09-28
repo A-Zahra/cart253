@@ -130,38 +130,38 @@ function setup() {
     // We'll talk more about this nice quality of random soon enough.
     // But basically each "if" and "else if" has a 10% chance of being true
     if (dist(x,y,guideImageX,guideImageY) > guideRectSize+10){
-    if (r < 0.1) {
-      image(decoyImage1,x,y);
-    }
-    else if (r < 0.2) {
-      image(decoyImage2,x,y);
-    }
-    else if (r < 0.3) {
-      image(decoyImage3,x,y);
-    }
-    else if (r < 0.4) {
-      image(decoyImage4,x,y);
-    }
-    else if (r < 0.5) {
-      image(decoyImage5,x,y);
-    }
-    else if (r < 0.6) {
-      image(decoyImage6,x,y);
-    }
-    else if (r < 0.7) {
-      image(decoyImage7,x,y);
-    }
-    else if (r < 0.8) {
-      image(decoyImage8,x,y);
-    }
-    else if (r < 0.9) {
-      image(decoyImage9,x,y);
-    }
-    else if (r < 1.0) {
-      image(decoyImage10,x,y);
+      if (r < 0.1) {
+        image(decoyImage1,x,y);
+      }
+      else if (r < 0.2) {
+        image(decoyImage2,x,y);
+      }
+      else if (r < 0.3) {
+        image(decoyImage3,x,y);
+      }
+      else if (r < 0.4) {
+        image(decoyImage4,x,y);
+      }
+      else if (r < 0.5) {
+        image(decoyImage5,x,y);
+      }
+      else if (r < 0.6) {
+        image(decoyImage6,x,y);
+      }
+      else if (r < 0.7) {
+        image(decoyImage7,x,y);
+      }
+      else if (r < 0.8) {
+        image(decoyImage8,x,y);
+      }
+      else if (r < 0.9) {
+        image(decoyImage9,x,y);
+      }
+      else if (r < 1.0) {
+        image(decoyImage10,x,y);
+      }
     }
   }
-}
 
   // Show the target image if it is inside screen
   if (targetX < windowWidth-50 || targetY < windowHeight-50){
