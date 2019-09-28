@@ -16,6 +16,7 @@ https://creativenerds.co.uk/freebies/80-free-wildlife-icons-the-best-ever-animal
 let targetX;
 let targetY;
 let targetImage;
+let targetImageSize;
 let targetImageRight;
 let guideImageX;
 let guideImageY;
@@ -110,6 +111,7 @@ function setup() {
   // Once we've displayed all decoys, we choose a random location for the target
   targetX = random(0,width);
   targetY = random(0,height);
+  targetImageSize = 100;
 
   // Assign string to the guide canvas caption
   welcomeCaption = "Can you find me??";
@@ -161,15 +163,18 @@ function setup() {
   }
 }
 
-  // Reset if the target images goes off screen
-  if (targetX > windowWidth-30 || targetY > windowHeight-30){
+  // Show the target image if it is inside screen
+  if (targetX < windowWidth-50 || targetY < windowHeight-50){
+    // Draw the target image only if it's not under the red rectangle
+    if (dist(targetX,targetY,guideImageX,guideImageY) > guideRectSize + 50){
+      // And draw it (because it's the last thing drawn, it will always be on top)
+      image(targetImage,targetX,targetY);
+    }
+  }
+  // Otherwise reset if the target image goes off screen
+  else if (targetX > windowWidth-50 || targetY > windowHeight-50){
     targetX = random(0,width);
     targetY = random(0,height);
-  }
-  // Draw the target image only if it's not under the red rectangle
-  if (dist(targetX,targetY,guideImageX,guideImageY) > guideRectSize + 50){
-    // And draw it (because it's the last thing drawn, it will always be on top)
-    image(targetImage,targetX,targetY);
   }
 
   // Small guide canvas on the top right corner of the canvas
@@ -216,18 +221,10 @@ function setup() {
 // Displays the game over screen if the player has won,
 // otherwise nothing (all the gameplay stuff is in mousePressed())
 function draw() {
-  if ( dist(mouseX, mouseY, targetX, targetY) < 50 ){
-    fill(255,0,0);
-    stroke(10);
-    ellipse(targetX,targetY,170,170);
-    imageMode(CENTER);
-    image(targetImage, targetX, targetY-20);
-    fill(255);
-    noStroke();
-    textAlign(CENTER);
-    text(imageFound, targetX, targetY+30);
-    text(prizeButton, targetX, targetY+45);
-  }
+  //Image found
+  youFoundIt();
+
+  // Game over scene
   if (gameOver) {
     background(0);
 
@@ -266,6 +263,22 @@ function mousePressed() {
     if (mouseY > targetY - targetImage.height/2 && mouseY < targetY + targetImage.height/2) {
       gameOver = true;
     }
+  }
+}
+
+// Image found
+function youFoundIt(){
+  if ( dist(mouseX, mouseY, targetX, targetY) < targetImageSize/2 ){
+    fill(255,0,0);
+    stroke(10);
+    ellipse(targetX,targetY,170,170);
+    imageMode(CENTER);
+    image(targetImage, targetX, targetY-20);
+    fill(255);
+    noStroke();
+    textAlign(CENTER);
+    text(imageFound, targetX, targetY+30);
+    text(prizeButton, targetX, targetY+50);
   }
 }
 
