@@ -71,7 +71,7 @@ let y;
 
 // The number of decoys to show on the screen, randomly
 // chosen from the decoy images
-let numDecoys = 70;
+let numDecoys = 35;
 
 // Keep track of whether they've won
 let gameOver = false;
@@ -121,7 +121,7 @@ function preload() {
 // Creates the canvas, sets basic modes, draws correct number
 // of decoys in random positions, then the target
 function setup() {
-  createCanvas(windowWidth,windowHeight);
+  createCanvas(windowWidth,windowHeight-4);
   background("#268048");
   imageMode(CENTER);
 
@@ -146,17 +146,21 @@ function setup() {
   for (let i = 0; i < numDecoys; i++) {
 
     // Generate a random number we can use for probability
-    let r = round(random(0,22));
+    //let r = round(random(0,22));
 
     // Show random images excluding target image
     // Use the random number to display one of the ten decoy
     // images, each with a 10% chance of being shown
     for( let j = 0; j < 22; j++){
+
         if (j !== ranNum){
           // Choose a random location on the canvas for this decoy
           x = random(0,width);
           y = random(0,height);
-          image(randomTarget[j], x*r/j, y*r/j);
+          // Keep decoy images far from the red canvas on top right of the screen
+          if (dist(x,y,guideImageX,guideImageY) > guideRectSize){
+            image(randomTarget[j], x, y);
+          }
         }
       }
   }
@@ -317,7 +321,7 @@ function jumpingDog () {
   }
 }
 
-// Left side rolling pictures of animals
+// Left side rolling images of animals
 function movingAnimalsLeft () {
   // Check if the image is inside of screen
     if(animalsY < 760){
@@ -385,7 +389,7 @@ function movingAnimalsLeft () {
     }
  }
 
-// Right side rolling pictures of animals
+// Right side rolling images of animals
 function movingAnimalsRight() {
     // check if the image is inside the screen
     if(animalsRightY < 760){
