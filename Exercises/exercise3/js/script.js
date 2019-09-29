@@ -24,6 +24,7 @@ let guideRectSize;
 let counter;
 let increase;
 let targetImagejumpX;
+let targetImagejumpRX;
 let targetImagejumpY;
 let randomTarget;
 let ranNum;
@@ -54,14 +55,23 @@ let decoyImage7;
 let decoyImage8;
 let decoyImage9;
 let decoyImage10;
-
+let decoyImage11;
+let decoyImage12;
+let decoyImage13;
+let decoyImage14;
+let decoyImage15;
+let decoyImage16;
+let decoyImage17;
+let decoyImage18;
+let decoyImage19;
+let decoyImage20;
 // Decoy images x and y positions
 let x;
 let y;
 
 // The number of decoys to show on the screen, randomly
 // chosen from the decoy images
-let numDecoys = 150;
+let numDecoys = 70;
 
 // Keep track of whether they've won
 let gameOver = false;
@@ -94,6 +104,16 @@ function preload() {
   decoyImage8 = loadImage("assets/images/animals-flipped-08.png");
   decoyImage9 = loadImage("assets/images/animals-09.png");
   decoyImage10 = loadImage("assets/images/animals-flipped-10.png");
+  decoyImage11 = loadImage("assets/images/animals-02.png");
+  decoyImage12 = loadImage("assets/images/animals-flipped-03.png");
+  decoyImage13 = loadImage("assets/images/animals-04.png");
+  decoyImage14 = loadImage("assets/images/animals-flipped-05.png");
+  decoyImage15 = loadImage("assets/images/animals-06.png");
+  decoyImage16 = loadImage("assets/images/animals-flipped-07.png");
+  decoyImage17 = loadImage("assets/images/animals-08.png");
+  decoyImage18 = loadImage("assets/images/animals-flipped-09.png");
+  decoyImage19 = loadImage("assets/images/animals-10.png");
+  decoyImage20 = loadImage("assets/images/animals-flipped-01.png");
 }
 
 // setup()
@@ -119,23 +139,23 @@ function setup() {
   welcomeCaption = "Can you find me??";
 
   // To have random target image
-  randomTarget = [targetImage, decoyImage1, decoyImage2, decoyImage3, decoyImage4, decoyImage5, decoyImage6, decoyImage7, decoyImage8, decoyImage9, decoyImage10];
-  ranNum = round(random(0,11));
+  randomTarget = [targetImage, targetImageRight, decoyImage1, decoyImage2, decoyImage3, decoyImage4, decoyImage5, decoyImage6, decoyImage7, decoyImage8, decoyImage9, decoyImage10, decoyImage11, decoyImage12, decoyImage13, decoyImage14, decoyImage15, decoyImage16, decoyImage17, decoyImage18, decoyImage19, decoyImage20];
+  ranNum = round(random(0,22));
 
   // Use a for loop to draw as many decoys as we need
   for (let i = 0; i < numDecoys; i++) {
-    // Choose a random location on the canvas for this decoy
-    x = random(0,width);
-    y = random(0,height);
 
     // Generate a random number we can use for probability
-    let r = round(random(0,11));
+    let r = round(random(0,22));
 
     // Show random images excluding target image
     // Use the random number to display one of the ten decoy
     // images, each with a 10% chance of being shown
-    for( let j = 0; j < 11; j++){
+    for( let j = 0; j < 22; j++){
         if (j !== ranNum){
+          // Choose a random location on the canvas for this decoy
+          x = random(0,width);
+          y = random(0,height);
           image(randomTarget[j], x*r/j, y*r/j);
         }
       }
@@ -173,7 +193,8 @@ function setup() {
 
   // Specify jumping dog image x and y position
   targetImagejumpX = 350;
-  targetImagejumpY=0;
+  targetImagejumpY = 0;
+  targetImagejumpRX = 1200;
   // Sine wave elements
   counter = 1;
   // 100 iterations
@@ -276,12 +297,23 @@ function stars () {
 
 // Jumping dog image
 function jumpingDog () {
-  // Sine wave movement
+  // Sine wave movement from right to left
+  if (ranNum === 0 || ranNum === 2 || ranNum === 4 || ranNum === 6 || ranNum === 8 || ranNum === 10 || ranNum === 12 || ranNum === 14 || ranNum === 16 || ranNum === 18 || ranNum === 20){
   if (targetImagejumpX < 1200){
     image(randomTarget[ranNum],targetImagejumpX, targetImagejumpY+100);
     targetImagejumpX += 6;
     targetImagejumpY = Math.abs(Math.pow(Math.sin(counter),3)*200);
     counter -= increase;
+  }
+  }
+  // Sine wave movement from left to right
+  else if (ranNum === 1 || ranNum === 3 || ranNum === 5 || ranNum === 7 || ranNum === 8 || ranNum === 9 || ranNum === 10 || ranNum === 13 || ranNum === 15 || ranNum === 17 || ranNum === 19){
+    if (targetImagejumpRX > 300){
+      image(randomTarget[ranNum],targetImagejumpRX, targetImagejumpY+100);
+      targetImagejumpRX -= 6;
+      targetImagejumpY = Math.abs(Math.pow(Math.sin(counter),3)*200);
+      counter -= increase;
+    }
   }
 }
 
