@@ -16,7 +16,7 @@ https://creativenerds.co.uk/freebies/80-free-wildlife-icons-the-best-ever-animal
 let targetX;
 let targetY;
 let targetImage;
-let targetImageSize;
+let targetSize;
 let targetImageRight;
 let guideImageX;
 let guideImageY;
@@ -25,6 +25,8 @@ let counter;
 let increase;
 let targetImagejumpX;
 let targetImagejumpY;
+let randomTarget;
+let ranNum;
 
 // Number of stars in the winning scene
 let numStars = 1000;
@@ -59,7 +61,7 @@ let y;
 
 // The number of decoys to show on the screen, randomly
 // chosen from the decoy images
-let numDecoys = 300;
+let numDecoys = 150;
 
 // Keep track of whether they've won
 let gameOver = false;
@@ -111,10 +113,14 @@ function setup() {
   // Once we've displayed all decoys, we choose a random location for the target
   targetX = random(0,width);
   targetY = random(0,height);
-  targetImageSize = 100;
+  targetSize = 100;
 
   // Assign string to the guide canvas caption
   welcomeCaption = "Can you find me??";
+
+  // To have random target image
+  randomTarget = [targetImage, decoyImage1, decoyImage2, decoyImage3, decoyImage4, decoyImage5, decoyImage6, decoyImage7, decoyImage8, decoyImage9, decoyImage10];
+  ranNum = round(random(0,11));
 
   // Use a for loop to draw as many decoys as we need
   for (let i = 0; i < numDecoys; i++) {
@@ -123,52 +129,24 @@ function setup() {
     y = random(0,height);
 
     // Generate a random number we can use for probability
-    let r = random();
+    let r = round(random(0,11));
 
+    // Show random images excluding target image
     // Use the random number to display one of the ten decoy
     // images, each with a 10% chance of being shown
-    // We'll talk more about this nice quality of random soon enough.
-    // But basically each "if" and "else if" has a 10% chance of being true
-    if (dist(x,y,guideImageX,guideImageY) > guideRectSize+10){
-      if (r < 0.1) {
-        image(decoyImage1,x,y);
+    for( let j = 0; j < 11; j++){
+        if (j !== ranNum){
+          image(randomTarget[j], x*r/j, y*r/j);
+        }
       }
-      else if (r < 0.2) {
-        image(decoyImage2,x,y);
-      }
-      else if (r < 0.3) {
-        image(decoyImage3,x,y);
-      }
-      else if (r < 0.4) {
-        image(decoyImage4,x,y);
-      }
-      else if (r < 0.5) {
-        image(decoyImage5,x,y);
-      }
-      else if (r < 0.6) {
-        image(decoyImage6,x,y);
-      }
-      else if (r < 0.7) {
-        image(decoyImage7,x,y);
-      }
-      else if (r < 0.8) {
-        image(decoyImage8,x,y);
-      }
-      else if (r < 0.9) {
-        image(decoyImage9,x,y);
-      }
-      else if (r < 1.0) {
-        image(decoyImage10,x,y);
-      }
-    }
   }
 
   // Show the target image if it is inside screen
-  if (targetX < windowWidth-50 || targetY < windowHeight-50){
+  if (targetX < windowWidth-40 || targetY < windowHeight-40){
     // Draw the target image only if it's not under the red rectangle
     if (dist(targetX,targetY,guideImageX,guideImageY) > guideRectSize + 50){
       // And draw it (because it's the last thing drawn, it will always be on top)
-      image(targetImage,targetX,targetY);
+      image(randomTarget[ranNum],targetX,targetY);
     }
   }
   // Otherwise reset if the target image goes off screen
@@ -181,11 +159,11 @@ function setup() {
   stroke(0);
   fill(255,0,0);
   rect(1352,15,guideRectSize,guideRectSize);
-  image(targetImage,guideImageX,guideImageY);
+  image(randomTarget[ranNum],guideImageX,guideImageY,120,120);
   fill(255);
   noStroke();
   textSize(15);
-  text(welcomeCaption, 1365, 140);
+  text(welcomeCaption, 1365, 145);
 
   // Found image
   imageFound = "HaHa, you found me!!";
@@ -268,12 +246,12 @@ function mousePressed() {
 
 // Image found
 function youFoundIt(){
-  if ( dist(mouseX, mouseY, targetX, targetY) < targetImageSize/2 ){
+  if ( dist(mouseX, mouseY, targetX, targetY) < targetSize/2 ){
     fill(255,0,0);
     stroke(10);
     ellipse(targetX,targetY,170,170);
     imageMode(CENTER);
-    image(targetImage, targetX, targetY-20);
+    image(randomTarget[ranNum], targetX, targetY-25,100,100);
     fill(255);
     noStroke();
     textAlign(CENTER);
@@ -282,7 +260,7 @@ function youFoundIt(){
   }
 }
 
-// Colored bouncing balls
+// Colored bouncing balls (I modified the code of star field example that is in the third week slides on github website)
 function stars () {
   for (let i = 0; i < numStars; i++) {
     let x = random(280,(width/2)+470);
@@ -300,7 +278,7 @@ function stars () {
 function jumpingDog () {
   // Sine wave movement
   if (targetImagejumpX < 1200){
-    image(targetImage,targetImagejumpX, targetImagejumpY+100);
+    image(randomTarget[ranNum],targetImagejumpX, targetImagejumpY+100);
     targetImagejumpX += 6;
     targetImagejumpY = Math.abs(Math.pow(Math.sin(counter),3)*200);
     counter -= increase;
