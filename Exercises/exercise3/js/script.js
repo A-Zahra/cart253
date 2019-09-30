@@ -311,7 +311,7 @@ function jumpingDog () {
   }
   }
   // Sine wave movement from left to right
-  else if (ranNum === 1 || ranNum === 3 || ranNum === 5 || ranNum === 7 || ranNum === 8 || ranNum === 9 || ranNum === 10 || ranNum === 13 || ranNum === 15 || ranNum === 17 || ranNum === 19){
+  else if (ranNum === 1 || ranNum === 3 || ranNum === 5 || ranNum === 7 || ranNum === 9 || ranNum === 11 || ranNum === 13 || ranNum === 15 || ranNum === 17 || ranNum === 19){
     if (targetImagejumpRX > 300){
       image(randomTarget[ranNum],targetImagejumpRX, targetImagejumpY+100);
       targetImagejumpRX -= 6;
