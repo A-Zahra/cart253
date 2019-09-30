@@ -327,7 +327,7 @@ function movingAnimalsLeft () {
     if(animalsY < 760){
       if (turnCounter[0]){
         image(targetImage,animalsX, animalsY,animalsSize,animalsSize);
-        animalsY += 15;
+        animalsY += 12;
         if (animalsY > 758){
           turnCounter[0] = false;
         }
@@ -395,7 +395,7 @@ function movingAnimalsRight() {
     if(animalsRightY < 760){
       if (turnCounterRight[0]){
         image(targetImageRight,animalsRightX, animalsRightY,animalsSize,animalsSize);
-        animalsRightY += 15;
+        animalsRightY += 12;
         if (animalsRightY > 759){
           turnCounterRight[0] = false;
         }
