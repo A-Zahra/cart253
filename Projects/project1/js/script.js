@@ -138,6 +138,15 @@ function handleInput() {
   else {
     playerVY = 0;
   }
+
+  //Add the ability to sprint + Make the player lose health faster
+  if (keyIsDown(SHIFT)){
+    playerMaxSpeed = 6;
+    playerHealth = playerHealth - 1;
+  }
+  else {
+    playerMaxSpeed = 2;
+  }
 }
 
 // movePlayer()
@@ -219,9 +228,7 @@ function checkEating() {
 //
 // Moves the prey based on random velocity changes
 function movePrey() {
-  // Change the prey's velocity at random intervals
-  // random() will be < 0.05 5% of the time, so the prey
-  // will change direction on 5% of frames
+  // Change the prey's velocity at sequential intervals
 
   // Set velocity based on sequential values to get a new direction
   // and speed of movement
@@ -234,8 +241,10 @@ function movePrey() {
   preyX += preyVX;
   preyY += preyVY;
 
+  // Add to prey time value by 0.01 per second
   preyTX += 0.01;
   preyTY += 0.01;
+
   // Screen wrapping
   if (preyX < 0) {
     preyX = preyX + width;
@@ -243,14 +252,12 @@ function movePrey() {
   else if (preyX > width) {
     preyX = preyX - width;
   }
-
   if (preyY < 0) {
     preyY = preyY + height;
   }
   else if (preyY > height) {
     preyY = preyY - height;
   }
-
 }
 
 // drawPrey()
