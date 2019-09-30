@@ -43,7 +43,9 @@ let preyHealth;
 let preyMaxHealth = 100;
 // Prey fill color
 let preyFill = 200;
-
+// Prey x and y times
+let preyTX;
+let preyTY;
 // Amount of health obtained per frame of "eating" (overlapping) the prey
 let eatHealth = 10;
 // Number of prey eaten during the game (the "score")
@@ -71,6 +73,8 @@ function setupPrey() {
   preyVX = -preyMaxSpeed;
   preyVY = preyMaxSpeed;
   preyHealth = preyMaxHealth;
+  preyTX = random(0,100);
+  preyTY = random(0,100);
 }
 
 // setupPlayer()
@@ -218,20 +222,20 @@ function movePrey() {
   // Change the prey's velocity at random intervals
   // random() will be < 0.05 5% of the time, so the prey
   // will change direction on 5% of frames
-  if (random() < 0.05) {
-    // Set velocity based on random values to get a new direction
-    // and speed of movement
-    //
-    // Use map() to convert from the 0-1 range of the random() function
-    // to the appropriate range of velocities for the prey
-    preyVX = map(random(), 0, 1, -preyMaxSpeed, preyMaxSpeed);
-    preyVY = map(random(), 0, 1, -preyMaxSpeed, preyMaxSpeed);
-  }
+
+  // Set velocity based on sequential values to get a new direction
+  // and speed of movement
+  // Use map() to convert from the 0-1 range of the noise() function
+  // to the appropriate range of velocities for the prey
+  preyVX = map(noise(preyTX), 0, 1, -preyMaxSpeed, preyMaxSpeed)*2;
+  preyVY = map(noise(preyTY), 0, 1, -preyMaxSpeed, preyMaxSpeed)*2;
 
   // Update prey position based on velocity
-  preyX = preyX + preyVX;
-  preyY = preyY + preyVY;
+  preyX += preyVX;
+  preyY += preyVY;
 
+  preyTX += 0.01;
+  preyTY += 0.01;
   // Screen wrapping
   if (preyX < 0) {
     preyX = preyX + width;
@@ -246,6 +250,7 @@ function movePrey() {
   else if (preyY > height) {
     preyY = preyY - height;
   }
+
 }
 
 // drawPrey()
