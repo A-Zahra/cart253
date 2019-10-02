@@ -18,6 +18,11 @@ random movement, screen wrap.
 // Track whether the game is over
 let gameOver = false;
 
+// Restart button properties
+let restartX;
+let restartY;
+let restartSize;
+
 // Player position, size, velocity
 let playerX;
 let playerY;
@@ -25,6 +30,7 @@ let playerRadius = 25;
 let playerVX = 0;
 let playerVY = 0;
 let playerMaxSpeed = 2;
+let playerSpeedKeeper;
 // Player health
 let playerHealth;
 let playerMaxHealth = 255;
@@ -51,17 +57,34 @@ let eatHealth = 10;
 // Number of prey eaten during the game (the "score")
 let preyEaten = 0;
 
+// Ranger men x and y position + size +
+let rangerMenX;
+let rangerMenY;
+let rangerMenRadius;
+
 // setup()
 //
 // Sets up the basic elements of the game
 function setup() {
-  createCanvas(500, 500);
+  createCanvas(1000, 750);
 
   noStroke();
 
-  // We're using simple functions to separate code out
+  // Set up restart button, player, prey and the ranger men
+  setupRestart();
   setupPrey();
   setupPlayer();
+  setupRangerMen();
+
+}
+
+// setupRangerMen()
+//
+// Initialises rangerMen position and size
+function setupRangerMen(){
+  rangerMenX = 100;
+  rangerMenY = 100;
+  rangerMenRadius = 25;
 }
 
 // setupPrey()
@@ -86,6 +109,15 @@ function setupPlayer() {
   playerHealth = playerMaxHealth;
 }
 
+// setupRestart()
+//
+// Initialises restart button values
+function setupRestart(){
+  restartX = width/2;
+  restartY = height/2+100;
+  restartSize = 50;
+}
+
 // draw()
 //
 // While the game is active, checks input
@@ -94,7 +126,8 @@ function setupPlayer() {
 // displays the two agents.
 // When the game is over, shows the game over screen.
 function draw() {
-  background(100, 100, 200);
+  background("#2DB360");
+console.log(gameOver);
 
   if (!gameOver) {
     handleInput();
@@ -107,9 +140,13 @@ function draw() {
 
     drawPrey();
     drawPlayer();
+    drawRangerMen();
+
+    // If player is detected it dies
+    isDetected();
   }
   else {
-    showGameOver();
+      showGameOver();
   }
 }
 
@@ -146,6 +183,15 @@ function handleInput() {
   }
   else {
     playerMaxSpeed = 2;
+  }
+
+  playerSpeedKeeper = playerMaxSpeed;
+  if (keyIsDown(CONTROL)){
+    playerMaxSpeed += playerSpeedKeeper;
+    playerHealth++;
+  }
+  else {
+    playerMaxSpeed = 6;
   }
 }
 
@@ -221,6 +267,7 @@ function checkEating() {
       // Track how many prey were eaten
       preyEaten = preyEaten + 1;
     }
+    playerRadius++;
   }
 }
 
@@ -276,6 +323,48 @@ function drawPlayer() {
   ellipse(playerX, playerY, playerRadius * 2);
 }
 
+// drawRangerMen
+//
+// draw ranger men on the four sides of canvas
+function drawRangerMen(){
+  fill("#B38E43");
+  ellipse(rangerMenX*2,rangerMenY*2,rangerMenRadius*2, rangerMenRadius*2);
+  ellipse(width/2+rangerMenX*3,rangerMenY*2,rangerMenRadius*2, rangerMenRadius*2);
+  ellipse(rangerMenX*2,height/2+rangerMenY*2,rangerMenRadius*2, rangerMenRadius*2);
+  ellipse(width/2+rangerMenX*3,height/2+rangerMenY*2,rangerMenRadius*2, rangerMenRadius*2);
+
+}
+
+// Restart
+//
+// restart button
+function drawRestart(){
+  fill(100,100,200);
+  rectMode(CENTER);
+  rect(restartX, restartY, restartSize*3, restartSize);
+  fill(0);
+  textAlign(CENTER);
+  textSize(20);
+  text("Play Again!", width/2,(height/2)+100);
+
+}
+
+// isDetected
+//
+// Check if the player and the rangerMen overlapped
+function isDetected(){
+  if (dist(playerX, playerY, rangerMenX*2,rangerMenY*2) < playerRadius*2 ||
+      dist(playerX, playerY, width/2+rangerMenX*3,rangerMenY*2) < playerRadius*2 ||
+      dist(playerX, playerY, rangerMenX*2,height/2+rangerMenY*2) < playerRadius*2 ||
+      dist(playerX, playerY,width/2+rangerMenX*3,height/2+rangerMenY*2) < playerRadius*2){
+        playerHealth = 0;
+        if (playerHealth === 0) {
+          // If so, the game is over
+          gameOver = true;
+        }
+  }
+}
+
 // showGameOver()
 //
 // Display text about the game being over!
@@ -290,4 +379,28 @@ function showGameOver() {
   gameOverText = gameOverText + "before you died."
   // Display it in the centre of the screen
   text(gameOverText, width / 2, height / 2);
+  drawRestart();
+
+
+}
+// mousePressed()
+//
+// If mouse pressed run restart function
+function mousePressed(){
+  if(gameOver ===true){
+      restart();
+  }
+}
+// restart()
+//
+//
+function restart(){
+  if (dist(mouseX, mouseY, restartX, restartY) < restartSize){
+    gameOver = false;
+    playerHealth=playerMaxHealth;
+    playerRadius = 25;
+    setupPlayer();
+    setupPrey();
+
+  }
 }
