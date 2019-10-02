@@ -76,13 +76,13 @@ let numDecoys = 20;
 // Keep track of whether they've won
 let gameOver = false;
 
-// Declare variable for the winning message
+// Declare variable name for the winning message
 let textEnlargement;
 
-// Declare variable for the short caption in the guide panel
+// Declare variable name for the short caption in the guide panel
 let welcomeCaption;
 
-// Found image
+// Found image sign
 let imageFound;
 
 // Prize button
@@ -125,7 +125,7 @@ function setup() {
   background("#268048");
   imageMode(CENTER);
 
-  //Assign x and y position values for the dog image in the guide canvas
+  //Assign x and y position values as well as size value for the dog image in the guide canvas
   guideImageX = 1428;
   guideImageY = 75;
   guideRectSize = 150;
@@ -135,7 +135,7 @@ function setup() {
   targetY = random(0,height);
   targetSize = 100;
 
-  // Assign string to the guide canvas caption
+  // Assign a message to the guide canvas caption
   welcomeCaption = "Can you find me??";
 
   // To have random target image
@@ -145,11 +145,8 @@ function setup() {
   // Use a for loop to draw as many decoys as we need
   for (let i = 0; i < numDecoys; i++) {
 
-    // Generate a random number we can use for probability
-    //let r = round(random(0,22));
-
     // Show random images excluding target image
-    // Use the random number to display one of the ten decoy
+    // Use the random number to display one of the twenty two decoys
     // images, each with a 10% chance of being shown
     for( let j = 0; j < 22; j++){
 
@@ -189,13 +186,13 @@ function setup() {
   textSize(15);
   text(welcomeCaption, 1365, 145);
 
-  // Found image
+  // Found image message
   imageFound = "HaHa, you found me!!";
 
-  // prize button
+  // prize button message
   prizeButton = "Get your prize!";
 
-  // Specify jumping dog image x and y position
+  // Specify jumping target image x and y position 
   targetImagejumpX = 350;
   targetImagejumpY = 0;
   targetImagejumpRX = 1200;
@@ -207,8 +204,8 @@ function setup() {
   // To enlarge the winning message
   textEnlargement = 10;
 
-  // Specify the animal rolling pictures x and y positions and size
-  // Add an array of bouleans to make the if statement work so that is shifts images one they go
+  // Specify the animal rolling images x and y positions and size
+  // Add an array of bouleans to make the if statement work so that it shifts images once they go
   // off the canvas
   animalsX = 130;
   animalsY = 0;
@@ -233,7 +230,7 @@ function draw() {
 
     // The winning scene functions
     stars();
-    jumpingDog();
+    jumpingTargetImage();
     movingAnimalsLeft();
     movingAnimalsRight();
 
@@ -269,7 +266,7 @@ function mousePressed() {
   }
 }
 
-// Image found
+// Image found function
 function youFoundIt(){
   if ( dist(mouseX, mouseY, targetX, targetY) < targetSize/2 ){
     fill(255,0,0);
@@ -285,7 +282,7 @@ function youFoundIt(){
   }
 }
 
-// Colored bouncing balls (I modified the code of star field example that is in the third week slides on github website)
+// Bouncing colored balls function(I modified the code of star field example that is in the third week slides on github website)
 function stars () {
   for (let i = 0; i < numStars; i++) {
     let x = random(280,(width/2)+470);
@@ -299,8 +296,8 @@ function stars () {
   }
 }
 
-// Jumping dog image
-function jumpingDog () {
+// Jumping target image function
+function jumpingTargetImage () {
   // Sine wave movement from right to left
   if (ranNum === 0 || ranNum === 2 || ranNum === 4 || ranNum === 6 || ranNum === 8 || ranNum === 10 || ranNum === 12 || ranNum === 14 || ranNum === 16 || ranNum === 18 || ranNum === 20){
   if (targetImagejumpX < 1200){
@@ -323,7 +320,7 @@ function jumpingDog () {
 
 // Left side rolling images of animals
 function movingAnimalsLeft () {
-  // Check if the image is inside of screen
+  // Check if the image is inside of the screen
     if(animalsY < 760){
       if (turnCounter[0]){
         image(targetImage,animalsX, animalsY,animalsSize,animalsSize);
@@ -383,7 +380,7 @@ function movingAnimalsLeft () {
         }
       }
     }
-    // Check if the image is of screen
+    // Check if the image is off screen
     else {
       animalsY = 0;
     }
@@ -391,7 +388,7 @@ function movingAnimalsLeft () {
 
 // Right side rolling images of animals
 function movingAnimalsRight() {
-    // check if the image is inside the screen
+    // check if the image is inside of the screen
     if(animalsRightY < 760){
       if (turnCounterRight[0]){
         image(targetImageRight,animalsRightX, animalsRightY,animalsSize,animalsSize);
