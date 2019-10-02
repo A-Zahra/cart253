@@ -17,6 +17,7 @@ random movement, screen wrap.
 
 // Track whether the game is over
 let gameOver = false;
+let startIt = true;
 let firtLevel = true;
 let secondLevel = true;
 // Restart button properties
@@ -55,6 +56,9 @@ let preyTX;
 let preyTY;
 // Amount of health obtained per frame of "eating" (overlapping) the prey
 let eatHealth = 15;
+
+let preyEatenX ;
+let preyEatenY ;
 // Number of prey eaten during the game (the "score")
 let preyEaten = 0;
 
@@ -63,6 +67,9 @@ let rangerMenX;
 let rangerMenY;
 let rangerMenRadius;
 
+let counterMessage;
+let levelOneMessage;
+let levelTwoMessage;
 // setup()
 //
 // Sets up the basic elements of the game
@@ -76,7 +83,7 @@ function setup() {
   setupPrey();
   setupPlayer();
   setupRangerMen();
-
+  setupLevelRaiser();
 }
 
 // setupRangerMen()
@@ -110,6 +117,17 @@ function setupPlayer() {
   playerHealth = playerMaxHealth;
 }
 
+// setupLevelRaiser
+//
+// The content of preyEaten counter on the top left of the SCREEN
+function setupLevelRaiser(){
+  preyEatenX = 50;
+  preyEatenY = 50;
+  levelOneMessage = `Oh nooo, you were detected. Watch out the ranger men are coming!!!`;
+  levelTwoMessage = `You still want more prey, run faster using your shift and control key!!!`;
+
+}
+
 // setupRestart()
 //
 // Initialises restart button values
@@ -129,13 +147,16 @@ function setupRestart(){
 function draw() {
   background("#2DB360");
 console.log(gameOver);
-
-  if (preyEaten > 15){
+  if (startIt){
+    showGameStart();
+  }
+  else if (preyEaten > 15){
     winned();
   }
   else if (!gameOver) {
-
+    drawLevelRaiser();
     getLevelHigher();
+
     handleInput();
 
     movePlayer();
@@ -362,21 +383,26 @@ function drawRangerMen(){
   ellipse((rangerMenX*4)+50,height/2+rangerMenY,rangerMenRadius*2, rangerMenRadius*2);
 
 }
-
-// Restart
-//
-// restart button
-function drawRestart(){
-  fill(100,100,200);
-  rectMode(CENTER);
-  rect(restartX, restartY, restartSize*3, restartSize);
-  fill(0);
-  textAlign(CENTER);
-  textSize(20);
-  text("Play Again!", width/2,(height/2)+100);
-
+function drawLevelRaiser(){
+  if (preyEaten < 5 || preyEaten > 5 && preyEaten < 10 || preyEaten > 10){
+    fill(0);
+    textSize(25);
+    textAlign(LEFT);
+    text(`Number times the prey was eaten: ${preyEaten}`, preyEatenX, preyEatenY);
+  }
+  else if (preyEaten === 5){
+    fill(0);
+    textSize(20);
+    textAlign(CENTER);
+    text(levelOneMessage, width/2, height/2);
+  }
+  else if (preyEaten === 10){
+    fill(0);
+    textSize(20);
+    textAlign(CENTER);
+    text(levelTwoMessage, width/2, height/2);
+  }
 }
-
 // isDetected
 //
 // Check if the player and the rangerMen overlapped
@@ -392,7 +418,77 @@ function isDetected(){
         }
   }
 }
+// start()
+//
+// start the game()
+function drawStart(){
+  fill(100,100,200);
+  rectMode(CENTER);
+  stroke(10);
+  rect(restartX, restartY, restartSize*3, restartSize);
+  fill(0);
+  noStroke(20);
+  textAlign(CENTER);
+  textSize(20);
+  text("Start", width/2,(height/2)+100);
+}
+// Restart
+//
+// restart button
+function drawRestart(){
+  fill(100,100,200);
+  rectMode(CENTER);
+  stroke(10);
+  rect(restartX, restartY, restartSize*3, restartSize);
+  fill(0);
+  noStroke(20);
+  textAlign(CENTER);
+  textSize(20);
+  text("Play Again!", width/2,(height/2)+100);
 
+}
+
+// getLevelHigher
+//
+// Makeing the game harder as the player eats the prey more and more
+function getLevelHigher(){
+  if (preyEaten < 5){
+    drawLevelRaiser();
+  }
+  else if (preyEaten === 5){
+    drawLevelRaiser();
+    playerRadius = 25;
+    playerHealth = playerMaxHealth;
+  }
+  else if (preyEaten > 5 && preyEaten < 10){
+    drawLevelRaiser();
+    drawRangerMen();
+    // If player is detected it dies
+    isDetected();
+  }
+  else if (preyEaten === 10){
+    drawLevelRaiser();
+    playerRadius = 25;
+    playerHealth = playerMaxHealth;
+  }
+  else if (preyEaten > 10) {
+    drawLevelRaiser();
+    drawRangerMen();
+    // If player is detected it dies
+    isDetected();
+  }
+}
+// showGameStart
+//
+// Display text about the game start and short instruction
+function showGameStart(){
+  let gameStartText = "Welcome to chaser game!\n"; // \n means "new line"
+  gameStartText = "Instruction:\n";
+  gameStartText = "before you died.";
+  // Display it in the centre of the screen
+  text(gameStartText, width / 2, height / 2);
+  drawStart();
+}
 // showGameOver()
 //
 // Display text about the game being over!
@@ -409,31 +505,39 @@ function showGameOver() {
   text(gameOverText, width / 2, height / 2);
   drawRestart();
 }
+
 // winned()
 //
 // show the winning message
 function winned(){
-  background(100,100,200);
+  background("#FFA447");
   fill(0);
-  textSize(25);
+  noStroke();
+  textSize(30);
+  textAlign(CENTER);
   text("Yeayyyyy! You winned", width/2, height/2);
   drawRestart();
 
 }
-// mousePressed()
+
+// start()
 //
-// If mouse pressed run restart function
-function mousePressed(){
-  if(gameOver ===true){
-      restart();
-  }
-  else if (preyEaten > 15){
-    restart();
+// start the game
+function start(){
+  if (dist(mouseX, mouseY, restartX, restartY) < restartSize){
+    startIt = false;
+    playerHealth=playerMaxHealth;
+    playerRadius = 25;
+    preyEaten = 0;
+    setupPlayer();
+    setupPrey();
+    getLevelHigher();
   }
 }
+
 // restart()
 //
-//
+// Restart the game
 function restart(){
   if (dist(mouseX, mouseY, restartX, restartY) < restartSize){
     gameOver = false;
@@ -445,47 +549,18 @@ function restart(){
     getLevelHigher();
   }
 }
-// getLevelHigher
+
+// mousePressed()
 //
-// Makeing the game harder as the player eats the prey more and more
-function getLevelHigher(){
-  if (preyEaten < 5){
-    fill(0);
-    textSize(25);
-    text(`Number times the prey was eaten: ${preyEaten}`, 50, 50);
-
+// If mouse pressed run restart function
+function mousePressed(){
+  if (startIt === true){
+    start();
   }
-  else if (preyEaten === 5){
-    fill(0);
-    textSize(20);
-    textAlign(CENTER);
-    text(`Oh nooo, you were detected. Watch out the ranger men are coming!!!`, width/2, height/2);
-    playerRadius = 25;
-    playerHealth = playerMaxHealth;
+  else if(gameOver ===true){
+    restart();
   }
-  else if (preyEaten > 5 && preyEaten < 10){
-    fill(0);
-    textSize(25);
-    text(`Number times the prey was eaten: ${preyEaten}`, 50, 50);
-    drawRangerMen();
-    // If player is detected it dies
-    isDetected();
+  else if (preyEaten > 15){
+    restart();
   }
-  else if (preyEaten === 10){
-    fill(0);
-    textSize(20);
-    textAlign(CENTER);
-    text(`You still want more prey, run faster using your shift and control key!!!`, width/2, height/2);
-    playerRadius = 25;
-    playerHealth = playerMaxHealth;
-  }
-  else if (preyEaten > 10) {
-    fill(0);
-    textSize(25);
-    text(`Number times the prey was eaten: ${preyEaten}`, 50, 50);
-    drawRangerMen();
-    // If player is detected it dies
-    isDetected();
-  }
-
 }
