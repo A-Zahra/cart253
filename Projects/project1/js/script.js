@@ -146,7 +146,7 @@ function setupRestart(){
 // When the game is over, shows the game over screen.
 function draw() {
   background("#2DB360");
-console.log(gameOver);
+
   if (startIt){
     showGameStart();
   }
@@ -425,12 +425,12 @@ function drawStart(){
   fill(100,100,200);
   rectMode(CENTER);
   stroke(10);
-  rect(restartX, restartY, restartSize*3, restartSize);
+  rect(restartX, restartY, restartSize*2, restartSize);
   fill(0);
   noStroke(20);
   textAlign(CENTER);
   textSize(20);
-  text("Start", width/2,(height/2)+100);
+  text("Start", width/2,(height/2)+105);
 }
 // Restart
 //
@@ -482,11 +482,17 @@ function getLevelHigher(){
 //
 // Display text about the game start and short instruction
 function showGameStart(){
-  let gameStartText = "Welcome to chaser game!\n"; // \n means "new line"
-  gameStartText = "Instruction:\n";
-  gameStartText = "before you died.";
+  let gameStartText = "Welcome to chaser game!\n" +
+  " Instruction: This game has three levels.\n" +
+  "In each level you face with some new options that\n" +
+  "stays with you till the end of the game.\n" +
+  "Level1: Keep SHIFT key to raise you speed.\n" +
+  "In order to go to the next level you must eat the prey 5 times\n" +
+  "Level2: In order to go to the next level eat the prey 5 more times\n" +
+  "Level3: In order to win eat the prey for another 5 times " ; // \n means "new line"
   // Display it in the centre of the screen
-  text(gameStartText, width / 2, height / 2);
+  textAlign(LEFT);
+  text(gameStartText, 100, height / 4);
   drawStart();
 }
 // showGameOver()
