@@ -26,31 +26,33 @@ let restartY;
 let restartSize;
 
 // Player position, size, velocity
+let player;
 let playerX;
 let playerY;
-let playerRadius = 25;
+let playerRadius = 35;
 let playerVX = 0;
 let playerVY = 0;
 let playerMaxSpeed = 2;
 let playerSpeedKeeper;
 // Player health
 let playerHealth;
-let playerMaxHealth = 255;
+let playerMaxHealth = 200;
 // Player fill color
-let playerFill = 50;
+let playerFill = 255;
 
 // Prey position, size, velocity
+let prey;
 let preyX;
 let preyY;
-let preyRadius = 25;
+let preyRadius = 35;
 let preyVX;
 let preyVY;
 let preyMaxSpeed = 4;
 // Prey health
 let preyHealth;
-let preyMaxHealth = 100;
+let preyMaxHealth = 200;
 // Prey fill color
-let preyFill = 200;
+let preyFill = 255;
 // Prey x and y times
 let preyTX;
 let preyTY;
@@ -62,7 +64,9 @@ let preyEatenY ;
 // Number of prey eaten during the game (the "score")
 let preyEaten = 0;
 
-// Ranger men x and y position + size +
+// Ranger men x and y position + size
+let rangerWomen;
+let rangerMen;
 let rangerMenX;
 let rangerMenY;
 let rangerMenRadius;
@@ -70,6 +74,16 @@ let rangerMenRadius;
 let counterMessage;
 let levelOneMessage;
 let levelTwoMessage;
+
+// preload()
+//
+// Preload  external files
+function preload(){
+  player = loadImage("assets/images/Player.png");
+  prey = loadImage("assets/images/Prey.png");
+  rangerMen = loadImage("assets/images/Ranger-Man.png");
+  rangerWomen = loadImage("assets/images/Ranger-Woman.png");
+}
 // setup()
 //
 // Sets up the basic elements of the game
@@ -91,8 +105,8 @@ function setup() {
 // Initialises rangerMen position and size
 function setupRangerMen(){
   rangerMenX = 150;
-  rangerMenY = 150;
-  rangerMenRadius = 30;
+  rangerMenY = 100;
+  rangerMenRadius = 35;
 }
 
 // setupPrey()
@@ -112,7 +126,7 @@ function setupPrey() {
 //
 // Initialises player position and health
 function setupPlayer() {
-  playerX = 4 * width / 5;
+  playerX = 3 * width / 5;
   playerY = height / 2;
   playerHealth = playerMaxHealth;
 }
@@ -150,7 +164,7 @@ function draw() {
   if (startIt){
     showGameStart();
   }
-  else if (preyEaten > 15){
+  else if (preyEaten > 25){
     winned();
   }
   else if (!gameOver) {
@@ -274,7 +288,7 @@ function checkEating() {
   // Get distance of player to prey
   let d = dist(playerX, playerY, preyX, preyY);
   // Check if it's an overlap
-  if (d < playerRadius*2.5) {
+  if (d < playerRadius*2) {
     // Increase the player health
     playerHealth = playerHealth + eatHealth;
     // Constrain to the possible range
@@ -294,7 +308,7 @@ function checkEating() {
         // Track how many prey were eaten
         preyEaten = preyEaten + 1;
     }
-    if (preyRadius < 100){
+    if (playerRadius < 60){
       // If the player ate prey, it gets bigger by one pixel each time
       playerRadius++;
     }
@@ -360,43 +374,44 @@ function movePrey() {
 //
 // Draw the prey as an ellipse with alpha based on health
 function drawPrey() {
-  fill(preyFill, preyHealth);
-  ellipse(preyX, preyY, preyRadius * 2.5);
+  tint(preyFill, preyHealth);
+  image(prey, preyX, preyY, preyRadius * 2.5, preyRadius * 2.5);
 }
 
 // drawPlayer()
 //
 // Draw the player as an ellipse with alpha value based on health
 function drawPlayer() {
-  fill(playerFill, playerHealth);
-  ellipse(playerX, playerY, playerRadius * 2.5);
+  tint(playerFill, playerHealth);
+  image(player,playerX, playerY, playerRadius * 2.5, playerRadius * 2.5);
+
 }
 
 // drawRangerMen
 //
 // draw ranger men on the four sides of canvas
 function drawRangerMen(){
-  fill("#B38E43");
-  ellipse(rangerMenX,rangerMenY,rangerMenRadius*2, rangerMenRadius*2);
-  ellipse((rangerMenX*4)+50,rangerMenY,rangerMenRadius*2, rangerMenRadius*2);
-  ellipse(rangerMenX,height/2+rangerMenY,rangerMenRadius*2, rangerMenRadius*2);
-  ellipse((rangerMenX*4)+50,height/2+rangerMenY,rangerMenRadius*2, rangerMenRadius*2);
+  tint(255);
+  image(rangerMen, rangerMenX, rangerMenY, rangerMenRadius*2, rangerMenRadius*2);
+  image(rangerWomen, (rangerMenX*4), rangerMenY, rangerMenRadius*2, rangerMenRadius*2);
+  image(rangerWomen, rangerMenX, height/2+rangerMenY, rangerMenRadius*2, rangerMenRadius*2);
+  image(rangerMen, (rangerMenX*4), height/2+rangerMenY, rangerMenRadius*2, rangerMenRadius*2);
 
 }
 function drawLevelRaiser(){
-  if (preyEaten < 5 || preyEaten > 5 && preyEaten < 10 || preyEaten > 10){
+  if (preyEaten < 6 || preyEaten > 6 && preyEaten < 12 || preyEaten > 12){
     fill(0);
     textSize(25);
     textAlign(LEFT);
     text(`Number times the prey was eaten: ${preyEaten}`, preyEatenX, preyEatenY);
   }
-  else if (preyEaten === 5){
+  else if (preyEaten === 6){
     fill(0);
     textSize(20);
     textAlign(CENTER);
     text(levelOneMessage, width/2, height/2);
   }
-  else if (preyEaten === 10){
+  else if (preyEaten === 12){
     fill(0);
     textSize(20);
     textAlign(CENTER);
@@ -407,10 +422,10 @@ function drawLevelRaiser(){
 //
 // Check if the player and the rangerMen overlapped
 function isDetected(){
-  if (dist(playerX, playerY, rangerMenX,rangerMenY) < playerRadius*2 ||
-      dist(playerX, playerY, (rangerMenX*4)+50,rangerMenY) < playerRadius*2 ||
-      dist(playerX, playerY, rangerMenX,height/2+rangerMenY) < playerRadius*2 ||
-      dist(playerX, playerY,(rangerMenX*4)+50,height/2+rangerMenY) < playerRadius*2){
+  if (dist(playerX, playerY, rangerMenX,rangerMenY) < playerRadius ||
+      dist(playerX, playerY, (rangerMenX*4),rangerMenY) < playerRadius ||
+      dist(playerX, playerY, rangerMenX,height/2+rangerMenY) < playerRadius ||
+      dist(playerX, playerY,(rangerMenX*4),height/2+rangerMenY) < playerRadius){
         playerHealth = 0;
         if (playerHealth === 0) {
           // If so, the game is over
@@ -452,53 +467,77 @@ function drawRestart(){
 //
 // Makeing the game harder as the player eats the prey more and more
 function getLevelHigher(){
-  if (preyEaten < 5){
+  if (preyEaten < 6){
     drawLevelRaiser();
   }
-  else if (preyEaten === 5){
+  else if (preyEaten === 6){
     drawLevelRaiser();
-    playerRadius = 25;
-    playerHealth = playerMaxHealth;
+    playerRadius = 35;
+    playerHealth = playerMaxHealth + 50;
   }
-  else if (preyEaten > 5 && preyEaten < 10){
+  else if (preyEaten > 6 && preyEaten < 12){
     drawLevelRaiser();
     drawRangerMen();
     // If player is detected it dies
     isDetected();
   }
-  else if (preyEaten === 10){
+  else if (preyEaten === 12){
     drawLevelRaiser();
-    playerRadius = 25;
-    playerHealth = playerMaxHealth;
+    playerRadius = 35;
+    playerHealth = playerMaxHealth + 50;
   }
-  else if (preyEaten > 10) {
+  else if (preyEaten > 12) {
     drawLevelRaiser();
     drawRangerMen();
     // If player is detected it dies
     isDetected();
   }
 }
+
 // showGameStart
 //
 // Display text about the game start and short instruction
 function showGameStart(){
   let gameStartText = "Welcome to chaser game!\n" +
-  " Instruction: This game has three levels.\n" +
+  "Instruction: This game has three levels.\n" +
   "In each level you face with some new options that\n" +
   "stays with you till the end of the game.\n" +
   "Level1: Keep SHIFT key to raise you speed.\n" +
-  "In order to go to the next level you must eat the prey 5 times\n" +
-  "Level2: In order to go to the next level eat the prey 5 more times\n" +
-  "Level3: In order to win eat the prey for another 5 times " ; // \n means "new line"
+  "In order to go to the next level you must eat the prey 6 times\n" +
+  "Level2: In order to go to the next level eat the prey 6 more times\n" +
+  "Level3: In order to win eat the prey for 8 times " ; // \n means "new line"
   // Display it in the centre of the screen
+  fill(0);
+  noStroke();
   textAlign(LEFT);
   text(gameStartText, 100, height / 4);
   drawStart();
+  image(rangerWomen, (rangerMenX*4), height/3+rangerMenY+50, rangerMenRadius*3, rangerMenRadius*3);
+  image(rangerMen, (rangerMenX*3)+30, height/3+rangerMenY+50, rangerMenRadius*3, rangerMenRadius*3);
+  fill("#FFE429");
+  stroke(20);
+  rectMode(LEFT);
+  rect(595, 500, 200, 50);
+  fill(0);
+  noStroke();
+  text("Ranger mans", 600, 507);
+  image(player,playerX-270, playerY+50, playerRadius * 3, playerRadius * 3);
+  image(prey, preyX-75, preyY+50, preyRadius * 3, preyRadius * 3);
+  fill("#FFE429");
+  stroke(20);
+  rectMode(LEFT);
+  rect(200, 500, 200, 50);
+  fill(0);
+  noStroke();
+  text("Prey", 140, 507);
+  text("Player", 255, 507);
 }
+
 // showGameOver()
 //
 // Display text about the game being over!
 function showGameOver() {
+  background("#E84D53");
   // Set up the font
   textSize(32);
   textAlign(CENTER, CENTER);
@@ -523,7 +562,6 @@ function winned(){
   textAlign(CENTER);
   text("Yeayyyyy! You winned", width/2, height/2);
   drawRestart();
-
 }
 
 // start()
@@ -533,7 +571,7 @@ function start(){
   if (dist(mouseX, mouseY, restartX, restartY) < restartSize){
     startIt = false;
     playerHealth=playerMaxHealth;
-    playerRadius = 25;
+    playerRadius = 30;
     preyEaten = 0;
     setupPlayer();
     setupPrey();
@@ -548,7 +586,7 @@ function restart(){
   if (dist(mouseX, mouseY, restartX, restartY) < restartSize){
     gameOver = false;
     playerHealth=playerMaxHealth;
-    playerRadius = 25;
+    playerRadius = 30;
     preyEaten = 0;
     setupPlayer();
     setupPrey();
@@ -566,7 +604,7 @@ function mousePressed(){
   else if(gameOver ===true){
     restart();
   }
-  else if (preyEaten > 15){
+  else if (preyEaten > 25){
     restart();
   }
 }
