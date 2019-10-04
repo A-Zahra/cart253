@@ -120,7 +120,7 @@ function preload(){
   ranger.Women = loadImage("assets/images/Ranger-Woman.png");
   owl.Image = loadImage("assets/images/HappyOwl.png");
   angryOwl.Image = loadImage("assets/images/AngryOwl.png");
-  funnySound = loadSound("assets/sounds/POL-follow-me-short.wav");
+  //funnySound = loadSound("assets/sounds/POL-follow-me-short.wav");
 }
 
 // setup()
