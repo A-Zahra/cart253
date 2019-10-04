@@ -41,7 +41,7 @@ let player = {
   SpeedKeeper: 0,
   // Player health
   Health: 0,
-  MaxHealth: 200,
+  MaxHealth: 255,
   // Player fill color
   Fill: 255
 };
@@ -62,14 +62,14 @@ let prey = {
   MaxSpeed: 4,
   // Prey health
   Health: 0,
-  MaxHealth: 200,
+  MaxHealth: 255,
   // Prey fill color
   Fill: 255,
   // Prey x and y times
   TX: 0,
   TY: 0,
   // Amount of health obtained per frame of "eating" (overlapping) the prey
-  eatHealth: 15,
+  eatHealth: 10,
   EatenX: 0,
   EatenY: 0,
   // Number of prey eaten during the game (the "score")
@@ -194,7 +194,7 @@ function setupLevelRaiser(){
                     "Tip: Stay away from ranger men!!\n" +
                     "Eat the prey to go to the next level";
   levelTwoMessage = "You still want more prey, run faster!!\n"+
-    "Tip: use your shift and control key at the same time!!!" +
+    "Tip: use your shift and control key at the same time!!!\n" +
     "Eat the prey to go to the next level";
 }
 
@@ -323,20 +323,20 @@ function movePlayer() {
   player.Y = player.Y + player.VY;
 
   // Wrap when player goes off the canvas
-  if (player.X < -50) {
+  if (player.X < -100) {
     // Off the left side, so add the width to reset to the right
     player.X = player.X + width;
   }
-  else if (player.X > width+50) {
+  else if (player.X > width+100) {
     // Off the right side, so subtract the width to reset to the left
     player.X = player.X - width;
   }
 
-  if (player.Y < -50) {
+  if (player.Y < -100) {
     // Off the top, so add the height to reset to the bottom
     player.Y = player.Y + height;
   }
-  else if (player.Y > height+50) {
+  else if (player.Y > height+100) {
     // Off the bottom, so subtract the height to reset to the top
     player.Y = player.Y - height;
   }
@@ -350,7 +350,7 @@ function updateHealth() {
   // Reduce player health
   player.Health = player.Health - 0.4;
   // Constrain the result to a sensible range
-  player.Health = constrain(player.Health, 0, player.MaxHealth);
+  player.Health = constrain(player.Health, 200, player.MaxHealth);
   // Check if the player is dead (0 health)
   if (player.Health === 0) {
     // If so, the game is over
@@ -367,26 +367,28 @@ function checkEating() {
   // Check if it's an overlap
   if (d < prey.Radius*2) {
     // Increase the player health
-    player.Health = player.Health + prey.eatHealth;
+    player.Health = player.Health + prey.eatHealth*2;
     // Constrain to the possible range
-    player.Health = constrain(player.Health, 0, player.MaxHealth);
+    player.Health = constrain(player.Health, 200, player.MaxHealth);
     // Reduce the prey health
     prey.Health = prey.Health - prey.eatHealth;
     // Constrain to the possible range
     prey.Health = constrain(prey.Health, 200, prey.MaxHealth);
 
-    // Check if the prey died (health 0)
+    // Check if the prey died (health 200)
     if (prey.Health === 200) {
+      // Check if it's still in the first level
       if(prey.Eaten < 6){
         // Move the "new" prey to a random position
-        prey.X = random(prey.AreaX, prey.AreaX + prey.AreaW);
-        prey.Y = random(prey.AreaY, prey.AreaY + prey.AreaH);
+        prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
+        prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
         // Give it full health
         prey.Health = prey.MaxHealth;
         // Track how many prey were eaten
         prey.Eaten = prey.Eaten + 1;
       }
       else {
+        // Check if it's no more in the first level
         // Move the "new" prey to a random position
         prey.X = random(50, width-50);
         prey.Y = random(50, height-50);
@@ -396,7 +398,7 @@ function checkEating() {
         prey.Eaten = prey.Eaten + 1;
       }
     }
-    if (player.Radius < 60){
+    if (player.Radius < 65){
       // If the player ate prey, it gets bigger by one pixel each time
       player.Radius++;
     }
@@ -405,7 +407,7 @@ function checkEating() {
 
 // movePrey()
 //
-// Moves the prey based on random velocity changes
+// Moves the prey based on the value that Perlin noise produces for velocity changes
 function movePrey() {
   // Change the prey's velocity at sequential intervals
 
@@ -413,35 +415,40 @@ function movePrey() {
     // and speed of movement
     // Use map() to convert from the 0-1 range of the noise() function
     // to the appropriate range of velocities for the prey
-    prey.VX = map(noise(prey.TX), 0, 1, -prey.MaxSpeed, prey.MaxSpeed)*1.5;
-    prey.VY = map(noise(prey.TY), 0, 1, -prey.MaxSpeed, prey.MaxSpeed)*1.5;
+    prey.VX = map(noise(prey.TX), 0, 1, -prey.MaxSpeed, prey.MaxSpeed);
+    prey.VY = map(noise(prey.TY), 0, 1, -prey.MaxSpeed, prey.MaxSpeed);
     // Update prey position based on velocity
     prey.X += prey.VX;
     prey.Y += prey.VY;
 
-    // Add to prey time value by 0.01 per second
+    // Add to prey time's value by 0.01 per frame
     prey.TX += 0.01;
     prey.TY += 0.01;
 
     // Screen wrapping
+    // if the prey goes off the screen, gives a random value to the prey position based on the prey area
+    //so that is's again inside of the screen
     if (prey.X < prey.AreaX || prey.Y < prey.AreaY) {
-      prey.X = random(prey.AreaX, prey.AreaX + prey.AreaW);
-      prey.Y = random(prey.AreaY, prey.AreaY + prey.AreaH);
+      prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
+      prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
     }
     else if (prey.X > (prey.AreaX + prey.AreaW) || prey.Y > (prey.AreaY + prey.AreaH)) {
-      prey.X = random(prey.AreaX, prey.AreaX + prey.AreaW);
-      prey.Y = random(prey.AreaY, prey.AreaY + prey.AreaH);
+      prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
+      prey.Y = round(random((prey.AreaY, prey.AreaY + prey.AreaH));
     }
 }
 
 // drawPrey()
 //
-// Draw the prey as an ellipse with alpha based on health
+// Draw the prey image with tint based on health
 function drawPrey() {
   tint(prey.Fill, prey.Health);
   image(prey.img, prey.X, prey.Y, prey.Radius*2.5, prey.Radius*2.5);
 }
 
+// drawPreyArea()
+//
+// Draw the prey area
 function drawPreyArea(){
   push();
   noFill();
@@ -449,26 +456,45 @@ function drawPreyArea(){
   rect(prey.AreaX, prey.AreaY, prey.AreaW, prey.AreaH);
   pop();
 }
+
 // drawPlayer()
 //
-// Draw the player as an ellipse with alpha value based on health
+// Draw the player image with tint value based on health
 function drawPlayer() {
   tint(player.Fill, player.Health);
   image(player.img,player.X, player.Y, player.Radius * 2.5, player.Radius * 2.5);
-
 }
 
 // drawRangerMen
 //
-// draw ranger men on the four sides of canvas
+// draw ranger men and and women on the four sides of the screen
 function drawRangerMen(){
   tint(255);
   image(ranger.Men, ranger.ManX, ranger.ManY, ranger.ManW*3, ranger.ManH*3);
-  image(ranger.Women, (ranger.ManX*3)+100, ranger.ManY, ranger.ManW*3, ranger.ManH*3);
-  image(ranger.Women, ranger.ManX, height/2+ranger.ManY, ranger.ManW*3, ranger.ManH*3);
-  image(ranger.Men, (ranger.ManX*3)+100, height/2+ranger.ManY, ranger.ManW*3, ranger.ManH*3);
-
+  image(ranger.Women, (ranger.ManX*3) + 100, ranger.ManY, ranger.ManW*3, ranger.ManH*3);
+  image(ranger.Women, ranger.ManX, height/2 + ranger.ManY, ranger.ManW*3, ranger.ManH*3);
+  image(ranger.Men, (ranger.ManX*3) + 100, height/2 + ranger.ManY, ranger.ManW*3, ranger.ManH*3);
 }
+
+// isDetected
+//
+// Check if the player and the rangerMen overlapped
+function isDetected(){
+  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ranger.ManW*2 ||
+      dist(player.X, player.Y, (ranger.ManX*3) + 100,ranger.ManY) < ranger.ManW*2 ||
+      dist(player.X, player.Y, ranger.ManX,height/2 + ranger.ManY) < ranger.ManW*2 ||
+      dist(player.X, player.Y,(ranger.ManX*3) + 100,height/2 + ranger.ManY) < ranger.ManW*2){
+      player.Health = 0;
+      if (player.Health === 0) {
+        // If so, the game is over
+        gameOver = true;
+      }
+  }
+}
+
+// drawLevelRaiser()
+//
+// Change the game messages based on the level the player is in
 function drawLevelRaiser(){
   if (prey.Eaten < 6 || prey.Eaten > 6 && prey.Eaten < 12 || prey.Eaten > 12){
     fill(0);
@@ -490,25 +516,9 @@ function drawLevelRaiser(){
   }
 }
 
-// isDetected
+// drawStart()
 //
-// Check if the player and the rangerMen overlapped
-function isDetected(){
-  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ranger.ManW*2 ||
-      dist(player.X, player.Y, (ranger.ManX*3)+100,ranger.ManY) < ranger.ManW*2 ||
-      dist(player.X, player.Y, ranger.ManX,height/2+ranger.ManY) < ranger.ManW*2 ||
-      dist(player.X, player.Y,(ranger.ManX*3)+100,height/2+ranger.ManY) < ranger.ManW*2){
-        player.Health = 0;
-        if (player.Health === 0) {
-          // If so, the game is over
-          gameOver = true;
-        }
-  }
-}
-
-// start()
-//
-// start the game()
+// Start button, character figures, Labels under the characters
 function drawStart(){
   // Draw start button
   push();
@@ -520,12 +530,12 @@ function drawStart(){
   noStroke(20);
   textAlign(CENTER);
   textSize(20);
-  text("Start", (width/2)-5,(height/2)+102);
+  text("Start", (width/2) - 5,(height/2) + 102);
   // Introduce the ranger man and Woman
   // imageMode(RIGHT);
   tint(255);
-  image(ranger.Women, 600, height/3+150, ranger.ManW*3, ranger.ManH*3);
-  image(ranger.Men, (ranger.ManX*3)+30, height/3+ranger.ManY+50, ranger.ManW*3, ranger.ManH*3);
+  image(ranger.Women, 600, height/3 + 150, ranger.ManW*3, ranger.ManH*3);
+  image(ranger.Men, (ranger.ManX*3) + 30, height/3+ranger.ManY + 50, ranger.ManW*3, ranger.ManH*3);
   // Name label
   fill("#FFE429");
   stroke(20);
@@ -537,8 +547,8 @@ function drawStart(){
   text("Ranger mans", 600, 502);
   // Introduce the prey and player
   imageMode(LEFT);
-  image(player.img,player.X-195, player.Y+50, player.Radius*3, player.Radius*3);
-  image(prey.img, prey.X-120, prey.Y+50, prey.Radius*3, prey.Radius*3);
+  image(player.img,player.X - 195, player.Y + 50, player.Radius*3, player.Radius*3);
+  image(prey.img, prey.X - 120, prey.Y + 50, prey.Radius*3, prey.Radius*3);
   // Names label
   fill("#FFE429");
   stroke(20);
@@ -552,9 +562,9 @@ function drawStart(){
   pop();
 }
 
-// Restart
+// drawRestart()
 //
-// restart button
+// Restart button
 function drawRestart(){
   fill(100,100,200);
   rectMode(CENTER);
@@ -564,12 +574,12 @@ function drawRestart(){
   noStroke(20);
   textAlign(CENTER);
   textSize(20);
-  text("Play Again!", width/2,(height/2)+100);
+  text("Play Again!", width/2, (height/2) + 100);
 }
 
-// getLevelHigher
+// getLevelHigher()
 //
-// Makeing the game harder as the player eats the prey more and more
+// Go to the next level after each six times the prey is eaten by the player
 function getLevelHigher(){
   if (prey.Eaten < 6){
     drawLevelRaiser();
@@ -598,9 +608,9 @@ function getLevelHigher(){
   }
 }
 
-// showGameStart
+// showGameStart()
 //
-// Display text about the game start and short instruction
+// Game starting screen
 function showGameStart(){
   // Set up the font
   textSize(22);
@@ -626,19 +636,9 @@ function showGameStart(){
 
 }
 
-// drawAngryOwl()
-//
-// Draw the angry owl on the gameOver SCREEN
-function drawAngryOwl(){
-let angryOwlX = width/2;
-let angryOwlY = 220;
-let angryOwlSize = 300;
-image(angryOwl.Image, angryOwlX, angryOwlY, angryOwlSize, angryOwlSize);
-}
-
 // showGameOver()
 //
-// Display text about the game being over!
+// Display the game over screen!
 function showGameOver() {
   background("#E84D53");
   // Set up the font
@@ -658,12 +658,23 @@ function showGameOver() {
   tint(255);
   drawAngryOwl();
   pop();
+  // Draw restart button
   drawRestart();
+  }
+
+  // drawAngryOwl()
+  //
+  // Draw the angry owl image on the gameOver screen
+  function drawAngryOwl(){
+  let angryOwlX = width/2;
+  let angryOwlY = 220;
+  let angryOwlSize = 300;
+  image(angryOwl.Image, angryOwlX, angryOwlY, angryOwlSize, angryOwlSize);
   }
 
 // winned()
 //
-// show the winning message
+// show the winning screen
 function winned(){
   background("#FFA447");
   fill(0);
@@ -676,23 +687,27 @@ function winned(){
   imageMode(CENTER);
   tint(255);
   image(owl.Image, width/2, 170, 250, 250);
-  happyOwl(owl.ImageX, owl.ImageY, owl.ImageSize, owl.ImageSize);
+  DrawHappyOwl(owl.ImageX, owl.ImageY, owl.ImageSize, owl.ImageSize);
   pop();
 }
 
-function happyOwl(x, y, size){
+// DrawHappyOwl
+//
+// Draw the happy owl in random positions and sizes
+function DrawHappyOwl(x, y, size){
   let owlX = x;
   let owlY = y;
   let owlSize = size;
   image(owl.Image, owlX, owlY, owlSize, owlSize);
 }
+
 // start()
 //
-// start the game
+// Start the game
 function start(){
   if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
     startIt = false;
-    player.Health=player.MaxHealth;
+    player.Health = player.MaxHealth;
     player.Radius = 30;
     prey.Eaten = 0;
     setupStart();
@@ -723,7 +738,7 @@ function restart(){
 
 // mousePressed()
 //
-// If mouse pressed run restart function
+// If mouse pressed run start or restart function based on the level the play is in
 function mousePressed(){
   if (startIt === true){
     start();
