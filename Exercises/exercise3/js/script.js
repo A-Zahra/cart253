@@ -1,12 +1,14 @@
 "use strict";
 
 /******************************************************************************
-Where's Sausage Dog?
-by Pippin Barr
+Where's the target image?
+by Zahra Ahmadi
 
 An algorithmic version of a Where's Wally/Waldo searching game where you
-need to click on the sausage dog you're searching for in amongst all
-the visual noise of other animals.
+need to click on the target you're searching for in amongst all
+the visual noise of other animals. The target image is different evey time the 
+player reload the page. Make sure the image you find, is completely the same as
+the image in the guide panel.
 
 Animal images from:
 https://creativenerds.co.uk/freebies/80-free-wildlife-icons-the-best-ever-animal-icon-set/
