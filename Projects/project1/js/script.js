@@ -117,7 +117,7 @@ function preload(){
   player.img = loadImage("assets/images/Player.png");
   prey.img = loadImage("assets/images/Prey.png");
   ranger.Men = loadImage("assets/images/Ranger-Man.png");
-  ranger.Women = loadImage("assets/images/Ranger-Woman.png");
+  ranger.Women = loadImage("assets/images/Ranger-woman.png");
   owl.Image = loadImage("assets/images/HappyOwl.png");
   angryOwl.Image = loadImage("assets/images/AngryOwl.png");
   //funnySound = loadSound("assets/sounds/POL-follow-me-short.wav");
