@@ -89,10 +89,13 @@ let counterMessage;
 let levelOneMessage;
 let levelTwoMessage;
 
-let owlImage;
-let owlImageX;
-let owlImageY;
-let owlImageSize;
+// Happy owl image when the player wins
+let owl = {
+  Image: undefined,
+  ImageX: 0,
+  ImageY: 0,
+  ImageSize: 0
+};
 
 // preload()
 //
@@ -102,7 +105,7 @@ function preload(){
   prey.img = loadImage("assets/images/Prey.png");
   ranger.Men = loadImage("assets/images/Ranger-Man.png");
   ranger.Women = loadImage("assets/images/Ranger-Woman.png");
-  owlImage = loadImage("assets/images/HappyOwl.png");
+  owl.Image = loadImage("assets/images/HappyOwl.png");
 }
 // setup()
 //
@@ -202,11 +205,11 @@ function draw() {
   if (startIt){
     showGameStart();
   }
-  else if (prey.Eaten > 25){
+  else if (prey.Eaten > 24){
     winned();
-    owlImageX = random(0, width);
-    owlImageY = random(0, height);
-    owlImageSize = random(20, 100);
+    owl.ImageX = random(0, width);
+    owl.ImageY = random(0, height);
+    owl.ImageSize = random(20, 150);
   }
   else if (!gameOver) {
     drawLevelRaiser();
@@ -255,25 +258,37 @@ function handleInput() {
     player.VY = 0;
   }
 
-  //Add the ability to sprint + Make the player lose health faster
-  if (keyIsDown(SHIFT)){
-      player.MaxSpeed = 6;
-      player.Health = player.Health - 0.7;
+  if (prey.Eaten < 6){
+    //Add the ability to sprint + Make the player lose health faster
+    if (keyIsDown(SHIFT)){
+        player.MaxSpeed = 6;
+        player.Health = player.Health - 0.7;
+    }
+    else {
+      player.MaxSpeed = 2;
+    }
   }
-  else {
-    player.MaxSpeed = 2;
+  else if (prey.Eaten >= 6){
+    //Add the ability to sprint + Make the player lose health faster
+    if (keyIsDown(SHIFT)){
+        player.MaxSpeed = 8;
+        player.Health = player.Health - 0.7;
+    }
+    else {
+      player.MaxSpeed = 2;
+    }
   }
 
   // Go faster, live longer if the Control key is pressed
-  if (prey.Eaten > 6){
+  if (prey.Eaten > 12){
     player.SpeedKeeper = player.MaxSpeed;
     if (keyIsDown(CONTROL)){
       player.MaxSpeed += player.SpeedKeeper;
       player.Health += 0.6;
-      prey.MaxSpeed = 9;
+      prey.MaxSpeed = 10;
     }
     else {
-      player.MaxSpeed = 6;
+      player.MaxSpeed = 2;
       prey.MaxSpeed = 4;
     }
   }
@@ -331,7 +346,7 @@ function checkEating() {
   // Get distance of player to prey
   let d = dist(player.X, player.Y, prey.X, prey.Y);
   // Check if it's an overlap
-  if (d < player.Radius*2) {
+  if (d < prey.Radius*2) {
     // Increase the player health
     player.Health = player.Health + prey.eatHealth;
     // Constrain to the possible range
@@ -466,10 +481,10 @@ function drawLevelRaiser(){
 //
 // Check if the player and the rangerMen overlapped
 function isDetected(){
-  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < player.Radius*2 ||
-      dist(player.X, player.Y, (ranger.ManX*3)+100,ranger.ManY) < player.Radius*2 ||
-      dist(player.X, player.Y, ranger.ManX,height/2+ranger.ManY) < player.Radius*2 ||
-      dist(player.X, player.Y,(ranger.ManX*3)+100,height/2+ranger.ManY) < player.Radius*2){
+  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ranger.ManW*2 ||
+      dist(player.X, player.Y, (ranger.ManX*3)+100,ranger.ManY) < ranger.ManW*2 ||
+      dist(player.X, player.Y, ranger.ManX,height/2+ranger.ManY) < ranger.ManW*2 ||
+      dist(player.X, player.Y,(ranger.ManX*3)+100,height/2+ranger.ManY) < ranger.ManW*2){
         player.Health = 0;
         if (player.Health === 0) {
           // If so, the game is over
@@ -628,8 +643,8 @@ function winned(){
   drawRestart();
   push();
   imageMode(CENTER);
-  image(owlImage, width/2, 170, 250, 250);
-  happyOwl(owlImageX, owlImageY, owlImageSize, owlImageSize);
+  image(owl.Image, width/2, 170, 250, 250);
+  happyOwl(owl.ImageX, owl.ImageY, owl.ImageSize, owl.ImageSize);
   pop();
 }
 
@@ -637,7 +652,7 @@ function happyOwl(x, y, size){
   let owlX = x;
   let owlY = y;
   let owlSize = size;
-  image(owlImage, owlX, owlY, owlSize, owlSize);
+  image(owl.Image, owlX, owlY, owlSize, owlSize);
 }
 // start()
 //
@@ -682,7 +697,7 @@ function mousePressed(){
   else if(gameOver ===true){
     restart();
   }
-  else if (prey.Eaten > 25){
+  else if (prey.Eaten > 24){
     restart();
   }
 }
