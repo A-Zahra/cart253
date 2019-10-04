@@ -1,18 +1,34 @@
 "use strict";
 
 /******************************************************
-
 Game - Chaser
-Pippin Barr
+Zahra Ahmadi
 
 A "simple" game of cat and mouse. The player is an owl and can move with keys,
-if they overlap the (randomly moving) prey they "eat it" by sucking out its life
-and adding it to their own. The player "dies" slowly over time so they have to keep
+if it overlaps the (randomly moving) prey it "eat it" by sucking out its life
+and adding it to its own. The player "dies" slowly over time so they have to keep
 eating to stay alive.
+This game has three levels and it gets harder as the game goes forward.
 
 Includes: Physics-based movement, keyboard controls, health/stamina,
 random movement, screen wrap.
+********************************************************
+*References*
+-------------
+Ranger man images from:
+https://dribbble.com/shots/3751110-Park-Rangers
 
+Prey image from:
+https://www.pngguru.com/free-transparent-background-png-clipart-knyhh
+
+Player image from:
+https://stickerprintingshop.com/animal-stickers/
+
+Happy owl image from:
+https://www.pinterest.com/pin/99290366760034733/
+
+Angry owl image from:
+https://www.canstockphoto.ca/illustration/wide-eyed-bird.html
 ******************************************************/
 
 // Track whether the game is over, sarted, is in the second or third level
