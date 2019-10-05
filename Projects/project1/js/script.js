@@ -57,7 +57,7 @@ let player = {
   SpeedKeeper: 0,
   // Player health
   Health: 0,
-  MaxHealth: 200,
+  MaxHealth: 180,
   // Player fill color
   Fill: 255
 };
@@ -320,7 +320,7 @@ function handleInput() {
     if (keyIsDown(CONTROL)){
       player.MaxSpeed += player.SpeedKeeper;
       player.Health += 0.6;
-      prey.MaxSpeed = 10;
+      prey.MaxSpeed = 13;
     }
     else {
       player.MaxSpeed = 2;
@@ -396,8 +396,8 @@ function checkEating() {
       // Check if it's still in the first level
       if(prey.Eaten < 6){
         // Move the "new" prey to a random position
-        prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
-        prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
+        prey.X = round(random(prey.X, prey.AreaX + prey.AreaW));
+        prey.Y = round(random(prey.Y, prey.AreaY + prey.AreaH));
         // Give it full health
         prey.Health = prey.MaxHealth;
         // Track how many prey were eaten
@@ -445,12 +445,12 @@ function movePrey() {
     // if the prey goes off the screen, gives a random value to the prey position based on the prey area
     //so that is's again inside of the screen
     if (prey.X < prey.AreaX || prey.Y < prey.AreaY) {
-      prey.X += random(prey.AreaX, prey.AreaX + prey.AreaW);
-      prey.Y += random(prey.AreaY, prey.AreaY + prey.AreaH);
+      prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
+      prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
     }
     else if (prey.X > (prey.AreaX + prey.AreaW) || prey.Y > (prey.AreaY + prey.AreaH)) {
-      prey.X -= random(prey.AreaX, prey.AreaX + prey.AreaW);
-      prey.Y -= random(prey.AreaY, prey.AreaY + prey.AreaH);
+      prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
+      prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
     }
 }
 
@@ -697,12 +697,12 @@ function winned(){
   noStroke();
   textSize(30);
   textAlign(CENTER);
-  text("Yeayyyyy! You winned", width/2, 310);
+  text("Yeayyyyy! You winned", width/2, 330);
   drawRestart();
   push();
   imageMode(CENTER);
   tint(255);
-  image(owl.Image, width/2, 170, 250, 250);
+  image(owl.Image, width/2, 200, 270, 270);
   DrawHappyOwl(owl.ImageX, owl.ImageY, owl.ImageSize, owl.ImageSize);
   pop();
 }
