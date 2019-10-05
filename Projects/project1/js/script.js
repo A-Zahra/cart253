@@ -38,7 +38,7 @@ let firtLevel = true;
 let secondLevel = true;
 
 // Restart button x & y position, width and height
-let reset ={
+let reset = {
   X: 0,
   Y: 0,
   Size: 0
@@ -99,7 +99,7 @@ Men: undefined,
 ManX: 0,
 ManY: 0,
 ManW: 0,
-ManH: 0,
+ManH: 0
 };
 
 // Background sound
