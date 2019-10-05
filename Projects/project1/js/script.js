@@ -445,12 +445,12 @@ function movePrey() {
     // if the prey goes off the screen, gives a random value to the prey position based on the prey area
     //so that is's again inside of the screen
     if (prey.X < prey.AreaX || prey.Y < prey.AreaY) {
-      prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
-      prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
+      prey.X += random(prey.AreaX, prey.AreaX + prey.AreaW);
+      prey.Y += random(prey.AreaY, prey.AreaY + prey.AreaH);
     }
     else if (prey.X > (prey.AreaX + prey.AreaW) || prey.Y > (prey.AreaY + prey.AreaH)) {
-      prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
-      prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
+      prey.X -= random(prey.AreaX, prey.AreaX + prey.AreaW);
+      prey.Y -= random(prey.AreaY, prey.AreaY + prey.AreaH);
     }
 }
 
