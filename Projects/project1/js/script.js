@@ -29,7 +29,7 @@ https://www.pinterest.com/pin/99290366760034733/
 
 Angry owl image from:
 https://www.canstockphoto.ca/illustration/wide-eyed-bird.html
-******************************************************/
+*******************************************************/
 
 // Track whether the game is over, sarted, is in the second or third level
 let gameOver = false;
@@ -450,7 +450,7 @@ function movePrey() {
     }
     else if (prey.X > (prey.AreaX + prey.AreaW) || prey.Y > (prey.AreaY + prey.AreaH)) {
       prey.X = round(random(prey.AreaX, prey.AreaX + prey.AreaW));
-      prey.Y = round(random((prey.AreaY, prey.AreaY + prey.AreaH));
+      prey.Y = round(random(prey.AreaY, prey.AreaY + prey.AreaH));
     }
 }
 
