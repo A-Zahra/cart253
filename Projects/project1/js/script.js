@@ -57,7 +57,7 @@ let player = {
   SpeedKeeper: 0,
   // Player health
   Health: 0,
-  MaxHealth: 255,
+  MaxHealth: 200,
   // Player fill color
   Fill: 255
 };
@@ -366,9 +366,9 @@ function updateHealth() {
   // Reduce player health
   player.Health = player.Health - 0.4;
   // Constrain the result to a sensible range
-  player.Health = constrain(player.Health, 200, player.MaxHealth);
+  player.Health = constrain(player.Health, 10, player.MaxHealth);
   // Check if the player is dead (0 health)
-  if (player.Health === 0) {
+  if (player.Health === 10) {
     // If so, the game is over
     gameOver = true;
   }
@@ -385,7 +385,7 @@ function checkEating() {
     // Increase the player health
     player.Health = player.Health + prey.eatHealth*2;
     // Constrain to the possible range
-    player.Health = constrain(player.Health, 200, player.MaxHealth);
+    player.Health = constrain(player.Health, 10, player.MaxHealth);
     // Reduce the prey health
     prey.Health = prey.Health - prey.eatHealth;
     // Constrain to the possible range
@@ -414,7 +414,7 @@ function checkEating() {
         prey.Eaten = prey.Eaten + 1;
       }
     }
-    if (player.Radius < 65){
+    if (player.Radius < 60){
       // If the player ate prey, it gets bigger by one pixel each time
       player.Radius++;
     }
@@ -671,7 +671,6 @@ function showGameOver() {
   text(gameOverPreyEaten, width/2, 435);
   push();
   imageMode(CENTER);
-  tint(255);
   drawAngryOwl();
   pop();
   // Draw restart button
@@ -682,10 +681,11 @@ function showGameOver() {
   //
   // Draw the angry owl image on the gameOver screen
   function drawAngryOwl(){
-  let angryOwlX = width/2;
-  let angryOwlY = 220;
-  let angryOwlSize = 300;
-  image(angryOwl.Image, angryOwl, angryOwlY, angryOwlSize, angryOwlSize);
+  angryOwl.X = width/2;
+  angryOwl.Y = 220;
+  angryOwl.Size = 300;
+  tint(255);
+  image(angryOwl.Image, angryOwl.X, angryOwl.Y, angryOwl.Size, angryOwl.Size);
   }
 
 // winned()
