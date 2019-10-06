@@ -496,10 +496,19 @@ function drawRangerMen(){
 //
 // Check if the player and the rangerMen overlapped
 function isDetected(){
-  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ranger.ManW + player.Radius ||
-      dist(player.X, player.Y, (ranger.ManX*3) + 100,ranger.ManY) < ranger.ManW + player.Radius ||
-      dist(player.X, player.Y, ranger.ManX,height/2 + ranger.ManY) < ranger.ManW + player.Radius ||
-      dist(player.X, player.Y,(ranger.ManX*3) + 100, height/2 + ranger.ManY) < ranger.ManW + player.Radius){
+  // if the distance between player and ranger man is more 110 decrease the player radius by 1
+    let distance = ranger.ManW + player.Radius;
+    let ppDistance;
+    if ( distance < 100){
+      ppDistance = distance;
+    }
+    else {
+      ppDistance = distance--;
+    }
+  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ppDistance ||
+      dist(player.X, player.Y, (ranger.ManX*3) + 100,ranger.ManY) < ppDistance ||
+      dist(player.X, player.Y, ranger.ManX,height/2 + ranger.ManY) < ppDistance ||
+      dist(player.X, player.Y,(ranger.ManX*3) + 100, height/2 + ranger.ManY) < ppDistance){
       player.Health = 0;
       if (player.Health === 0) {
         // If so, the game is over
