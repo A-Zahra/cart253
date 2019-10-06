@@ -319,7 +319,7 @@ function handleInput() {
     player.SpeedKeeper = player.MaxSpeed;
     if (keyIsDown(CONTROL)){
       player.MaxSpeed += player.SpeedKeeper;
-      player.Health += 0.3;
+      player.Health += 0.4;
       prey.MaxSpeed = 14;
     }
     else {
