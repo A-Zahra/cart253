@@ -57,7 +57,7 @@ let player = {
   SpeedKeeper: 0,
   // Player health
   Health: 0,
-  MaxHealth: 180,
+  MaxHealth: 170,
   // Player fill color
   Fill: 255
 };
@@ -319,8 +319,8 @@ function handleInput() {
     player.SpeedKeeper = player.MaxSpeed;
     if (keyIsDown(CONTROL)){
       player.MaxSpeed += player.SpeedKeeper;
-      player.Health += 0.6;
-      prey.MaxSpeed = 13;
+      player.Health += 0.3;
+      prey.MaxSpeed = 14;
     }
     else {
       player.MaxSpeed = 2;
@@ -396,8 +396,8 @@ function checkEating() {
       // Check if it's still in the first level
       if(prey.Eaten < 6){
         // Move the "new" prey to a random position
-        prey.X = round(random(prey.X, prey.AreaX + prey.AreaW));
-        prey.Y = round(random(prey.Y, prey.AreaY + prey.AreaH));
+        prey.X = random(prey.AreaX, prey.AreaX + prey.AreaW)*100;
+        prey.Y = random(prey.AreaY, prey.AreaY + prey.AreaH)*100;
         // Give it full health
         prey.Health = prey.MaxHealth;
         // Track how many prey were eaten
@@ -496,10 +496,10 @@ function drawRangerMen(){
 //
 // Check if the player and the rangerMen overlapped
 function isDetected(){
-  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ranger.ManW*2 ||
-      dist(player.X, player.Y, (ranger.ManX*3) + 100,ranger.ManY) < ranger.ManW*2 ||
-      dist(player.X, player.Y, ranger.ManX,height/2 + ranger.ManY) < ranger.ManW*2 ||
-      dist(player.X, player.Y,(ranger.ManX*3) + 100, height/2 + ranger.ManY) < ranger.ManW*2){
+  if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ranger.ManW + player.Radius ||
+      dist(player.X, player.Y, (ranger.ManX*3) + 100,ranger.ManY) < ranger.ManW + player.Radius ||
+      dist(player.X, player.Y, ranger.ManX,height/2 + ranger.ManY) < ranger.ManW + player.Radius ||
+      dist(player.X, player.Y,(ranger.ManX*3) + 100, height/2 + ranger.ManY) < ranger.ManW + player.Radius){
       player.Health = 0;
       if (player.Health === 0) {
         // If so, the game is over
@@ -629,24 +629,29 @@ function getLevelHigher(){
 // Game starting screen
 function showGameStart(){
   // Set up the font
-  textSize(22);
+  textSize(15);
   textAlign(LEFT, CENTER);
   fill(0);
   let gameStartWelcome = "Welcome to chaser game!\n";
-  let gameStartText = "Instruction: This game has three levels.\n" +
-  "In each level you face with some new options that\n" +
-  "stays with you till the end of the game.\n" +
-  "Level1: Keep SHIFT key to raise you speed.\n" +
-  "In order to go to the next level you must eat the prey 6 times\n" +
-  "Level2: Eat the prey 6 more times\n" +
-  "Level3: To win eat the prey for 8 times " ; // \n means "new line"
+  let gameStartText = "*INSTRUCTION: This game has three levels.\n" +
+  "In each level you face with some new options that stays with you till the end of the game.\n" +
+  "You have to eat the prey continuously otherwise you die. Between each level there's a short\n" +
+  "message that tells you what to do for the next one.For reading the message stays away\n" +
+  "from the prey otherwise you enter the next level without knowing what to do!!!\n" +
+  "*LEVEL1: Keep SHIFT key to raise you speed.\n" +
+  "*In order to go to the next level you must eat the prey 6 times\n" +
+  "*LEVEL2: Eat the prey 6 more times\n" +
+  "*LEVEL3: To win eat the prey for 8 times " ; // \n means "new line"
   // Display it in the centre of the screen
   push();
   textSize(25);
   textStyle(BOLD);
-  text(gameStartWelcome, 95, 110);
+  text(gameStartWelcome, 95, 100);
   pop();
-  text(gameStartText, 95, 220);
+  push();
+  textLeading(25);
+  text(gameStartText, 95, 225);
+  pop();
   // Draw start button
   drawStart();
 
@@ -697,12 +702,12 @@ function winned(){
   noStroke();
   textSize(30);
   textAlign(CENTER);
-  text("Yeayyyyy! You winned", width/2, 330);
+  text("Yeayyyyy! You winned", width/2, 335);
   drawRestart();
   push();
   imageMode(CENTER);
   tint(255);
-  image(owl.Image, width/2, 200, 270, 270);
+  image(owl.Image, width/2, 190, 270, 270);
   DrawHappyOwl(owl.ImageX, owl.ImageY, owl.ImageSize, owl.ImageSize);
   pop();
 }
