@@ -29,6 +29,12 @@ https://www.pinterest.com/pin/99290366760034733/
 
 Angry owl image from:
 https://www.canstockphoto.ca/illustration/wide-eyed-bird.html
+
+Background sound:
+https://www.playonloop.com/royalty-free-music-style/funny/
+
+Victory screen sound:
+https://www.noiseforfun.com/
 *******************************************************/
 
 // Track whether the game is over, sarted, is in the second or third level
@@ -102,8 +108,15 @@ ManW: 0,
 ManH: 0
 };
 
+// Distance between the prey and player
+let distance;
+let ppDistance;
+
 // Background sound
 let funnySound;
+// Winning sound
+let winningSound;
+let victory = false;
 
 // Counter and levels messages variable declaration
 let counterMessage;
@@ -136,7 +149,8 @@ function preload(){
   ranger.Women = loadImage("assets/images/Ranger-woman.png");
   owl.Image = loadImage("assets/images/HappyOwl.png");
   angryOwl.Image = loadImage("assets/images/AngryOwl.png");
-  //funnySound = loadSound("assets/sounds/POL-follow-me-short.wav");
+  funnySound = loadSound("assets/sounds/POL-follow-me-short.wav");
+  winningSound = loadSound("assets/sounds/NFF-ultraviolet.wav");
 }
 
 // setup()
@@ -238,7 +252,7 @@ function draw() {
   if (startIt){
     showGameStart();
   }
-  else if (prey.Eaten > 24){
+  else if (victory){
     winned();
 
     // Gives random position and size to the happy owl image in the winning screen
@@ -265,6 +279,7 @@ function draw() {
   else {
       showGameOver();
   }
+
 }
 
 // handleInput()
@@ -413,6 +428,12 @@ function checkEating() {
         // Track how many prey were eaten
         prey.Eaten = prey.Eaten + 1;
       }
+      // If prey was eaten more than 20 times, set the victory to true
+      if (prey.Eaten > 20){
+        victory = true;
+        // Play the victory sound
+        winningSound.play();
+      }
     }
     if (player.Radius < 60){
       // If the player ate prey, it gets bigger by one pixel each time
@@ -458,8 +479,10 @@ function movePrey() {
 //
 // Draw the prey image with tint based on health
 function drawPrey() {
+  push();
   tint(prey.Fill, prey.Health);
   image(prey.img, prey.X, prey.Y, prey.Radius*2.5, prey.Radius*2.5);
+  pop();
 }
 
 // drawPreyArea()
@@ -477,8 +500,10 @@ function drawPreyArea(){
 //
 // Draw the player image with tint value based on health
 function drawPlayer() {
+  push();
   tint(player.Fill, player.Health);
   image(player.img,player.X, player.Y, player.Radius * 2.5, player.Radius * 2.5);
+  pop();
 }
 
 // drawRangerMen
@@ -497,13 +522,14 @@ function drawRangerMen(){
 // Check if the player and the rangerMen overlapped
 function isDetected(){
   // if the distance between player and ranger man is more 110 decrease the player radius by 1
-    let distance = ranger.ManW + player.Radius;
-    let ppDistance;
+    distance = ranger.ManW + player.Radius;
+    ppDistance;
     if ( distance < 100){
       ppDistance = distance;
+      console.log(ppDistance);
     }
     else {
-      ppDistance = distance--;
+      ppDistance = ranger.ManW*2;
     }
   if (dist(player.X, player.Y, ranger.ManX,ranger.ManY) < ppDistance ||
       dist(player.X, player.Y, (ranger.ManX*3) + 100,ranger.ManY) < ppDistance ||
@@ -646,7 +672,7 @@ function showGameStart(){
   "In each level you face with some new options that stays with you till the end of the game.\n" +
   "You have to eat the prey continuously otherwise you die. Between each level there's a short\n" +
   "message that tells you what to do for the next one.For reading the message stays away\n" +
-  "from the prey otherwise you enter the next level without knowing what to do!!!\n" +
+  "from the prey, otherwise you enter the next level without knowing what to do!!!\n" +
   "*LEVEL1: Keep SHIFT key to raise you speed.\n" +
   "*In order to go to the next level you must eat the prey 6 times\n" +
   "*LEVEL2: Eat the prey 6 more times\n" +
@@ -689,6 +715,9 @@ function showGameOver() {
   pop();
   // Draw restart button
   drawRestart();
+  // Stop sound
+  funnySound.stop();
+
   }
 
   // drawAngryOwl()
@@ -712,7 +741,11 @@ function winned(){
   textSize(30);
   textAlign(CENTER);
   text("Yeayyyyy! You winned", width/2, 335);
+  // Draw restart button
   drawRestart();
+  // Stop sound
+  funnySound.stop();
+
   push();
   imageMode(CENTER);
   tint(255);
@@ -744,8 +777,11 @@ function start(){
     setupPlayer();
     setupPrey();
     getLevelHigher();
-    //funnySound.currentTime = 0;
-    //funnySound.play();
+    push();
+    // Loop the sound
+    funnySound.loop();
+    pop();
+
   }
 }
 
@@ -763,6 +799,7 @@ function restart(){
     setupPrey();
     setupStart();
     getLevelHigher();
+
   }
 }
 
@@ -776,7 +813,7 @@ function mousePressed(){
   else if(gameOver ===true){
     restart();
   }
-  else if (prey.Eaten > 24){
+  else if (victory){
     restart();
   }
 }
