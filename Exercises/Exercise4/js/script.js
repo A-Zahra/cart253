@@ -61,7 +61,17 @@ let rightPaddle = {
   Score: 0
 }
 
+// Right paddle score bar position, width and height, opacity
 let scoreRight = {
+  X: 0,
+  Y: 0,
+  W: 0,
+  H: 0,
+  Opacity: 0
+}
+
+// Right paddle score bar position, width and height, opacity
+let scoreLeft = {
   X: 0,
   Y: 0,
   W: 0,
@@ -116,25 +126,27 @@ function setupPaddles() {
 // Sets the starting positions and sizes of the two paddle scores
 function setupScore() {
   scoreRight.X = width/2+50;
-  scoreRight.W = width/2-70;
+  scoreRight.W = width/2-100;
   scoreRight.H = height/20;
-
+  scoreLeft.X = 50;
+  scoreLeft.W = width/2-100;
+  scoreLeft.H = height/20;
   scorePosition = [
-    {y: height- 30, a: 0},
-    {y: height- 60, a: 10},
-    {y: height- 90, a: 20},
-    {y: height- 120, a: 30},
-    {y: height- 150, a: 40},
-    {y: height- 180, a: 50},
-    {y: height- 210, a: 60},
-    {y: height- 240, a: 70},
-    {y: height- 270, a: 80},
-    {y: height- 300, a: 90},
-    {y: height- 330, a: 100},
-    {y: height- 360, a: 110},
-    {y: height- 390, a: 120},
-    {y: height- 420, a: 130},
-    {y: height- 450, a: 140}
+    {y: height - 30, a: 17},
+    {y: height - 60, a: 34},
+    {y: height - 90, a: 51},
+    {y: height - 120, a: 68},
+    {y: height - 150, a: 85},
+    {y: height - 180, a: 102},
+    {y: height - 210, a: 119},
+    {y: height - 240, a: 136},
+    {y: height - 270, a: 153},
+    {y: height - 300, a: 170},
+    {y: height - 330, a: 187},
+    {y: height - 360, a: 204},
+    {y: height - 390, a: 221},
+    {y: height - 420, a: 238},
+    {y: height - 450, a: 255}
   ];
 }
 // draw()
@@ -171,12 +183,18 @@ function draw() {
       // This is where we would likely count points, depending on which side
       // the ball went off...
     }
-    if (leftPaddle.Score < 24){
+    if (leftPaddle.Score < 16){
       for(let i = 0; i < leftPaddle.Score; i++){
-        displayScore(scorePosition[i]);
-        if( leftPaddle.score > 2){
-          displayScore(scorePosition[i++]);
-        }
+        displayRightScore(scorePosition[i]);
+      }
+    }
+    else {
+      victory = true;
+      playing = false;
+    }
+    if (rightPaddle.Score < 16 ) {
+      for(let j = 0; j < rightPaddle.Score; j++){
+        displayLeftScore(scorePosition[j]);
       }
     }
     else {
@@ -248,6 +266,7 @@ function ballIsOutOfBounds() {
   }
   else if (ball.x > width) {
     rightPaddle.Score++;
+    console.log(rightPaddle.Score);
     return true;
   }
   else {
@@ -319,19 +338,33 @@ function displayBall() {
   rect(ball.x, ball.y, ball.size, ball.size);
 }
 
-// displayScore()
+// displayRightScore()
 //
 // Display left and right paddle scores
-function displayScore(scorePositions) {
+function displayRightScore(scorePositions) {
     push();
     let paddleRY = scorePositions.y;
     let scoreOp = scorePositions.a;
-    fill(255, 255, 255, scoreOp);
+    fill(0, 255, 110, scoreOp);
     rectMode(CORNER);
     rect(scoreRight.X, paddleRY, scoreRight.W, scoreRight.H);
     pop();
   console.log(paddleRY);
 }
+
+// displayLeftScore()
+//
+// Display left and right paddle scores
+function displayLeftScore(scorePositions) {
+    push();
+    let paddleLY = scorePositions.y;
+    let scoreOp = scorePositions.a;
+    fill(132, 12, 232, scoreOp);
+    rectMode(CORNER);
+    rect(scoreLeft.X, paddleLY, scoreLeft.W, scoreLeft.H);
+    pop();
+}
+
 // resetBall()
 //
 // Sets the starting position and velocity of the ball
