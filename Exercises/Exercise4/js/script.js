@@ -83,9 +83,11 @@ let scoreLeft = {
 
 let scorePosition;
 // A variable to hold the beep sound we will play on bouncing
+let groupScore;
 let beepSFX;
 
 let victory = false;
+let scoreMatcher;
 // preload()
 //
 // Loads the beep audio for the sound of bouncing
@@ -127,29 +129,76 @@ function setupPaddles() {
 //
 // Sets the starting positions and sizes of the two paddle scores
 function setupScore() {
-  scoreRight.X = width/2+50;
-  scoreRight.W = width/2-100;
-  scoreRight.H = height/20;
-  scoreLeft.X = 50;
-  scoreLeft.W = width/2-100;
-  scoreLeft.H = height/20;
+  scoreRight.X = width / 2;
+  scoreRight.W = width / 2;
+  scoreRight.H = height / 20;
+  scoreLeft.X = width / 2;
+  scoreLeft.W = width / 2;
+  scoreLeft.H = height / 20;
   scorePosition = [
-    {y: height - 30, a: 17},
-    {y: height - 60, a: 34},
-    {y: height - 90, a: 51},
-    {y: height - 120, a: 68},
-    {y: height - 150, a: 85},
-    {y: height - 180, a: 102},
-    {y: height - 210, a: 119},
-    {y: height - 240, a: 136},
-    {y: height - 270, a: 153},
-    {y: height - 300, a: 170},
-    {y: height - 330, a: 187},
-    {y: height - 360, a: 204},
-    {y: height - 390, a: 221},
-    {y: height - 420, a: 238},
-    {y: height - 450, a: 255}
+    {
+      y: height - 30,
+      a: 45
+    },
+    {
+      y: height - 60,
+      a: 59
+    },
+    {
+      y: height - 90,
+      a: 73
+    },
+    {
+      y: height - 120,
+      a: 87
+    },
+    {
+      y: height - 150,
+      a: 101
+    },
+    {
+      y: height - 180,
+      a: 115
+    },
+    {
+      y: height - 210,
+      a: 143
+    },
+    {
+      y: height - 240,
+      a: 157
+    },
+    {
+      y: height - 270,
+      a: 171
+    },
+    {
+      y: height - 300,
+      a: 185
+    },
+    {
+      y: height - 330,
+      a: 199
+    },
+    {
+      y: height - 360,
+      a: 213
+    },
+    {
+      y: height - 390,
+      a: 227
+    },
+    {
+      y: height - 420,
+      a: 241
+    },
+    {
+      y: height - 450,
+      a: 255
+    }
   ];
+  groupScore = 0;
+  scoreMatcher = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 }
 // draw()
 //
@@ -158,12 +207,11 @@ function setupScore() {
 function draw() {
   // Fill the background
   background(bgColor);
-  if (victory){
-    displayVictoryScreen();
+  if (victory) {
+    displayVictoryScreen(rightPaddle.Victory);
     // Display the message to start the game
     displayStartMessage();
-  }
-  else if (playing) {
+  } else if (playing) {
     // If the game is in play, we handle input and move the elements around
     handleInput(leftPaddle);
     handleInput(rightPaddle);
@@ -186,31 +234,19 @@ function draw() {
       // the ball went off...
     }
 
-    // If right paddle score is less than 16, adds to the number of bars
-    if (leftPaddle.Score < 16){
-      for(let i = 0; i < leftPaddle.Score; i++){
-        displayRightScore(scorePosition[i]);
-        if (leftPaddle.Score === 15){
-          rightPaddle.Victory = true;
-        }
-      }
-    }
-    // Else if the score passed number 16, the game is over and right paddle is the winner
-    else {
-      victory = true;
-      playing = false;
-    }
-    // If left paddle score is less than 16, adds to the number of bars
-    if (rightPaddle.Score < 16 ) {
-      for(let j = 0; j < rightPaddle.Score; j++){
-        displayLeftScore(scorePosition[j]);
-        if (rightPaddle.Score === 15){
-          leftPaddle.Victory = true;
-        }
+    // If group score is less than 16 keeps adding to the number of scores and don't stop the game
+    if (groupScore < 16) {
+      for (let i = 0; i < groupScore; i++) {
+        displayScore(scoreMatcher[i], scorePosition[i]);
       }
     }
     // Else if the score passed number 16, the game is over and left paddle is the winner
     else {
+      // if left paddle score is more than the right paddle, the winner is right paddle
+      // otherwise the winner is left paddle
+      if (leftPaddle.Score > rightPaddle.Score) {
+        rightPaddle.Victory = true;
+      }
       victory = true;
       playing = false;
     }
@@ -219,8 +255,7 @@ function draw() {
     displayPaddle(leftPaddle);
     displayPaddle(rightPaddle);
     displayBall();
-  }
-  else {
+  } else {
     // Otherwise we display the message to start the game
     displayStartMessage();
   }
@@ -241,8 +276,7 @@ function handleInput(paddle) {
   else if (keyIsDown(paddle.downKey)) {
     // Move down
     paddle.vy = paddle.speed;
-  }
-  else {
+  } else {
     // Otherwise stop moving
     paddle.vy = 0;
   }
@@ -274,13 +308,17 @@ function ballIsOutOfBounds() {
   if (ball.x < 0) {
     // Add one to the score of right paddle score
     leftPaddle.Score++;
-    // scoreRight.Y -= 10;
+    // Set the scoreMatcher value to true in the index number that is given by the groupScore variable
+    scoreMatcher[groupScore] = true;
+    groupScore += 1;
     return true;
   }
   else if (ball.x > width) {
     // Add one to the score of left paddle score
     rightPaddle.Score++;
-    console.log(rightPaddle.Score);
+    // Set the scoreMatcher value to false in the index number that is given by the groupScore variable 
+    scoreMatcher[groupScore] = false;
+    groupScore += 1;
     return true;
   }
   else {
@@ -288,6 +326,9 @@ function ballIsOutOfBounds() {
   }
 }
 
+// function checkScore() {
+//
+// }
 // checkBallWallCollision()
 //
 // Check if the ball has hit the top or bottom of the canvas
@@ -352,48 +393,46 @@ function displayBall() {
   rect(ball.x, ball.y, ball.size, ball.size);
 }
 
-// displayRightScore()
-//
-// Display right paddle score
-function displayRightScore(scorePositions) {
+function displayScore(scoreMatch, scorePositions) {
+  let paddleRY = scorePositions.y;
+  let scoreOp = scorePositions.a;
+  // If scoreMatch is true, add to the right paddle score
+  if (scoreMatch) {
     push();
-    let paddleRY = scorePositions.y;
-    let scoreOp = scorePositions.a;
     fill(0, 255, 110, scoreOp);
-    rectMode(CORNER);
-    rect(scoreRight.X, paddleRY, scoreRight.W, scoreRight.H);
+    rectMode(CENTER);
+    rect(scoreLeft.X, paddleRY, scoreLeft.W, scoreLeft.H);
     pop();
-  console.log(paddleRY);
-}
-
-// displayLeftScore()
-//
-// Display left paddle score
-function displayLeftScore(scorePositions) {
+    console.log(paddleRY);
+  }
+  // otherwise add to the left paddle score
+  else {
+    console.log(scoreMatch);
     push();
-    let paddleLY = scorePositions.y;
-    let scoreOp = scorePositions.a;
     fill(132, 12, 232, scoreOp);
-    rectMode(CORNER);
-    rect(scoreLeft.X, paddleLY, scoreLeft.W, scoreLeft.H);
+    rectMode(CENTER);
+    rect(scoreLeft.X, paddleRY, scoreLeft.W, scoreLeft.H);
     pop();
+  }
+
 }
 
 // displayVictoryScreen()
 //
 // Display the victory screen once the number of bars in either side passes 16
-function displayVictoryScreen () {
-  push();
-  if(rightPaddle.Victory) {
+function displayVictoryScreen(checkVictoryCol) {
+  let checkColor = checkVictoryCol;
+  if (checkColor) {
     background(0, 255, 110);
   }
-  else if (leftPaddle.Victory) {
+  else {
     background(132, 12, 232);
   }
+  push();
   fill(0);
   textAlign(CENTER);
   textSize(30);
-  text("I knew you win!", width/2, height/3);
+  text("I knew you win!", width / 2, height / 3);
   pop();
 }
 // resetBall()
@@ -425,3 +464,96 @@ function displayStartMessage() {
 function mousePressed() {
   playing = true;
 }
+
+
+
+
+
+
+// // If right paddle score is less than 16, adds to the number of bars
+// if (leftPaddle.Score < 16){
+//   for(let i = 0; i < leftPaddle.Score; i++){
+//     displayRightScore(scorePosition[i]);
+//     if (leftPaddle.Score === 15){
+//       rightPaddle.Victory = true;
+//     }
+//   }
+// }
+// // Else if the score passed number 16, the game is over and right paddle is the winner
+// else {
+//   victory = true;
+//   playing = false;
+// }
+// // If left paddle score is less than 16, adds to the number of bars
+// if (rightPaddle.Score < 16 ) {
+//   for(let j = 0; j < rightPaddle.Score; j++){
+//     displayLeftScore(scorePosition[j]);
+//     if (rightPaddle.Score === 15){
+//       leftPaddle.Victory = true;
+//     }
+//   }
+// }
+// // Else if the score passed number 16, the game is over and left paddle is the winner
+// else {
+//   victory = true;
+//   playing = false;
+// }
+
+// if (groupScore < 16){
+//       for(let j = 0; j < groupScore; j+= rightPaddle.Score){
+//           displayLeftScore(scorePosition[j]);
+//         if (rightPaddle.Score === 15){
+//           leftPaddle.Victory = true;
+//         }
+//       }
+//       for(let j = 0; j < groupScore; j++){
+//           displayRightScore(scorePosition[leftPaddle.Score]);
+//             if (leftPaddle.Score === 15){
+//               rightPaddle.Victory = true;
+//             }
+//           }
+//         }
+//         // Else if the score passed number 16, the game is over and left paddle is the winner
+//         else {
+//           victory = true;
+//           playing = false;
+//         }
+
+// for(let j = 0; j < groupScore; j++){
+//     if (j === rightPaddle.Score){
+//
+//       // positionNumber[j] = groupScore;
+//     }
+//     else if (j === leftPaddle.Score){
+//       scoreMatcher[j] = false;
+//       // positionNumber[j] = leftPaddle.Score;
+//     }
+//   }
+
+
+
+// // displayRightScore()
+// //
+// // Display right paddle score
+// function displayRightScore(scorePositions) {
+//     push();
+//     let paddleRY = scorePositions.y;
+//     let scoreOp = scorePositions.a;
+//     fill(0, 255, 110, scoreOp);
+//     rectMode(CORNER);
+//     rect(scoreRight.X, paddleRY, scoreRight.W, scoreRight.H);
+//     pop();
+// }
+//
+// // displayLeftScore()
+// //
+// // Display left paddle score
+// function displayLeftScore(scorePositions) {
+//     push();
+//     let paddleLY = scorePositions.y;
+//     let scoreOp = scorePositions.a;
+//     fill(132, 12, 232);
+//     rectMode(CORNER);
+//     rect(scoreLeft.X, paddleLY, scoreLeft.W, scoreLeft.H);
+//     pop();
+// }
