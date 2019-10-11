@@ -73,6 +73,7 @@ let scorePosition;
 // A variable to hold the beep sound we will play on bouncing
 let beepSFX;
 
+let victory = false;
 // preload()
 //
 // Loads the beep audio for the sound of bouncing
@@ -115,16 +116,25 @@ function setupPaddles() {
 // Sets the starting positions and sizes of the two paddle scores
 function setupScore() {
   scoreRight.X = width/2+50;
-  scoreRight.Y = height-30;
   scoreRight.W = width/2-70;
-  scoreRight.H = height/25;
+  scoreRight.H = height/20;
 
   scorePosition = [
-    {y: height-30},
-    {y: height-60},
-    {y: height-90},
-    {y: height-120},
-    {y: height-150}
+    {y: height- 30, a: 0},
+    {y: height- 60, a: 10},
+    {y: height- 90, a: 20},
+    {y: height- 120, a: 30},
+    {y: height- 150, a: 40},
+    {y: height- 180, a: 50},
+    {y: height- 210, a: 60},
+    {y: height- 240, a: 70},
+    {y: height- 270, a: 80},
+    {y: height- 300, a: 90},
+    {y: height- 330, a: 100},
+    {y: height- 360, a: 110},
+    {y: height- 390, a: 120},
+    {y: height- 420, a: 130},
+    {y: height- 450, a: 140}
   ];
 }
 // draw()
@@ -134,7 +144,11 @@ function setupScore() {
 function draw() {
   // Fill the background
   background(bgColor);
-
+  if (victory){
+    background(200);
+    fill(255);
+    text("You won!", width/2, height/2);
+  }
   if (playing) {
     // If the game is in play, we handle input and move the elements around
     handleInput(leftPaddle);
@@ -157,14 +171,17 @@ function draw() {
       // This is where we would likely count points, depending on which side
       // the ball went off...
     }
-    for(let i = 0; i < leftPaddle.Score; i++){
-      displayScore(scorePosition[i]);
-      if( leftPaddle.score > 2){
-        displayScore(scorePosition[i++]);
+    if (leftPaddle.Score < 24){
+      for(let i = 0; i < leftPaddle.Score; i++){
+        displayScore(scorePosition[i]);
+        if( leftPaddle.score > 2){
+          displayScore(scorePosition[i++]);
+        }
       }
-      if( leftPaddle.score > 3){
-        displayScore(scorePosition[i++]);
-      }
+    }
+    else {
+      victory = true;
+      playing = false;
     }
 
   }
@@ -226,8 +243,7 @@ function ballIsOutOfBounds() {
   // Check for ball going off the sides
   if (ball.x < 0) {
     leftPaddle.Score++;
-    scoreRight.Opacity += 10;
-    scoreRight.Y -= 10;
+    // scoreRight.Y -= 10;
     return true;
   }
   else if (ball.x > width) {
@@ -306,19 +322,14 @@ function displayBall() {
 // displayScore()
 //
 // Display left and right paddle scores
-// function displayScore() {
-//   fill(255);
-//   textSize(20);
-//   text(`Right paddle score: ${leftPaddle.Score}`, width-230, height/10);
-//   text(`Left paddle score: ${rightPaddle.Score}`, width/11, height/10);
-// }
-
 function displayScore(scorePositions) {
+    push();
     let paddleRY = scorePositions.y;
-    fill(255);
+    let scoreOp = scorePositions.a;
+    fill(255, 255, 255, scoreOp);
     rectMode(CORNER);
     rect(scoreRight.X, paddleRY, scoreRight.W, scoreRight.H);
-
+    pop();
   console.log(paddleRY);
 }
 // resetBall()
