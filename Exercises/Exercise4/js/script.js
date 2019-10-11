@@ -42,7 +42,8 @@ let leftPaddle = {
   speed: 5,
   upKey: 87,
   downKey: 83,
-  Score: 0
+  Score: 0,
+  Victory: false
 }
 
 // RIGHT PADDLE
@@ -58,7 +59,8 @@ let rightPaddle = {
   speed: 5,
   upKey: 38,
   downKey: 40,
-  Score: 0
+  Score: 0,
+  Victory: false
 }
 
 // Right paddle score bar position, width and height, opacity
@@ -157,11 +159,11 @@ function draw() {
   // Fill the background
   background(bgColor);
   if (victory){
-    background(200);
-    fill(255);
-    text("You won!", width/2, height/2);
+    displayVictoryScreen();
+    // Display the message to start the game
+    displayStartMessage();
   }
-  if (playing) {
+  else if (playing) {
     // If the game is in play, we handle input and move the elements around
     handleInput(leftPaddle);
     handleInput(rightPaddle);
@@ -183,35 +185,45 @@ function draw() {
       // This is where we would likely count points, depending on which side
       // the ball went off...
     }
+
+    // If right paddle score is less than 16, adds to the number of bars
     if (leftPaddle.Score < 16){
       for(let i = 0; i < leftPaddle.Score; i++){
         displayRightScore(scorePosition[i]);
+        if (leftPaddle.Score === 15){
+          rightPaddle.Victory = true;
+        }
       }
     }
+    // Else if the score passed number 16, the game is over and right paddle is the winner
     else {
       victory = true;
       playing = false;
     }
+    // If left paddle score is less than 16, adds to the number of bars
     if (rightPaddle.Score < 16 ) {
       for(let j = 0; j < rightPaddle.Score; j++){
         displayLeftScore(scorePosition[j]);
+        if (rightPaddle.Score === 15){
+          leftPaddle.Victory = true;
+        }
       }
     }
+    // Else if the score passed number 16, the game is over and left paddle is the winner
     else {
       victory = true;
       playing = false;
     }
 
+    // We always display the paddles and ball so it looks like Pong!
+    displayPaddle(leftPaddle);
+    displayPaddle(rightPaddle);
+    displayBall();
   }
   else {
     // Otherwise we display the message to start the game
     displayStartMessage();
   }
-
-  // We always display the paddles and ball so it looks like Pong!
-  displayPaddle(leftPaddle);
-  displayPaddle(rightPaddle);
-  displayBall();
 }
 
 // handleInput()
@@ -260,11 +272,13 @@ function updateBall() {
 function ballIsOutOfBounds() {
   // Check for ball going off the sides
   if (ball.x < 0) {
+    // Add one to the score of right paddle score
     leftPaddle.Score++;
     // scoreRight.Y -= 10;
     return true;
   }
   else if (ball.x > width) {
+    // Add one to the score of left paddle score
     rightPaddle.Score++;
     console.log(rightPaddle.Score);
     return true;
@@ -340,7 +354,7 @@ function displayBall() {
 
 // displayRightScore()
 //
-// Display left and right paddle scores
+// Display right paddle score
 function displayRightScore(scorePositions) {
     push();
     let paddleRY = scorePositions.y;
@@ -354,7 +368,7 @@ function displayRightScore(scorePositions) {
 
 // displayLeftScore()
 //
-// Display left and right paddle scores
+// Display left paddle score
 function displayLeftScore(scorePositions) {
     push();
     let paddleLY = scorePositions.y;
@@ -365,6 +379,23 @@ function displayLeftScore(scorePositions) {
     pop();
 }
 
+// displayVictoryScreen()
+//
+// Display the victory screen once the number of bars in either side passes 16
+function displayVictoryScreen () {
+  push();
+  if(rightPaddle.Victory) {
+    background(0, 255, 110);
+  }
+  else if (leftPaddle.Victory) {
+    background(132, 12, 232);
+  }
+  fill(0);
+  textAlign(CENTER);
+  textSize(30);
+  text("I knew you win!", width/2, height/3);
+  pop();
+}
 // resetBall()
 //
 // Sets the starting position and velocity of the ball
