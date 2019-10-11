@@ -11,7 +11,7 @@
 
 // Whether the game has started
 let playing = false;
-
+let startIt = false;
 // Game colors (using hexadecimal)
 let bgColor = 0;
 let fgColor = 255;
@@ -81,6 +81,12 @@ let scoreLeft = {
   Opacity: 0
 }
 
+let reset = {
+  X: 0,
+  Y: 0,
+  Size: 0
+};
+
 let scorePosition;
 // A variable to hold the beep sound we will play on bouncing
 let groupScore;
@@ -109,6 +115,8 @@ function setup() {
 
   setupPaddles();
   setupScore();
+  setupRestart();
+  setupStart();
   resetBall();
 }
 
@@ -200,6 +208,21 @@ function setupScore() {
   groupScore = 0;
   scoreMatcher = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 }
+
+// setupRestart()
+//
+// Initialises restart button position, size
+function setupRestart(){
+  reset.X = width/2;
+  reset.Y = height/2 + 50;
+  reset.Size = 50;
+}
+function setupStart(){
+  reset.X = width/2;
+  reset.Y = height/2 + 50;
+  reset.Size = 50;
+}
+
 // draw()
 //
 // Calls the appropriate functions to run the game
@@ -207,10 +230,12 @@ function setupScore() {
 function draw() {
   // Fill the background
   background(bgColor);
-  if (victory) {
+  if (!startIt){
+    displayStart();
+  }
+  else if (victory) {
     displayVictoryScreen(rightPaddle.Victory);
     // Display the message to start the game
-    displayStartMessage();
   } else if (playing) {
     // If the game is in play, we handle input and move the elements around
     handleInput(leftPaddle);
@@ -249,15 +274,17 @@ function draw() {
       }
       victory = true;
       playing = false;
+
     }
 
     // We always display the paddles and ball so it looks like Pong!
     displayPaddle(leftPaddle);
     displayPaddle(rightPaddle);
     displayBall();
-  } else {
+  }
+  else {
     // Otherwise we display the message to start the game
-    displayStartMessage();
+    displayGameOver();
   }
 }
 
@@ -316,7 +343,7 @@ function ballIsOutOfBounds() {
   else if (ball.x > width) {
     // Add one to the score of left paddle score
     rightPaddle.Score++;
-    // Set the scoreMatcher value to false in the index number that is given by the groupScore variable 
+    // Set the scoreMatcher value to false in the index number that is given by the groupScore variable
     scoreMatcher[groupScore] = false;
     groupScore += 1;
     return true;
@@ -392,7 +419,9 @@ function displayBall() {
   // Draw the ball
   rect(ball.x, ball.y, ball.size, ball.size);
 }
-
+// displayScore();
+//
+// display the two paddle score at the middle of screen
 function displayScore(scoreMatch, scorePositions) {
   let paddleRY = scorePositions.y;
   let scoreOp = scorePositions.a;
@@ -433,8 +462,10 @@ function displayVictoryScreen(checkVictoryCol) {
   textAlign(CENTER);
   textSize(30);
   text("I knew you win!", width / 2, height / 3);
+  drawRestart();
   pop();
 }
+
 // resetBall()
 //
 // Sets the starting position and velocity of the ball
@@ -446,15 +477,71 @@ function resetBall() {
   ball.vy = ball.speed;
 }
 
-// displayStartMessage()
+// drawRestart()
 //
-// Shows a message about how to start the game
-function displayStartMessage() {
+// Restart button
+function drawStart() {
+
   push();
   textAlign(CENTER, CENTER);
   textSize(32);
-  text("CLICK TO START", width / 2, height / 2);
+  text("CLICK TO START", reset.X, reset.Y);
   pop();
+}
+
+function drawRestart() {
+
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(32);
+  text("CLICK TO START AGAIN", reset.X, reset.Y);
+  pop();
+}
+
+function displayStart() {
+  push();
+  background("#E84D53");
+  // Set up the font
+  textSize(25);
+  textAlign(CENTER, CENTER);
+  fill(0);
+  // Set up the text to display
+  let gameOverText = "GAME OVER\n"; // \n means "new line"
+  gameOverText = gameOverText + "YOU KILLED ME!!!!";
+  drawStart();
+  pop();
+}
+function displayGameOver(){
+  push();
+  background("#E84D53");
+  // Set up the font
+  textSize(25);
+  textAlign(CENTER, CENTER);
+  fill(0);
+  // Set up the text to display
+  let gameOverText = "GAME OVER\n"; // \n means "new line"
+  gameOverText = gameOverText + "YOU KILLED ME!!!!";
+  drawRestart();
+  pop();
+}
+// displayStartMessage()
+//
+// Shows a message about how to start the game
+function restart() {
+  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
+  startIt = false;
+  victory = false;
+  setupPaddles();
+  setupScore();
+  resetBall();
+  }
+}
+function start() {
+  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
+  playing = true;
+  startIt = true;
+  // victory = false;
+  }
 }
 
 // mousePressed()
@@ -462,7 +549,12 @@ function displayStartMessage() {
 // Here to require a click to start playing the game
 // Which will help us be allowed to play audio in the browser
 function mousePressed() {
-  playing = true;
+  if (!startIt){
+    start();
+  }
+  else if (victory){
+    restart();
+  }
 }
 
 
