@@ -26,7 +26,10 @@ let ball = {
   size: 20,
   vx: 0,
   vy: 0,
-  speed: 5
+  speed: 6,
+  maxSpeed: 200,
+  tx: 0,
+  ty: 0,
 }
 
 // PADDLES
@@ -94,6 +97,10 @@ let beepSFX;
 
 let victory = false;
 let scoreMatcher;
+
+let speedReset;
+let speed;
+let ballRight = false;
 // preload()
 //
 // Loads the beep audio for the sound of bouncing
@@ -114,6 +121,7 @@ function setup() {
   fill(fgColor);
 
   setupPaddles();
+  setupBall();
   setupScore();
   setupRestart();
   setupStart();
@@ -133,6 +141,10 @@ function setupPaddles() {
   rightPaddle.y = height / 2;
 }
 
+function setupBall(){
+  ball.tx = random(0, 100);
+  ball.ty = random(0, 100);
+}
 // setupScore
 //
 // Sets the starting positions and sizes of the two paddle scores
@@ -322,8 +334,16 @@ function updatePaddle(paddle) {
 // Sets the position of the ball based on its velocity
 function updateBall() {
   // Update the ball's position based on velocity
-  ball.x += ball.vx;
-  ball.y += ball.vy;
+  // If the ball went out of the left side of screen, it launchs toward the right paddle that won the most recent point.
+  // If the ball went out of the right side of screen, it launchs toward the left paddle that won the most recent point.
+  if (ballRight){
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+  }
+  else {
+    ball.x -= ball.vx;
+    ball.y -= ball.vy;
+  }
 }
 
 // ballIsOutOfBounds()
@@ -338,6 +358,7 @@ function ballIsOutOfBounds() {
     // Set the scoreMatcher value to true in the index number that is given by the groupScore variable
     scoreMatcher[groupScore] = true;
     groupScore += 1;
+    ballRight = true;
     return true;
   }
   else if (ball.x > width) {
@@ -346,6 +367,7 @@ function ballIsOutOfBounds() {
     // Set the scoreMatcher value to false in the index number that is given by the groupScore variable
     scoreMatcher[groupScore] = false;
     groupScore += 1;
+    ballRight = false;
     return true;
   }
   else {
@@ -367,8 +389,8 @@ function checkBallWallCollision() {
     // It hit so reverse velocity
     ball.vy = -ball.vy;
     // Play our bouncing sound effect by rewinding and then playing
-    beepSFX.currentTime = 0;
-    beepSFX.play();
+    // beepSFX.currentTime = 0;
+    // beepSFX.play();
   }
 }
 
@@ -398,8 +420,8 @@ function checkBallPaddleCollision(paddle) {
       // Reverse its vx so it starts travelling in the opposite direction
       ball.vx = -ball.vx;
       // Play our bouncing sound effect by rewinding and then playing
-      beepSFX.currentTime = 0;
-      beepSFX.play();
+      // beepSFX.currentTime = 0;
+      // beepSFX.play();
     }
   }
 }
@@ -466,20 +488,39 @@ function displayVictoryScreen(checkVictoryCol) {
   pop();
 }
 
+//
+// function controlBallSpeed() {
+//   if (groupScore < 7){
+//     let r = random(1, 5);
+//     ball.speed = ball.speed + r;
+//     ball.speed = constrain(ball.speed, 10, ball.maxSpeed);
+//   }
+//   else {
+//     // let r = random(5, 10);
+//     ball.speed = ball.speed + random(1, 5);;
+//     ball.speed = constrain(ball.speed, 10, ball.maxSpeed);
+//   }
+// }
+
 // resetBall()
 //
 // Sets the starting position and velocity of the ball
 function resetBall() {
+
   // Initialise the ball's position and velocity
-  ball.x = width / 2;
-  ball.y = height / 2;
+  ball.x = random(200, width-200);
+  ball.y = random(100, height-100);
+
+  //
+  ball.speed = random(4, 8);;
+  ball.speed = constrain(ball.speed, 0, ball.maxSpeed);
   ball.vx = ball.speed;
   ball.vy = ball.speed;
 }
 
-// drawRestart()
+// drawStart()
 //
-// Restart button
+// Draw start button
 function drawStart() {
 
   push();
@@ -489,6 +530,9 @@ function drawStart() {
   pop();
 }
 
+// drawRestart()
+//
+// Draw restart button
 function drawRestart() {
 
   push();
@@ -498,6 +542,9 @@ function drawRestart() {
   pop();
 }
 
+// displayStart()
+//
+// Display start screen
 function displayStart() {
   push();
   background("#E84D53");
@@ -506,11 +553,15 @@ function displayStart() {
   textAlign(CENTER, CENTER);
   fill(0);
   // Set up the text to display
-  let gameOverText = "GAME OVER\n"; // \n means "new line"
-  gameOverText = gameOverText + "YOU KILLED ME!!!!";
+  let startText = "Hello buddy!!"; // \n means "new line"
+  text(startText, width/2, height/2);
   drawStart();
   pop();
 }
+
+// displayGameOver()
+//
+// Display game over screen
 function displayGameOver(){
   push();
   background("#E84D53");
@@ -519,14 +570,27 @@ function displayGameOver(){
   textAlign(CENTER, CENTER);
   fill(0);
   // Set up the text to display
-  let gameOverText = "GAME OVER\n"; // \n means "new line"
-  gameOverText = gameOverText + "YOU KILLED ME!!!!";
-  drawRestart();
+  let gameOverText = "GAME OVER\n";
+  text(gameOverText, width/2, height/3);
   pop();
+  drawRestart();
+
 }
-// displayStartMessage()
+
+// start()
 //
-// Shows a message about how to start the game
+// Start the game
+function start() {
+  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
+  playing = true;
+  startIt = true;
+  // victory = false;
+  }
+}
+
+// restart()
+//
+// Restart the game
 function restart() {
   if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
   startIt = false;
@@ -536,13 +600,7 @@ function restart() {
   resetBall();
   }
 }
-function start() {
-  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
-  playing = true;
-  startIt = true;
-  // victory = false;
-  }
-}
+
 
 // mousePressed()
 //
