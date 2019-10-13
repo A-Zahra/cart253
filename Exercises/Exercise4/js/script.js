@@ -23,7 +23,7 @@ let fgColor = 255;
 let ball = {
   x: 0,
   y: 0,
-  size: 20,
+  size: 30,
   vx: 0,
   vy: 0,
   speed: 6,
@@ -32,6 +32,17 @@ let ball = {
   ty: 0,
 }
 
+let victoryBall = {
+  x: 0,
+  y: 0,
+  w: 0,
+  h: 0,
+  speed: 4,
+  vw: 0,
+  vh: 0,
+  yt: 0,
+  xt: 0
+}
 // PADDLES
 
 // Basic definition of a left paddle object with its key properties of
@@ -42,7 +53,7 @@ let leftPaddle = {
   w: 20,
   h: 70,
   vy: 0,
-  speed: 5,
+  speed: 6,
   upKey: 87,
   downKey: 83,
   Score: 0,
@@ -59,7 +70,7 @@ let rightPaddle = {
   w: 20,
   h: 70,
   vy: 0,
-  speed: 5,
+  speed: 6,
   upKey: 38,
   downKey: 40,
   Score: 0,
@@ -89,6 +100,25 @@ let reset = {
   Y: 0,
   Size: 0
 };
+
+let startButton = {
+  X: 0,
+  Y: 0,
+  Size: 0
+};
+
+let startBg = {
+  st: 0,
+  co: 0,
+  st2: 0,
+  co2: 0,
+  st3: 0,
+  co3: 0,
+  range: 5,
+  col: 0,
+  col2: 0,
+  col3: 0
+}
 
 let scorePosition;
 // A variable to hold the beep sound we will play on bouncing
@@ -122,6 +152,7 @@ function setup() {
 
   setupPaddles();
   setupBall();
+  setupVicBall();
   setupScore();
   setupRestart();
   setupStart();
@@ -134,16 +165,26 @@ function setup() {
 function setupPaddles() {
   // Initialise the left paddle position
   leftPaddle.x = 0 + leftPaddle.w;
-  leftPaddle.y = height / 2;
+  leftPaddle.y = height - 50;
 
   // Initialise the right paddle position
   rightPaddle.x = width - rightPaddle.w;
-  rightPaddle.y = height / 2;
+  rightPaddle.y = height - 50;
 }
 
 function setupBall(){
   ball.tx = random(0, 100);
   ball.ty = random(0, 100);
+}
+function setupVicBall() {
+  victoryBall.x = width/2;
+  victoryBall.y = height/2;
+  victoryBall.w = 100;
+  victoryBall.h = 100;
+  victoryBall.vw = victoryBall.speed;
+  victoryBall.vh = victoryBall.speed;
+  victoryBall.yt = random(0, 100);
+  victoryBall.xt = random(0, 100);
 }
 // setupScore
 //
@@ -158,62 +199,77 @@ function setupScore() {
   scorePosition = [
     {
       y: height - 30,
+      w: width - 220,
       a: 45
     },
     {
       y: height - 60,
+      w: width - 250,
       a: 59
     },
     {
       y: height - 90,
+      w: width - 280,
       a: 73
     },
     {
       y: height - 120,
+      w: width - 310,
       a: 87
     },
     {
       y: height - 150,
+      w: width - 340,
       a: 101
     },
     {
       y: height - 180,
+      w: width - 370,
       a: 115
     },
     {
       y: height - 210,
+      w: width - 400,
       a: 143
     },
     {
       y: height - 240,
+      w: width - 430,
       a: 157
     },
     {
       y: height - 270,
+      w: width - 460,
       a: 171
     },
     {
       y: height - 300,
+      w: width - 490,
       a: 185
     },
     {
       y: height - 330,
+      w: width - 520,
       a: 199
     },
     {
       y: height - 360,
+      w: width - 550,
       a: 213
     },
     {
       y: height - 390,
+      w: width - 580,
       a: 227
     },
     {
       y: height - 420,
+      w: width - 610,
       a: 241
     },
     {
       y: height - 450,
+      w: width - 640,
       a: 255
     }
   ];
@@ -226,15 +282,23 @@ function setupScore() {
 // Initialises restart button position, size
 function setupRestart(){
   reset.X = width/2;
-  reset.Y = height/2 + 50;
+  reset.Y = height/2 + 60;
   reset.Size = 50;
 }
 function setupStart(){
-  reset.X = width/2;
-  reset.Y = height/2 + 50;
-  reset.Size = 50;
+  startButton.X = width/2;
+  startButton.Y = height - 140;
+  startButton.Size = 50;
 }
 
+function setupStartBg() {
+  startBg.st = random(0, 255);
+  startBg.st2 = random(0, 255);
+  startBg.st3 = random(0, 255);
+  // startBg.col = startBg.range;
+  // startBg.col2 = startBg.range;
+  // startBg.col3 = startBg.range;
+}
 // draw()
 //
 // Calls the appropriate functions to run the game
@@ -272,7 +336,7 @@ function draw() {
     }
 
     // If group score is less than 16 keeps adding to the number of scores and don't stop the game
-    if (groupScore < 16) {
+    if (groupScore < 15) {
       for (let i = 0; i < groupScore; i++) {
         displayScore(scoreMatcher[i], scorePosition[i]);
       }
@@ -284,19 +348,27 @@ function draw() {
       if (leftPaddle.Score > rightPaddle.Score) {
         rightPaddle.Victory = true;
       }
+      else if (leftPaddle.Score < rightPaddle.Score) {
+        rightPaddle.Victory = false;
+      }
       victory = true;
       playing = false;
 
     }
 
-    // We always display the paddles and ball so it looks like Pong!
+
+    // Display the paddles and ball
+    push();
+    fill(132, 12, 232);
     displayPaddle(leftPaddle);
+    pop();
+
+    push();
+    fill(0, 255, 110);
     displayPaddle(rightPaddle);
+    pop();
+
     displayBall();
-  }
-  else {
-    // Otherwise we display the message to start the game
-    displayGameOver();
   }
 }
 
@@ -309,12 +381,22 @@ function handleInput(paddle) {
   // If the up key is being pressed
   if (keyIsDown(paddle.upKey)) {
     // Move up
-    paddle.vy = -paddle.speed;
+    if (ball.speed > 8){
+      paddle.vy = -paddle.speed-4;
+    }
+    else {
+      paddle.vy = -paddle.speed;
+    }
   }
   // Otherwise if the down key is being pressed
   else if (keyIsDown(paddle.downKey)) {
     // Move down
-    paddle.vy = paddle.speed;
+    if (ball.speed > 8) {
+      paddle.vy = paddle.speed+4;
+    }
+    else {
+      paddle.vy = paddle.speed;
+    }
   } else {
     // Otherwise stop moving
     paddle.vy = 0;
@@ -342,7 +424,7 @@ function updateBall() {
   }
   else {
     ball.x -= ball.vx;
-    ball.y -= ball.vy;
+    ball.y += ball.vy;
   }
 }
 
@@ -439,20 +521,29 @@ function displayPaddle(paddle) {
 // Draws the ball on screen as a square
 function displayBall() {
   // Draw the ball
-  rect(ball.x, ball.y, ball.size, ball.size);
+  push();
+  fill("#FFE900");
+  ellipse(ball.x, ball.y, ball.size, ball.size);
+  pop();
+
+}
+
+function displayVicBall() {
+    ellipse(victoryBall.x,victoryBall.y,victoryBall.w,victoryBall.h);
 }
 // displayScore();
 //
 // display the two paddle score at the middle of screen
 function displayScore(scoreMatch, scorePositions) {
   let paddleRY = scorePositions.y;
+  let paddleRW = scorePositions.w;
   let scoreOp = scorePositions.a;
   // If scoreMatch is true, add to the right paddle score
   if (scoreMatch) {
     push();
     fill(0, 255, 110, scoreOp);
     rectMode(CENTER);
-    rect(scoreLeft.X, paddleRY, scoreLeft.W, scoreLeft.H);
+    rect(scoreLeft.X, paddleRY, paddleRW, scoreLeft.H);
     pop();
     console.log(paddleRY);
   }
@@ -462,7 +553,7 @@ function displayScore(scoreMatch, scorePositions) {
     push();
     fill(132, 12, 232, scoreOp);
     rectMode(CENTER);
-    rect(scoreLeft.X, paddleRY, scoreLeft.W, scoreLeft.H);
+    rect(scoreLeft.X, paddleRY, paddleRW, scoreLeft.H);
     pop();
   }
 
@@ -473,34 +564,49 @@ function displayScore(scoreMatch, scorePositions) {
 // Display the victory screen once the number of bars in either side passes 16
 function displayVictoryScreen(checkVictoryCol) {
   let checkColor = checkVictoryCol;
+  background(0);
+
+  vicBallSpeed();
   if (checkColor) {
-    background(0, 255, 110);
+    push();
+    fill(0, 255, 110);
+    displayVicBall();
+    pop();
   }
   else {
-    background(132, 12, 232);
+    push();
+    fill(132, 12, 232);
+    displayVicBall();
+    pop();
   }
+
   push();
   fill(0);
   textAlign(CENTER);
-  textSize(30);
-  text("I knew you win!", width / 2, height / 3);
+  textFont("calibri");
+
+
+  if (leftPaddle.Score > rightPaddle.Score) {
+    push();
+    textSize(victoryBall.w/10);
+    text("I knew green wins!", width / 2, height / 3 + 40);
+    textSize(victoryBall.w/14);
+    text(`Your score: ${leftPaddle.Score}`, width / 2, height / 3 + 95);
+    pop();
+  }
+  else if (leftPaddle.Score < rightPaddle.Score) {
+    push();
+    textSize(victoryBall.w/10);
+    text("I knew purple wins!", width / 2, height / 3 + 40);
+    textSize(victoryBall.w/14);
+    text(`Your score: ${rightPaddle.Score}`, width / 2, height / 3 + 95);
+    pop();
+  }
   drawRestart();
+
   pop();
 }
 
-//
-// function controlBallSpeed() {
-//   if (groupScore < 7){
-//     let r = random(1, 5);
-//     ball.speed = ball.speed + r;
-//     ball.speed = constrain(ball.speed, 10, ball.maxSpeed);
-//   }
-//   else {
-//     // let r = random(5, 10);
-//     ball.speed = ball.speed + random(1, 5);;
-//     ball.speed = constrain(ball.speed, 10, ball.maxSpeed);
-//   }
-// }
 
 // resetBall()
 //
@@ -508,14 +614,39 @@ function displayVictoryScreen(checkVictoryCol) {
 function resetBall() {
 
   // Initialise the ball's position and velocity
-  ball.x = random(200, width-200);
-  ball.y = random(100, height-100);
+  ball.x = random(220, width-220);
+  ball.y = random(140, height-140);
 
   //
-  ball.speed = random(4, 8);;
+  ball.speed = random(6, 10);;
   ball.speed = constrain(ball.speed, 0, ball.maxSpeed);
   ball.vx = ball.speed;
   ball.vy = ball.speed;
+}
+
+// resetBall()
+//
+// Sets the starting position and velocity of the ball
+function vicBallSpeed() {
+
+  if ( victoryBall.w < 50 || victoryBall.w > width-50 || victoryBall.h < 50 || victoryBall.h > height-50){
+    victoryBall.xt = random(0, 100);
+  }
+  else {
+
+      // Initialise the ball's position and velocity
+      // victoryBall.speed = constrain(victoryBall.speed, 0 , victoryBall.speed*2);
+      victoryBall.vw = map(noise(victoryBall.xt), 0, 1, 2, victoryBall.speed);
+      victoryBall.vh = map(noise(victoryBall.xt), 0, 1, 2, victoryBall.speed);
+
+      victoryBall.w += victoryBall.vw;
+      victoryBall.h += victoryBall.vh;
+
+      // victoryBall.yt += 0.01;
+      victoryBall.xt += 0.0001;
+
+  }
+
 }
 
 // drawStart()
@@ -525,8 +656,8 @@ function drawStart() {
 
   push();
   textAlign(CENTER, CENTER);
-  textSize(32);
-  text("CLICK TO START", reset.X, reset.Y);
+  textSize(30);
+  text("CLICK TO START", startButton.X, startButton.Y);
   pop();
 }
 
@@ -537,7 +668,7 @@ function drawRestart() {
 
   push();
   textAlign(CENTER, CENTER);
-  textSize(32);
+  textSize(victoryBall.h/13);
   text("CLICK TO START AGAIN", reset.X, reset.Y);
   pop();
 }
@@ -546,17 +677,48 @@ function drawRestart() {
 //
 // Display start screen
 function displayStart() {
+//  startBg.range = constrain(startBg.range, 0, startBg.range*2);
+  startBg.co = map(noise(startBg.st), 0, 1, 0, startBg.range);
+  startBg.co2 = map(noise(startBg.st2), 0, 1, 0, startBg.range);
+  startBg.co3 = map(noise(startBg.st3), 0, 1, 0, startBg.range);
+
+  startBg.col += startBg.co;
+  startBg.col2 += startBg.co2;
+  startBg.col3 += startBg.co3;
+
+  startBg.st += 0.1;
+  startBg.st2 += 0.001;
+  startBg.st3 += 0.01;
+
+      push();
+      fill(startBg.col, startBg.col2, startBg.col3);
+      ellipse(width/2, height/2, width-200, width-200);
+      pop()
+
   push();
-  background("#E84D53");
+  if (startBg.col < 0) {
+    fill(255);
+  }
+  else {
+    fill(0);
+  }
   // Set up the font
-  textSize(25);
+  textSize(40);
   textAlign(CENTER, CENTER);
-  fill(0);
   // Set up the text to display
-  let startText = "Hello buddy!!"; // \n means "new line"
-  text(startText, width/2, height/2);
+  let startText = "Hi buddy!!"; // \n means "new line"
+  text(startText, width/2, height/3-10);
+  textAlign(LEFT);
+  textSize(16);
+  let startIns = "INSTRUCTION: \n1. Your score bars color is same as your paddle color.\n" +
+                "2. When you win a point, the ball launches toward your\n" + "paddle.\n" +
+                "3. The game ends when the sum of scores equals 15.\n" +
+                "4. The winner is the one who's won more points."
+  ; // \n means "new line"
+  text(startIns, width/5, height/3 + 80);
   drawStart();
   pop();
+
 }
 
 // displayGameOver()
@@ -581,9 +743,13 @@ function displayGameOver(){
 //
 // Start the game
 function start() {
-  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
+  if (dist(mouseX, mouseY, startButton.X, startButton.Y) < startButton.Size/2){
   playing = true;
   startIt = true;
+  leftPaddle.Score = 0;
+  rightPaddle.Score = 0;
+  setupVicBall();
+  setupRestart();
   // victory = false;
   }
 }
@@ -592,9 +758,11 @@ function start() {
 //
 // Restart the game
 function restart() {
-  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size){
+  if (dist(mouseX, mouseY, reset.X, reset.Y) < reset.Size/2){
   startIt = false;
   victory = false;
+  leftPaddle.Score = 0;
+  rightPaddle.Score = 0;
   setupPaddles();
   setupScore();
   resetBall();
@@ -616,7 +784,19 @@ function mousePressed() {
 }
 
 
-
+//
+// function controlBallSpeed() {
+//   if (groupScore < 7){
+//     let r = random(1, 5);
+//     ball.speed = ball.speed + r;
+//     ball.speed = constrain(ball.speed, 10, ball.maxSpeed);
+//   }
+//   else {
+//     // let r = random(5, 10);
+//     ball.speed = ball.speed + random(1, 5);;
+//     ball.speed = constrain(ball.speed, 10, ball.maxSpeed);
+//   }
+// }
 
 
 
