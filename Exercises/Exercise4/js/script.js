@@ -103,26 +103,7 @@ let rightPaddle = {
   Score: 0,
   Victory: false
 }
-// RIGHT PADDLES SCORE BAR PROPERTIES
 
-// Right paddle score bar position, width and height, opacity
-let scoreRight = {
-  X: 0,
-  Y: 0,
-  W: 0,
-  H: 0,
-  Opacity: 0
-}
-// LEFT PADDLES SCORE BAR PROPERTIES
-
-// Left paddle score bar position, width and height, opacity
-let scoreLeft = {
-  X: 0,
-  Y: 0,
-  W: 0,
-  H: 0,
-  Opacity: 0
-}
 // START BUTTON
 
 // Start button with the properties of position, size
@@ -155,7 +136,7 @@ let reset = {
   Size: 0
 };
 
-// Set score bar properties like: position, width, opacity
+// Set score bar properties like: position, width and height, opacity
 let scoreBar;
 
 // Sum of points
@@ -204,11 +185,11 @@ function setup() {
 function setupPaddles() {
   // Initialise the left paddle position
   leftPaddle.x = 0 + leftPaddle.w;
-  leftPaddle.y = height - 50;
+  leftPaddle.y = height - 70;
 
   // Initialise the right paddle position
   rightPaddle.x = width - rightPaddle.w;
-  rightPaddle.y = height - 50;
+  rightPaddle.y = height - 70;
 }
 
 // setupBall();
@@ -238,85 +219,109 @@ function setupVicBall() {
 //
 // Sets the starting positions and sizes of the two paddle score bars
 function setupScore() {
-  scoreRight.X = width / 2;
-  scoreRight.W = width / 2;
-  scoreRight.H = height / 20;
-  scoreLeft.X = width / 2;
-  scoreLeft.W = width / 2;
-  scoreLeft.H = height / 20;
   scoreBar = [{
       y: height - 30,
+      x: width / 2,
       w: width - 220,
+      h: height / 20,
       a: 45
     },
     {
       y: height - 60,
+      x: width / 2,
       w: width - 250,
+      h: height / 20,
       a: 59
     },
     {
       y: height - 90,
+      x: width / 2,
       w: width - 280,
+      h: height / 20,
       a: 73
     },
     {
       y: height - 120,
+      x: width / 2,
       w: width - 310,
+      h: height / 20,
       a: 87
     },
     {
       y: height - 150,
+      x: width / 2,
       w: width - 340,
+      h: height / 20,
       a: 101
     },
     {
       y: height - 180,
+      x: width / 2,
       w: width - 370,
+      h: height / 20,
       a: 115
     },
     {
       y: height - 210,
+      x: width / 2,
       w: width - 400,
+      h: height / 20,
       a: 143
     },
     {
       y: height - 240,
+      x: width / 2,
       w: width - 430,
+      h: height / 20,
       a: 157
     },
     {
       y: height - 270,
+      x: width / 2,
       w: width - 460,
+      h: height / 20,
       a: 171
     },
     {
       y: height - 300,
+      x: width / 2,
       w: width - 490,
+      h: height / 20,
       a: 185
     },
     {
       y: height - 330,
+      x: width / 2,
       w: width - 520,
+      h: height / 20,
       a: 199
     },
     {
       y: height - 360,
+      x: width / 2,
       w: width - 550,
+      h: height / 20,
       a: 213
     },
     {
       y: height - 390,
+      x: width / 2,
       w: width - 580,
+      h: height / 20,
       a: 227
     },
     {
       y: height - 420,
+      x: width / 2,
       w: width - 610,
+      h: height / 20,
       a: 241
     },
     {
       y: height - 450,
+      x: width / 2,
       w: width - 640,
+      h: height / 20,
       a: 255
     }
   ];
@@ -435,7 +440,7 @@ function handleInput(paddle) {
     if (ball.speed > 8) {
       paddle.vy = -paddle.speed - 4;
     } else {
-      paddle.vy = -paddle.speed;
+      paddle.vy = -paddle.speed - 2;
     }
   }
   // Otherwise if the down key is being pressed
@@ -446,7 +451,7 @@ function handleInput(paddle) {
       // otherwise keeps it's sprrd on the same level
       paddle.vy = paddle.speed + 4;
     } else {
-      paddle.vy = paddle.speed;
+      paddle.vy = paddle.speed + 2;
     }
   } else {
     // Otherwise stop moving
@@ -588,17 +593,18 @@ function displayVicBall() {
 //
 // display the two paddle score at the middle of screen
 function displayScore(scoreMatch, scorePositions) {
-  let paddleRY = scorePositions.y;
-  let paddleRW = scorePositions.w;
+  let paddleY = scorePositions.y;
+  let paddleX = scorePositions.x;
+  let paddleW = scorePositions.w;
+  let paddleH = scorePositions.h;
   let scoreOp = scorePositions.a;
   // If scoreMatch is true, add to the right paddle score
   if (scoreMatch) {
     push();
     fill(0, 255, 110, scoreOp);
     rectMode(CENTER);
-    rect(scoreLeft.X, paddleRY, paddleRW, scoreLeft.H);
+    rect(paddleX, paddleY, paddleW, paddleH);
     pop();
-    console.log(paddleRY);
   }
   // otherwise add to the left paddle score
   else {
@@ -606,7 +612,7 @@ function displayScore(scoreMatch, scorePositions) {
     push();
     fill(132, 12, 232, scoreOp);
     rectMode(CENTER);
-    rect(scoreLeft.X, paddleRY, paddleRW, scoreLeft.H);
+    rect(paddleX, paddleY, paddleW, paddleH);
     pop();
   }
 
