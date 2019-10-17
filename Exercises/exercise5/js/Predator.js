@@ -148,6 +148,7 @@ class Predator {
     fill(this.fillColor);
     this.radius = this.health;
     ellipse(this.x, this.y, this.radius * 2);
+    // Display the number of preys eaten by the player
     this.preyEatingTracker();
     pop();
   }
