@@ -13,6 +13,7 @@
 // so that players know which points belongs to them.
 // The victory screen adjusts itself to the color of winner paddle.
 // The number of points that the winner has won is also displayed on the screen.
+// The start screen also has random colors that every time the player reloads the page a new color emerges on the screen.
 // Up and down keys control the right hand paddle, W and S keys control
 // the left hand paddle
 // No external images or resources has been used to program this game
