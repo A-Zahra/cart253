@@ -68,6 +68,7 @@ class Prey {
     }
   }
 
+
   // display
   //
   // Draw the prey as an ellipse on the canvas

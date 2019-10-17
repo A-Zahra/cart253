@@ -10,7 +10,7 @@ class Predator {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(x, y, speed, fillColor, radius, up, down, left, right) {
+  constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey) {
     // Position
     this.x = x;
     this.y = y;
@@ -31,6 +31,11 @@ class Predator {
     this.downKey = down;
     this.leftKey = left;
     this.rightKey = right;
+    this.preyEaten = 0;
+    this.textX = textX;
+    this.textY = textY;
+    this.sprintKey = sprintKey;
+    this.sprint = sprint;
   }
 
   // handleInput
@@ -57,6 +62,13 @@ class Predator {
     }
     else {
       this.vy = 0;
+    }
+
+    if (keyIsDown(this.sprintKey)){
+      this.speed = this.sprint;
+    }
+    else {
+      this.speed = 5;
     }
   }
 
@@ -114,11 +126,18 @@ class Predator {
       prey.health -= this.healthGainPerEat;
       // Check if the prey died and reset it if so
       if (prey.health < 0) {
+        this.preyEaten++;
         prey.reset();
       }
     }
   }
-
+  preyEatingTracker() {
+    push();
+    fill(255);
+    textSize(30);
+    text(`Preys eaten: ${this.preyEaten}`, this.textX, this.textY);
+    pop();
+  }
   // display
   //
   // Draw the predator as an ellipse on the canvas
@@ -129,6 +148,7 @@ class Predator {
     fill(this.fillColor);
     this.radius = this.health;
     ellipse(this.x, this.y, this.radius * 2);
+    this.preyEatingTracker();
     pop();
   }
 }
