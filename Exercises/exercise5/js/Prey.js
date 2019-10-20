@@ -10,22 +10,23 @@ class Prey {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(x, y, speed, fillColor, radius) {
+  constructor(unknownPrey, color) {
     // Position
-    this.x = x;
-    this.y = y;
+    this.x = unknownPrey.x;
+    this.y = unknownPrey.y;
     // Velocity and speed
     this.vx = 0;
     this.vy = 0;
-    this.speed = speed;
+    this.speed = unknownPrey.speed;
+    this.prevSpeed = unknownPrey.speed;
     // Time properties for noise() function
     this.tx = random(0, 1000); // To make x and y noise different
     this.ty = random(0, 1000); // we use random starting values
     // Health properties
-    this.maxHealth = radius;
+    this.maxHealth = unknownPrey.radius;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     // Display properties
-    this.fillColor = fillColor;
+    this.fillColor = color;
     this.radius = this.health;
   }
 
@@ -68,6 +69,18 @@ class Prey {
     }
   }
 
+  runAway(predator) {
+    // Calculate distance from this predator to the prey
+    let d = dist(this.x, this.y, predator.x, predator.y);
+    // Check if the distance is less than their two radii (an overlap)
+    if (d < (this.radius + predator.radius)*2) {
+      this.speed++;
+
+      }
+    else {
+      this.speed = this.prevSpeed;
+    }
+  }
 
   // display
   //

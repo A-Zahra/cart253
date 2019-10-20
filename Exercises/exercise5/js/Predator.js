@@ -36,6 +36,8 @@ class Predator {
     this.textY = textY;
     this.sprintKey = sprintKey;
     this.sprint = sprint;
+    this.messageX = width/2;
+    this.messageY = height/3;
   }
 
   // handleInput
@@ -125,12 +127,33 @@ class Predator {
       // Decrease prey health by the same amount
       prey.health -= this.healthGainPerEat;
       // Check if the prey died and reset it if so
+      // add to preyEaten value
+      if (prey.health < 0) {
+        prey.reset();
+      }
+    }
+  }
+  checkEating(prey) {
+    // Calculate distance from this predator to the prey
+    let d = dist(this.x, this.y, prey.x, prey.y);
+    // Check if the distance is less than their two radii (an overlap)
+    if (d < this.radius + prey.radius) {
+      // Increase predator health and constrain it to its possible range
+      this.health += this.healthGainPerEat;
+      this.health = constrain(this.health, 0, this.maxHealth);
+      // Decrease prey health by the same amount
+      prey.health -= this.healthGainPerEat;
+      // Check if the prey died and reset it if so
+      // add to preyEaten value
       if (prey.health < 0) {
         this.preyEaten++;
         prey.reset();
       }
     }
   }
+  // preyEatingTracker()
+  //
+  // Display the number of preys eaten by the predator
   preyEatingTracker() {
     push();
     fill(255);
@@ -138,6 +161,7 @@ class Predator {
     text(`Preys eaten: ${this.preyEaten}`, this.textX, this.textY);
     pop();
   }
+
   // display
   //
   // Draw the predator as an ellipse on the canvas
