@@ -3,6 +3,9 @@
 // A class that represents a simple predator
 // controlled by the arrow keys. It can move around
 // the screen and consume Prey objects to maintain its health.
+// The number of preys that the predator eats is displayed on the screen
+// There is an alarm message to warn the predator that is not eating a real prey
+// There is a message that only appears on the screen once the predator ate a prey for the second time.
 
 class Predator {
 
@@ -32,10 +35,12 @@ class Predator {
     this.leftKey = left;
     this.rightKey = right;
     this.preyEaten = 0;
+    // The preyEating tracker position
     this.textX = textX;
     this.textY = textY;
     this.sprintKey = sprintKey;
     this.sprint = sprint;
+    // The alarm and ateMeBefore messages position
     this.messageX = width / 2;
     this.messageY = height / 3;
     this.Victory = false;
@@ -45,6 +50,7 @@ class Predator {
   //
   // Checks if an arrow key is pressed and sets the predator's
   // velocity appropriately.
+  // Add to the predator speed once the sprint key is pressed
   handleInput() {
     // Horizontal movement
     if (keyIsDown(this.leftKey)) {
@@ -62,7 +68,7 @@ class Predator {
     } else {
       this.vy = 0;
     }
-
+    // Sprint
     if (keyIsDown(this.sprintKey)) {
       this.speed = this.sprint;
     } else {
@@ -121,8 +127,7 @@ class Predator {
       // Decrease prey health by the same amount
       prey.health -= this.healthGainPerEat;
       // Check if the prey died and reset it if so
-      // add to preyEaten value
-
+      // Warn the predator that is not eating the right prey
       this.alarmMessage();
       if (prey.health < 0) {
         prey.reset();
@@ -134,8 +139,10 @@ class Predator {
   //
   // Takes a Prey object as an argument and checks if the predator
   // overlaps it. If so, reduces the prey's health and increases
-  // the predator's. If the prey dies, it gets reset.
+  // the predator's health. If the prey dies, it gets reset.
   // If the prey health decreases to 0 or less, one point is added to the number of preys eaten by the predator
+  // If the predator ate a prey once, don't count it for the second time.
+  // If the predator ate 5 preys, the game ends.
   checkEating(prey) {
     // Calculate distance from this predator to the prey
     let d = dist(this.x, this.y, prey.x, prey.y);
@@ -150,35 +157,32 @@ class Predator {
       // If prey's health is less than 0, add one to the preyEaten value and reset the prey size
       // Count the prey only once. If the same prey was eaten for the second time the point is not counted
       // and instead the message is shown.
-        if (prey.health < 0) {
-          if (prey.prey1Color) {
-            this.preyEaten++;
-            prey.prey1Color = false;
-          }
-          else if (prey.prey2Color) {
-            this.preyEaten++;
-            prey.prey2Color = false;
-          }
-          else if (prey.prey3Color) {
-            this.preyEaten++;
-            prey.prey3Color = false;
-          }
-          else if (prey.prey4Color) {
-            this.preyEaten++;
-            prey.prey4Color = false;
-          }
-          else if (prey.prey5Color) {
-            this.preyEaten++;
-            prey.prey5Color = false;
-          }
-            prey.reset();
+      if (prey.health < 0) {
+        if (prey.prey1Color) {
+          this.preyEaten++;
+          prey.prey1Color = false;
+        } else if (prey.prey2Color) {
+          this.preyEaten++;
+          prey.prey2Color = false;
+        } else if (prey.prey3Color) {
+          this.preyEaten++;
+          prey.prey3Color = false;
+        } else if (prey.prey4Color) {
+          this.preyEaten++;
+          prey.prey4Color = false;
+        } else if (prey.prey5Color) {
+          this.preyEaten++;
+          prey.prey5Color = false;
         }
-        if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color || !prey.prey5Color) {
-          this.ateMeBefore();
-        }
-        if (this.preyEaten === 5) {
-          this.victory = true;
-        }
+        prey.reset();
+      }
+      if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color || !prey.prey5Color) {
+        this.ateMeBefore();
+      }
+      // If the predator ate five preys, Show the victory screen
+      if (this.preyEaten === 5) {
+        this.victory = true;
+      }
     }
   }
 
@@ -208,14 +212,15 @@ class Predator {
   // ateMeBefore
   //
   // If the prey was eaten once before, show this message
-  ateMeBefore(){
+  ateMeBefore() {
     push();
     fill(255);
     textAlign(CENTER);
     textSize(30);
-    text("Don't cheat!! You ate me before!!", this.messageX, this.messageY*2);
+    text("Don't cheat!! You ate me before!!", this.messageX, this.messageY * 2);
     pop();
   }
+
   // display
   //
   // Draw the predator as an ellipse on the canvas
