@@ -54,19 +54,31 @@ function setup() {
   tiger = new Predator(200, 200, 5, color(200, 200, 0), 40, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width/4, height/2, 12, SHIFT);
   leopard = new Predator(width-200, 200, 5, color(200, 0, 200), 40, 87, 83, 65, 68, width/2 + 100, height/2, 12, 32);
   colors = [
+    // Rouged
     color('#FF145E'),
+    // Purple
     color('#A919FF'),
+    // Navy Blue
     color('#2542E8'),
+    // Turquoise blue
     color('#13D9E8'),
+    // Grassy green
     color('#5DE813'),
-    color('#FFE021'),
+    // Pink
+    color('#FF76CE'),
+    // Bluish Purple
     color('#77A2FF'),
+    // Carrot orange
     color('#FF7A59')
   ];
   actualPreyColor = [
+    // Orange
     color(255, 100, 10),
+    // White
     color(255, 255, 255),
-    color(255, 255, 0),
+    // dark blue
+    color(204, 10, 0),
+    // green
     color(25, 255, 130)
   ];
   sidePreys = [
@@ -92,7 +104,7 @@ function setup() {
       x: width/2,
       y: height/2,
       speed: 60,
-      radius: 70,
+      radius: 60,
     },
     {
       x: width/2,
@@ -115,8 +127,8 @@ function setup() {
     {
       x: width/2,
       y: height/2,
-      speed: 55,
-      radius: 55,
+      speed: 35,
+      radius: 35,
     }
   ];
   actualPrey = [
@@ -136,7 +148,7 @@ function setup() {
       x: width/2,
       y: height/2,
       speed: 20,
-      radius: 10,
+      radius: 40,
     },
     {
       x: width/2,
@@ -151,11 +163,6 @@ function setup() {
   for (let i = 0; i < 4; i++) {
     prey[i] = new Prey(actualPrey[i], actualPreyColor[i]);
   }
-  // antelope = new Prey(width/2, width/2, 10, color(255, 100, 10), 50);
-  // zebra = new Prey(width/2, height/2, 8, color(255, 255, 255), 60);
-  // bee = new Prey(width/2, height/2, 20, color(255, 255, 0), 10);
-  // rabbit = new Prey(width/2, height/2, 15, color(25, 255, 130), 30);
-
 }
 
 
@@ -166,64 +173,63 @@ function draw() {
   // Clear the background to black
   background(0);
 
-  // Handle input for the tiger and the leopard
-  tiger.handleInput();
-  leopard.handleInput();
+  if (tiger.victory){
+    push();
+    fill(255);
+    textSize(30);
+    text("Good job!!\nYou won the game buddy!", width/2, height/2);
+    pop();
+  }
+  else if (leopard.victory) {
+    push();
+    fill(255);
+    textSize(30);
+    text("You won!", width/2, height/2);
+    pop();
+  }
+  else {
 
-  // Move all the "animals"
-  tiger.move();
-  leopard.move();
-  for(let i = 0; i < 8; i++){
-    falsePrey[i].move();
-  }
-  for (let i = 0; i < 4; i++) {
-    prey[i].move();
-  }
-  // antelope.move();
-  // zebra.move();
-  // bee.move();
-  // rabbit.move();
 
-  // Handle the tiger eating any of the prey
-  // tiger.handleEating(antelope);
-  // tiger.handleEating(zebra);
-  // tiger.handleEating(bee);
-  // tiger.handleEating(rabbit);
-  for(let i = 0; i < 8; i++){
-    tiger.handleEating(falsePrey[i]);
+    // Handle input for the tiger and the leopard
+    tiger.handleInput();
+    leopard.handleInput();
+
+    // Move all the "animals"
+    tiger.move();
+    leopard.move();
+    for(let i = 0; i < 8; i++){
+      falsePrey[i].move();
+    }
+    for (let i = 0; i < 4; i++) {
+      prey[i].move();
+    }
+
+    // Handle the tiger eating any of the prey
+    for(let i = 0; i < 8; i++){
+      tiger.handleEating(falsePrey[i]);
+    }
+
+    // Handle the leopard eating any of the prey
+    for(let i = 0; i < 8; i++){
+      leopard.handleEating(falsePrey[i]);
+    }
+
+    // Check if the leopard or the tiger ate the real preys
+    for (let i = 0; i < 4; i++) {
+      tiger.checkEating(prey[i]);
+      leopard.checkEating(prey[i]);
+
+    }
+
+    // Display all the "animals"
+    tiger.display();
+    leopard.display();
+    for (let i = 0; i < 4; i++) {
+      prey[i].display();
+    }
+    for(let i = 0; i < 8; i++){
+      falsePrey[i].display();
+    }
   }
 
-  // Handle the leopard eating any of the prey
-  // leopard.handleEating(antelope);
-  // leopard.handleEating(zebra);
-  // leopard.handleEating(bee);
-  // leopard.handleEating(rabbit);
-  for(let i = 0; i < 8; i++){
-    leopard.handleEating(falsePrey[i]);
-  }
-
-  // Check if the leopard or the tiger ate the real preys
-  // leopard.checkEating(antelope);
-  // leopard.checkEating(zebra);
-  // leopard.checkEating(bee);
-  // leopard.checkEating(rabbit);
-  for (let i = 0; i < 4; i++) {
-    tiger.checkEating(prey[i]);
-    leopard.checkEating(prey[i]);
-
-  }
-
-  // Display all the "animals"
-  tiger.display();
-  leopard.display();
-  for (let i = 0; i < 4; i++) {
-    prey[i].display();
-  }
-  for(let i = 0; i < 8; i++){
-    falsePrey[i].display();
-  }
-  // antelope.display();
-  // zebra.display();
-  // bee.display();
-  // rabbit.display();
 }

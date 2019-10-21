@@ -36,8 +36,9 @@ class Predator {
     this.textY = textY;
     this.sprintKey = sprintKey;
     this.sprint = sprint;
-    this.messageX = width/2;
-    this.messageY = height/3;
+    this.messageX = width / 2;
+    this.messageY = height / 3;
+    this.Victory = false;
   }
 
   // handleInput
@@ -48,28 +49,23 @@ class Predator {
     // Horizontal movement
     if (keyIsDown(this.leftKey)) {
       this.vx = -this.speed;
-    }
-    else if (keyIsDown(this.rightKey)) {
+    } else if (keyIsDown(this.rightKey)) {
       this.vx = this.speed;
-    }
-    else {
+    } else {
       this.vx = 0;
     }
     // Vertical movement
     if (keyIsDown(this.upKey)) {
       this.vy = -this.speed;
-    }
-    else if (keyIsDown(this.downKey)) {
+    } else if (keyIsDown(this.downKey)) {
       this.vy = this.speed;
-    }
-    else {
+    } else {
       this.vy = 0;
     }
 
-    if (keyIsDown(this.sprintKey)){
+    if (keyIsDown(this.sprintKey)) {
       this.speed = this.sprint;
-    }
-    else {
+    } else {
       this.speed = 5;
     }
   }
@@ -98,15 +94,13 @@ class Predator {
     // Off the left or right
     if (this.x < 0) {
       this.x += width;
-    }
-    else if (this.x > width) {
+    } else if (this.x > width) {
       this.x -= width;
     }
     // Off the top or bottom
     if (this.y < 0) {
       this.y += height;
-    }
-    else if (this.y > height) {
+    } else if (this.y > height) {
       this.y -= height;
     }
   }
@@ -128,11 +122,20 @@ class Predator {
       prey.health -= this.healthGainPerEat;
       // Check if the prey died and reset it if so
       // add to preyEaten value
+
+      this.alarmMessage();
       if (prey.health < 0) {
         prey.reset();
       }
     }
   }
+
+  // checkEating
+  //
+  // Takes a Prey object as an argument and checks if the predator
+  // overlaps it. If so, reduces the prey's health and increases
+  // the predator's. If the prey dies, it gets reset.
+  // If the prey health decreases to 0 or less, one point is added to the number of preys eaten by the predator
   checkEating(prey) {
     // Calculate distance from this predator to the prey
     let d = dist(this.x, this.y, prey.x, prey.y);
@@ -143,15 +146,39 @@ class Predator {
       this.health = constrain(this.health, 0, this.maxHealth);
       // Decrease prey health by the same amount
       prey.health -= this.healthGainPerEat;
-      // Check if the prey died and reset it if so
-      // add to preyEaten value
-      if (prey.health < 0) {
-        this.preyEaten++;
-        prey.reset();
-      }
+
+      // If prey's health is less than 0, add one to the preyEaten value and reset the prey size
+      // Count the prey only once. If the same prey was eaten for the second time the point is not counted
+      // and instead the message is shown.
+        if (prey.health < 0) {
+          if (prey.prey1Color) {
+            this.preyEaten++;
+            prey.prey1Color = false;
+          }
+          else if (prey.prey2Color) {
+            this.preyEaten++;
+            prey.prey2Color = false;
+          }
+          else if (prey.prey3Color) {
+            this.preyEaten++;
+            prey.prey3Color = false;
+          }
+          else if (prey.prey4Color) {
+            this.preyEaten++;
+            prey.prey4Color = false;
+          }
+            prey.reset();
+        }
+        if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color) {
+          this.ateMeBefore();
+        }
+        if (this. preyEaten > 4) {
+          this.victory = true;
+        }
     }
   }
-  // preyEatingTracker()
+
+  // preyEatingTracker
   //
   // Display the number of preys eaten by the predator
   preyEatingTracker() {
@@ -162,6 +189,29 @@ class Predator {
     pop();
   }
 
+  // alarmMessage
+  //
+  // Display an alarm message when the predator is eating the wrong prey.
+  alarmMessage() {
+    push();
+    fill(255);
+    textAlign(CENTER);
+    textSize(30);
+    text("I am not a real prey sorry", this.messageX, this.messageY);
+    pop();
+  }
+
+  // ateMeBefore
+  //
+  // If the prey was eaten once before, show this message
+  ateMeBefore(){
+    push();
+    fill(255);
+    textAlign(CENTER);
+    textSize(30);
+    text("Don't cheat!! You ate me before!!", this.messageX, this.messageY*2);
+    pop();
+  }
   // display
   //
   // Draw the predator as an ellipse on the canvas

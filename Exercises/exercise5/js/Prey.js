@@ -28,6 +28,10 @@ class Prey {
     // Display properties
     this.fillColor = color;
     this.radius = this.health;
+    this.prey1Color = true;
+    this.prey2Color = true;
+    this.prey3Color = true;
+    this.prey4Color = true;
   }
 
   // move
@@ -66,19 +70,6 @@ class Prey {
     }
     else if (this.y > height) {
       this.y -= height;
-    }
-  }
-
-  runAway(predator) {
-    // Calculate distance from this predator to the prey
-    let d = dist(this.x, this.y, predator.x, predator.y);
-    // Check if the distance is less than their two radii (an overlap)
-    if (d < (this.radius + predator.radius)*2) {
-      this.speed++;
-
-      }
-    else {
-      this.speed = this.prevSpeed;
     }
   }
 
