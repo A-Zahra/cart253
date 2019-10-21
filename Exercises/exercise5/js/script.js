@@ -275,6 +275,9 @@ function draw() {
       tiger.checkEating(prey[i]);
       leopard.checkEating(prey[i]);
     }
+    
+    // Display samples of predators so that the player can recognizes themselves
+    displaySample();
 
     // Display all the "animals"
     tiger.display();
@@ -285,8 +288,7 @@ function draw() {
     for (let i = 0; i < 8; i++) {
       falsePrey[i].display();
     }
-    // Display samples of predators so that the player can recognizes themselves
-    displaySample();
+
   }
 }
 
