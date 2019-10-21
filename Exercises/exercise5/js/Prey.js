@@ -32,6 +32,7 @@ class Prey {
     this.prey2Color = true;
     this.prey3Color = true;
     this.prey4Color = true;
+    this.prey5Color = true;
   }
 
   // move

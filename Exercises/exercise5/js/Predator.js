@@ -167,12 +167,16 @@ class Predator {
             this.preyEaten++;
             prey.prey4Color = false;
           }
+          else if (prey.prey5Color) {
+            this.preyEaten++;
+            prey.prey5Color = false;
+          }
             prey.reset();
         }
-        if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color) {
+        if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color || !prey.prey5Color) {
           this.ateMeBefore();
         }
-        if (this. preyEaten > 4) {
+        if (this.preyEaten === 5) {
           this.victory = true;
         }
     }

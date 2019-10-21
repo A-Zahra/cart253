@@ -20,7 +20,8 @@ let prey = [
   {antelope: undefined},
   {zebra: undefined},
   {bee: undefined},
-  {rabbit: undefined}
+  {rabbit: undefined},
+  {squirrel: undefined}
 ];
 
 // The side preys variable declaration as objects of an array
@@ -76,59 +77,61 @@ function setup() {
     color(255, 100, 10),
     // White
     color(255, 255, 255),
-    // dark blue
+    // Red
     color(204, 10, 0),
     // green
-    color(25, 255, 130)
+    color(25, 255, 130),
+    // lemon-colored
+    color(255, 244, 94)
   ];
   sidePreys = [
     {
       x: width/2,
       y: height/2,
       speed: 20,
-      radius: 20
+      radius: 55
     },
     {
       x: width/2,
       y: height/2,
       speed: 50,
-      radius: 50,
+      radius: 50
     },
     {
       x: width/2,
       y: height/2,
       speed: 35,
-      radius: 35,
+      radius: 35
     },
     {
       x: width/2,
       y: height/2,
       speed: 60,
-      radius: 60,
+      radius: 60
     },
     {
       x: width/2,
       y: height/2,
       speed: 40,
-      radius: 40,
+      radius: 40
     },
     {
       x: width/2,
       y: height/2,
       speed: 45,
-      radius: 45,
+      radius: 45
     },
     {
       x: width/2,
       y: height/2,
       speed: 25,
-      radius: 25,
+      radius: 25
     },
     {
       x: width/2,
       y: height/2,
       speed: 35,
-      radius: 35,
+      radius: 35
     }
   ];
   actualPrey = [
@@ -136,35 +139,40 @@ function setup() {
       x: width/2,
       y: height/2,
       speed: 10,
-      radius: 50,
+      radius: 50
     },
     {
       x: width/2,
       y: height/2,
       speed: 8,
-      radius: 60,
+      radius: 55
     },
     {
       x: width/2,
       y: height/2,
       speed: 20,
-      radius: 40,
+      radius: 40
     },
     {
       x: width/2,
       y: height/2,
       speed: 15,
-      radius: 30,
-    }
+      radius: 30
+    },
+    {
+      x: width/2,
+      y: height/2,
+      speed: 12,
+      radius: 45
+    },
   ];
   for (let i = 0; i < 8; i++){
     falsePrey[i] = new Prey(sidePreys[i], colors[i]);
   }
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 5; i++) {
     prey[i] = new Prey(actualPrey[i], actualPreyColor[i]);
   }
 }
-
 
 // draw()
 //
@@ -176,15 +184,17 @@ function draw() {
   if (tiger.victory){
     push();
     fill(255);
+    textAlign(CENTER);
     textSize(30);
-    text("Good job!!\nYou won the game buddy!", width/2, height/2);
+    text(`Good job!!\nYou won the game buddy!\nNumber preys eaten: ${tiger.preyEaten}`, width/2, height/2);
     pop();
   }
   else if (leopard.victory) {
     push();
     fill(255);
+    textAlign(CENTER);
     textSize(30);
-    text("You won!", width/2, height/2);
+    text(`Good job!!\nYou won the game buddy!\nNumber preys eaten: ${leopard.preyEaten}`, width/2, height/2);
     pop();
   }
   else {
@@ -200,7 +210,7 @@ function draw() {
     for(let i = 0; i < 8; i++){
       falsePrey[i].move();
     }
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       prey[i].move();
     }
 
@@ -215,7 +225,7 @@ function draw() {
     }
 
     // Check if the leopard or the tiger ate the real preys
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       tiger.checkEating(prey[i]);
       leopard.checkEating(prey[i]);
 
@@ -224,7 +234,7 @@ function draw() {
     // Display all the "animals"
     tiger.display();
     leopard.display();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       prey[i].display();
     }
     for(let i = 0; i < 8; i++){
