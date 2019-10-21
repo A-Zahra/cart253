@@ -89,8 +89,8 @@ let samplePredatorR = {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   // Predator objects declaration and value assignment
-  tiger = new Predator(200, 200, 5, color(200, 200, 0), 40, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 4, height / 2, 12, SHIFT);
-  leopard = new Predator(width - 200, 200, 5, color(200, 0, 200), 40, 87, 83, 65, 68, width / 2 + 150, height / 2, 12, 32);
+  tiger = new Predator(200, 200, 5, color(200, 200, 0), 40, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 4, height / 2, 10, SHIFT);
+  leopard = new Predator(width - 200, 200, 5, color(200, 0, 200), 40, 87, 83, 65, 68, width / 2 + 150, height / 2, 10, 20);
 
   // Actual and side prey color declaration and value assignment
   actualPreyColor = [
@@ -180,7 +180,7 @@ function setup() {
     {
       x: width / 2,
       y: height / 2,
-      speed: 60,
+      speed: 45,
       radius: 60
     },
     {
@@ -275,7 +275,7 @@ function draw() {
       tiger.checkEating(prey[i]);
       leopard.checkEating(prey[i]);
     }
-    
+
     // Display samples of predators so that the player can recognizes themselves
     displaySample();
 

@@ -10,20 +10,19 @@ class Prey {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(unknownPrey, color) {
+  constructor(prey, color) {
     // Position
-    this.x = unknownPrey.x;
-    this.y = unknownPrey.y;
+    this.x = prey.x;
+    this.y = prey.y;
     // Velocity and speed
     this.vx = 0;
     this.vy = 0;
-    this.speed = unknownPrey.speed;
-    this.prevSpeed = unknownPrey.speed;
+    this.speed = prey.speed;
     // Time properties for noise() function
     this.tx = random(0, 1000); // To make x and y noise different
     this.ty = random(0, 1000); // we use random starting values
     // Health properties
-    this.maxHealth = unknownPrey.radius;
+    this.maxHealth = prey.radius;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     // Display properties
     this.fillColor = color;
@@ -98,5 +97,6 @@ class Prey {
     this.health = this.maxHealth;
     // Default radius
     this.radius = this.health;
+    this.speed = prey.speed;
   }
 }

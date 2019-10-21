@@ -129,7 +129,8 @@ class Predator {
       // Check if the prey died and reset it if so
       // Warn the predator that is not eating the right prey
       this.alarmMessage();
-      if (prey.health < 0) {
+      // Keeps the prey visible
+      if (prey.health < 4) {
         prey.reset();
       }
     }
@@ -152,12 +153,15 @@ class Predator {
       this.health += this.healthGainPerEat;
       this.health = constrain(this.health, 0, this.maxHealth);
       // Decrease prey health by the same amount
-      prey.health -= this.healthGainPerEat;
+      // Keeps the prey visible
+      if (prey.health > 4) {
+        prey.health -= this.healthGainPerEat;
+      }
 
-      // If prey's health is less than 0, add one to the preyEaten value and reset the prey size
+      // If prey's health is less than 5, add one to the preyEaten value and reset the prey size
       // Count the prey only once. If the same prey was eaten for the second time the point is not counted
       // and instead the message is shown.
-      if (prey.health < 0) {
+      if (prey.health < 5) {
         if (prey.prey1Color) {
           this.preyEaten++;
           prey.prey1Color = false;
