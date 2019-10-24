@@ -130,7 +130,7 @@ class Predator {
       // Warn the predator that is not eating the right prey
       this.alarmMessage();
       // Keeps the prey visible
-      if (prey.health < 0) {
+      if (prey.health < 4) {
         prey.reset();
         console.log(prey.reset());
       }
@@ -155,14 +155,14 @@ class Predator {
       this.health = constrain(this.health, 0, this.maxHealth);
       // Decrease prey health by the same amount
       // Keeps the prey visible
-    //  if (prey.health > 4) {
+      if (prey.health > 3) {
         prey.health -= this.healthGainPerEat;
-    //  }
+      }
 
-      // If prey's health is less than 0, add one to the preyEaten value and reset the prey size
+      // If prey's health is less than 4, add one to the preyEaten value and reset the prey size
       // Count the prey only once. If the same prey was eaten for the second time the point is not counted
       // and instead the message is shown.
-      if (prey.health < 0) {
+      if (prey.health < 4) {
         if (prey.prey1Color) {
           this.preyEaten++;
           prey.prey1Color = false;
@@ -220,9 +220,9 @@ class Predator {
   ateMeBefore() {
     push();
     fill(255);
-    textAlign(CENTER);
+    textAlign(CENTER, CENTER);
     textSize(30);
-    text("Don't cheat!! You ate me before!!", this.messageX, this.messageY * 2);
+    text("Don't cheat!! You ate me before!!", this.messageX - 35, this.textY + 200);
     pop();
   }
 

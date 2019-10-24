@@ -7,7 +7,7 @@
 // The predator loses health over time, so must keep eating to survive.
 // The predator can consume side preys to stay alive in order to be able to trap the real preys.
 // The predator can consume each prey only once.
-// The game is over once one of the predators finishes it's prey eating process sooner.
+// The game is over once one of the predators eats 5 preys.
 // The victory screen has the color of the winner predator.
 // The number of preys eaten by the predator is shown on the victory screen.
 
@@ -15,62 +15,28 @@
 let tiger;
 let leopard;
 
-// The actual preys variable declaration as objects of an array
-let prey = [{
-    antelope: undefined
-  },
-  {
-    zebra: undefined
-  },
-  {
-    bee: undefined
-  },
-  {
-    rabbit: undefined
-  },
-  {
-    squirrel: undefined
-  }
-];
+// Whether the game started
+let gameStart = false;
+// Whether the start screen is shown
+let startScreen = true;
 
-// The side preys variable declaration as objects of an array
-let falsePrey = [{
-    prey1: undefined
-  },
-  {
-    prey2: undefined
-  },
-  {
-    prey3: undefined
-  },
-  {
-    prey4: undefined
-  },
-  {
-    prey5: undefined
-  },
-  {
-    prey6: undefined
-  },
-  {
-    prey7: undefined
-  },
-  {
-    prey8: undefined
-  }
-];
+// Start button object declaration
+let rectProperties;
 
-// The actual preys properties like their position, size, speed
-let actualPrey;
+// Number of actual and side preys
+let numActualPreys = 5;
+let numSidePreys = 8;
 
-// The side preys properties like their position, size, speed
-let sidePreys;
+// Declare an array to assign actual preys to
+let actualPreys = [];
+// Declare an array to assign side preys to
+let sidePreys = [];
 
 // The side and actual prey arrays of colors
-let actualPreyColor;
-let colors;
+let preysColor;
+let sidePreysColor;
 
-// Samples predators properties like their position and size
+// Samples predators properties declaration
 let samplePredatorL = {
   x: 0,
   y: 0,
@@ -85,15 +51,15 @@ let samplePredatorR = {
 // setup()
 //
 // Sets up a canvas
-// Creates objects for the predator and three prey
+// Creates objects for the predator and preys
 function setup() {
   createCanvas(windowWidth, windowHeight);
   // Predator objects declaration and value assignment
   tiger = new Predator(200, 200, 5, color(200, 200, 0), 40, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 4, height / 2, 10, SHIFT);
   leopard = new Predator(width - 200, 200, 5, color(200, 0, 200), 40, 87, 83, 65, 68, width / 2 + 150, height / 2, 10, 20);
 
-  // Actual and side prey color declaration and value assignment
-  actualPreyColor = [
+  // Actual and side prey colors value assignment
+  preysColor = [
     // Orange
     color(255, 100, 10),
     // White
@@ -106,7 +72,7 @@ function setup() {
     color(255, 244, 94)
   ];
 
-  colors = [
+  sidePreysColor = [
     // Rouged
     color('#FF145E'),
     // Purple
@@ -125,96 +91,32 @@ function setup() {
     color('#FF7A59')
   ];
 
-  // Actual preys objects values assignment
-  actualPrey = [{
+  // Actual preys properties assignment to the objects and objects assignment to the array
+  for (let i = 0; i < numActualPreys; i++) {
+    let speed = [10, 15, 20, 25, 15];
+    let radius = [35, 45, 50, 35, 55];
+    let preysProperties = [{
       x: width / 2,
       y: height / 2,
-      speed: 10,
-      radius: 50
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 8,
-      radius: 55
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 20,
-      radius: 40
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 15,
-      radius: 30
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 12,
-      radius: 45
-    },
-  ];
-
-  // Side preys objects values assignment
-  sidePreys = [{
-      x: width / 2,
-      y: height / 2,
-      speed: 20,
-      radius: 55
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 50,
-      radius: 50
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 35,
-      radius: 35
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 45,
-      radius: 60
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 40,
-      radius: 40
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 45,
-      radius: 45
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 25,
-      radius: 25
-    },
-    {
-      x: width / 2,
-      y: height / 2,
-      speed: 35,
-      radius: 35
-    }
-  ];
-
-  // side and actual preys properties assignment to the objects inside the class
-  for (let i = 0; i < 5; i++) {
-    prey[i] = new Prey(actualPrey[i], actualPreyColor[i]);
+      speed: speed[i],
+      radius: radius[i]
+    }];
+    let newPrey = new Prey(preysProperties[0], preysColor[i]);
+    actualPreys.push(newPrey);
   }
-  for (let i = 0; i < 8; i++) {
-    falsePrey[i] = new Prey(sidePreys[i], colors[i]);
+
+  // Side preys properties assignment to the objects and objects assignment to the array
+  for (let i = 0; i < numSidePreys; i++) {
+    let speed = [10, 12, 22, 15, 17, 25, 23, 16];
+    let radius = [27, 33, 45, 48, 52, 35, 45, 57];
+    let sidePreysProperties = [{
+      x: width / 2,
+      y: height / 2,
+      speed: speed[i],
+      radius: radius[i]
+    }];
+    let newSidePrey = new Prey(sidePreysProperties[0], sidePreysColor[i]);
+    sidePreys.push(newSidePrey);
   }
 
   // Sample predators properties assignment
@@ -237,15 +139,21 @@ function draw() {
   // Clear the background to black
   background(0);
 
+  // Show start screen
+  if (startScreen) {
+    displayStart();
+  }
   // Victory screen
   // If the tiger won
-  if (tiger.victory) {
+  else if (tiger.victory) {
     tigerVictory();
   }
   // If the leopard won
   else if (leopard.victory) {
     leopardVictory();
-  } else {
+  }
+  // Start the game
+  else if (gameStart) {
     // Handle input for the tiger and the leopard
     tiger.handleInput();
     leopard.handleInput();
@@ -253,27 +161,26 @@ function draw() {
     // Move all the "animals"
     tiger.move();
     leopard.move();
-    for (let i = 0; i < 8; i++) {
-      falsePrey[i].move();
+    for (let i = 0; i < sidePreys.length; i++) {
+      sidePreys[i].move();
     }
-    for (let i = 0; i < 5; i++) {
-      prey[i].move();
+    for (let i = 0; i < actualPreys.length; i++) {
+      actualPreys[i].move();
     }
 
     // Handle the tiger eating any of the prey
-    for (let i = 0; i < 8; i++) {
-      tiger.handleEating(falsePrey[i]);
+    for (let i = 0; i < sidePreys.length; i++) {
+      tiger.handleEating(sidePreys[i]);
     }
-
     // Handle the leopard eating any of the prey
-    for (let i = 0; i < 8; i++) {
-      leopard.handleEating(falsePrey[i]);
+    for (let i = 0; i < sidePreys.length; i++) {
+      leopard.handleEating(sidePreys[i]);
     }
 
     // Check if the leopard or the tiger ate the real preys
-    for (let i = 0; i < 5; i++) {
-      tiger.checkEating(prey[i]);
-      leopard.checkEating(prey[i]);
+    for (let i = 0; i < actualPreys.length; i++) {
+      tiger.checkEating(actualPreys[i]);
+      leopard.checkEating(actualPreys[i]);
     }
 
     // Display samples of predators so that the player can recognizes themselves
@@ -282,63 +189,129 @@ function draw() {
     // Display all the "animals"
     tiger.display();
     leopard.display();
-    for (let i = 0; i < 5; i++) {
-      prey[i].display();
+    for (let i = 0; i < actualPreys.length; i++) {
+      actualPreys[i].display();
     }
-    for (let i = 0; i < 8; i++) {
-      falsePrey[i].display();
+    for (let i = 0; i < sidePreys.length; i++) {
+      sidePreys[i].display();
     }
-
   }
 }
 
-  // displaySample
-  //
-  // Draw a sample predator so that the player regonizes himself
-  function displaySample() {
-    push();
-    noStroke();
+// displayStart()
+//
+// Display start screen
+function displayStart() {
+  push();
+  let instruction = "INSTRUCTION";
+  let description = "1. Eat your five preys to win.\n2. Each prey is counted only once\n" +
+    "3. There are some side preys that are not counted.\nHowever, you can eat them to stay alive for a longer time.\n" +
+    '4. Use your sprint key to raise your speed.\nRight player sprint key is "SHIFT" and left player sprint key is "CAPS LOCK".';
+  let textX = width / 4;
+  let instY = 200;
+  let descY = 250;
+  fill(255);
+  textSize(30);
+  textAlign(LEFT);
+  text(10);
+  text(instruction, textX, instY);
+  textSize(25);
+  text(description, textX, descY);
+  pop();
+  startButton();
+}
 
-    // Tiger sample
-    fill(tiger.fillColor);
-    ellipse(samplePredatorL.x, samplePredatorL.y, samplePredatorL.radius * 2);
-    fill(0)
-    textSize(17);
-    textAlign(CENTER);
-    text("TIGER", samplePredatorL.x, samplePredatorL.y + 5);
-
-    // leopard sample
-    fill(leopard.fillColor);
-    ellipse(samplePredatorR.x, samplePredatorR.y, samplePredatorR.radius * 2);
-    fill(0)
-    textSize(15);
-    textAlign(CENTER);
-    text("LEOPARD", samplePredatorR.x, samplePredatorR.y + 5);
-    pop();
+// startButton()
+//
+// Draw start button
+function startButton() {
+  rectProperties = {
+    x: width / 2,
+    y: height / 2 + 150,
+    w: 150,
+    h: 80,
+    fillColor: color(35, 145, 200)
   }
+  push();
+  noStroke();
+  rectMode(CENTER);
+  fill(rectProperties.fillColor);
+  rect(rectProperties.x, rectProperties.y, rectProperties.w, rectProperties.h);
+  fill(255);
+  textSize(30);
+  textAlign(CENTER);
+  text("START", rectProperties.x, rectProperties.y + 10);
+  pop();
+}
 
-  // tigerVictory
-  //
-  // Tiger victory screen
-  function tigerVictory() {
-    push();
-    background(tiger.fillColor);
-    fill(0);
-    textAlign(CENTER);
-    textSize(30);
-    text(`Good job Tiger!!\nYou won the game buddy!\nNumber of preys eaten: ${tiger.preyEaten}`, width / 2, height / 2);
-    pop();
-  }
+// displaySample
+//
+// Draw a sample predator so that the player regonizes himself
+function displaySample() {
+  push();
+  noStroke();
 
-  // leopardVictory()
-  //
-  // Leopard victory screen
-  function leopardVictory() {
-    push();
-    background(leopard.fillColor);
-    fill(0);
-    textAlign(CENTER);
-    textSize(30);
-    text(`Good job Leopard!!\nYou won the game buddy!\nNumber of preys eaten: ${leopard.preyEaten}`, width / 2, height / 2);
-    pop();
+  // Tiger sample
+  fill(tiger.fillColor);
+  ellipse(samplePredatorL.x, samplePredatorL.y, samplePredatorL.radius * 2);
+  fill(0)
+  textSize(17);
+  textAlign(CENTER, CENTER);
+  text("TIGER", samplePredatorL.x, samplePredatorL.y + 5);
+
+  // leopard sample
+  fill(leopard.fillColor);
+  ellipse(samplePredatorR.x, samplePredatorR.y, samplePredatorR.radius * 2);
+  fill(0)
+  textSize(15);
+  textAlign(CENTER, CENTER);
+  text("LEOPARD", samplePredatorR.x, samplePredatorR.y + 5);
+  pop();
+}
+
+// tigerVictory
+//
+// Tiger victory screen
+function tigerVictory() {
+  push();
+  background(tiger.fillColor);
+  fill(0);
+  textAlign(CENTER);
+  textSize(30);
+  text(`Good job Tiger!!\nYou won the game buddy!\nNumber of preys eaten: ${tiger.preyEaten}`, width / 2, height / 2);
+  pop();
+}
+
+// leopardVictory()
+//
+// Leopard victory screen
+function leopardVictory() {
+  push();
+  background(leopard.fillColor);
+  fill(0);
+  textAlign(CENTER);
+  textSize(30);
+  text(`Good job Leopard!!\nYou won the game buddy!\nNumber of preys eaten: ${leopard.preyEaten}`, width / 2, height / 2);
+  pop();
+}
+
+// start()
+//
+// Start the game
+function start() {
+  // If the distance between mouse position and
+  // the start button was less than the button size reset the following values.
+  if (dist(mouseX, mouseY, rectProperties.x, rectProperties.y) < rectProperties.w) {
+    gameStart = true;
+    startScreen = false;
   }
+}
+
+// mousePressed()
+//
+// Here to require a click to start playing the game
+function mousePressed() {
+  if (!gameStart) {
+    start();
+  }
+}

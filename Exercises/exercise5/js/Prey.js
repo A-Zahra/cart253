@@ -98,6 +98,6 @@ class Prey {
     // Default radius
     this.radius = this.health;
     // Random position
-    this.speed = round(random(20,50));
+    this.speed = floor(random(15, 20));
   }
 }
