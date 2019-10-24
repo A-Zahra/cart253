@@ -97,6 +97,7 @@ class Prey {
     this.health = this.maxHealth;
     // Default radius
     this.radius = this.health;
-    this.speed = prey.speed;
+    // Random position
+    this.speed = round(random(20,50));
   }
 }
