@@ -109,3 +109,4 @@ class Prey {
       this.radius = this.health;
       // Erasing the extra ending brace.
   }
+}
