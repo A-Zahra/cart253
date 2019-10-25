@@ -48,7 +48,8 @@ function draw() {
   tiger.move();
   antelope.move();
   zebra.move();
-
+  // Lacking the bee move method. I added the bee move method, so now it doesn't stand still.
+  bee.move();
   // Handle the tiger eating any of the prey
   tiger.handleEating(antelope);
   tiger.handleEating(zebra);
