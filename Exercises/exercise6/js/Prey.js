@@ -55,57 +55,55 @@ class Prey {
     // Handle wrapping
     // Wrong dictation of the word "wrapping". I modified it.
     this.handleWrapping();
-  // The move method is missing the ending brace. I added one.
+    // The move method is missing the ending brace. I added one.
   }
 
-    // handleWrapping
-    //
-    // Checks if the prey has gone off the canvas and
-    // wraps it to the other side if so
-    handleWrapping() {
-      // Off the left or right
-      // Using wrong sign. It should be if this.x < 0 in order for making the method works. So, I replaced ">" with "<".
-      if (this.x < 0) {
-        this.x += width;
-      }
-      else if (this.x > width) {
-        this.x -= width;
-      }
-      // Off the top or bottom
-      if (this.y < 0) {
-        this.y += height;
-      }
-      else if (this.y > height) {
-        // Missing the letter "e". I added one.
-        this.y -= height;
-      }
+  // handleWrapping
+  //
+  // Checks if the prey has gone off the canvas and
+  // wraps it to the other side if so
+  handleWrapping() {
+    // Off the left or right
+    // Using wrong sign. It should be if this.x < 0 in order for making the method works. So, I replaced ">" with "<".
+    if (this.x < 0) {
+      this.x += width;
+    } else if (this.x > width) {
+      this.x -= width;
     }
-
-    // display
-    //
-    // Draw the prey as an ellipse on the canvas
-    // with a radius the same size as its current health.
-    display() {
-      push();
-      noStroke();
-      fill(this.fillColor);
-      this.radius = this.health;
-      // Wrong way of multiplicatin. I replaced the string with a number.
-      ellipse(this.x, this.y, this.radius * 2);
-      pop();
+    // Off the top or bottom
+    if (this.y < 0) {
+      this.y += height;
+    } else if (this.y > height) {
+      // Missing the letter "e". I added one.
+      this.y -= height;
     }
+  }
 
-    // reset
-    //
-    // Set the position to a random location and reset health
-    // and radius back to default
-    reset() {
-      // Random position
-      this.x = random(0, width);
-      this.y = random(0, height);
-      // Default health
-      this.health = this.maxHealth;
-      // Default radius
-      this.radius = this.health;
+  // display
+  //
+  // Draw the prey as an ellipse on the canvas
+  // with a radius the same size as its current health.
+  display() {
+    push();
+    noStroke();
+    fill(this.fillColor);
+    this.radius = this.health;
+    // Wrong way of multiplicatin. I replaced the string with a number.
+    ellipse(this.x, this.y, this.radius * 2);
+    pop();
+  }
+
+  // reset
+  //
+  // Set the position to a random location and reset health
+  // and radius back to default
+  reset() {
+    // Random position
+    this.x = random(0, width);
+    this.y = random(0, height);
+    // Default health
+    this.health = this.maxHealth;
+    // Default radius
+    this.radius = this.health;
   }
 }
