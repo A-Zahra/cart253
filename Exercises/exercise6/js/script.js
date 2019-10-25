@@ -50,6 +50,7 @@ function draw() {
   zebra.move();
   // Lacking the bee move method. I added the bee move method, so now it doesn't stand still.
   bee.move();
+
   // Handle the tiger eating any of the prey
   tiger.handleEating(antelope);
   tiger.handleEating(zebra);
@@ -59,7 +60,8 @@ function draw() {
   tiger.display();
   // Again missing letter "e". Added letter 'e' at the end of the word 'antelop'.
   antelope.display();
-  zebra.disploy();
+  // Wrong dictation of display. I replaced "o" with "a".
+  zebra.display();
   // Missing the two "ee" letters. I added them.
   bee.display();
 }
