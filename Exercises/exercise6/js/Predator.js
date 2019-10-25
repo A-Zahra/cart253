@@ -127,7 +127,8 @@ class Predator {
       prey.health -= this.healthGainPerEat;
       // Check if the prey died and reset it if so
       if (prey.health < 0) {
-        prey.rest();
+        // I added an "e" letter that the method was missing. I
+        prey.reset();
       }
     }
   }
