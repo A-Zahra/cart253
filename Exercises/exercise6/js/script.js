@@ -1,7 +1,7 @@
 "use strict";
 
 // Predator-Prey Simulation
-// by Pippin Barr
+// by Zahra Ahmadi
 //
 // Creates a predator and three prey (of different sizes and speeds)
 // The predator chases the prey using the arrow keys and consumes them.

@@ -7,8 +7,8 @@
 /////////////////////////
 // ~10 ERRORS IN HERE
 /////////////////////////
-
-glass Prey {
+// Edited wrong dictation of class. Replaced 'g' with 'c'.
+class Prey {
 
   // constructor
   //
