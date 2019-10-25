@@ -30,7 +30,9 @@ function setup() {
   // Extra comma inside the first parenthesis.
   tiger = new Predator(100, 100, 5, color(200, 200, 0), 40);
   antelope = new Prey(100, 100, 10, color(255, 100, 10), 50);
-  zebra = new Prey(100, 8, color(255, 255, 255), 60);
+  // Missing the y position value. I assigned 100 to y parameter
+  // so that the Zebra will have an intial value for y position just like other objects.
+  zebra = new Prey(100, 100, 8, color(255, 255, 255), 60);
   bee = new Prey(100, 100, 20, color(255, 255, 0), 10);
 }
 
