@@ -64,7 +64,8 @@ class Prey {
     // wraps it to the other side if so
     handleWrapping() {
       // Off the left or right
-      if (this.x > 0) {
+      // Using wrong sign. It should be if this.x < 0 in order for making the method works. So, I replaced ">" with "<".
+      if (this.x < 0) {
         this.x += width;
       }
       else if (this.x > width) {
