@@ -25,7 +25,8 @@ class Prey {
     // Missing one 'e' letter. I added one.
     this.speed = speed;
     // Time properties for noise() function
-    this.tx = random(0, 0); // To make x and y noise different
+    // Defining meaningless random function. I change the second value from 0 to 1000.
+    this.tx = random(0, 1000); // To make x and y noise different
     this.ty = random(0, 0); // we use random starting values
     // Health properties
     this.maxHealth = radius;
