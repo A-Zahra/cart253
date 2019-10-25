@@ -53,7 +53,8 @@ class Prey {
     this.tx += 0.01;
     this.ty += 0.01;
     // Handle wrapping
-    this.handleWarping();
+    // Wrong dictation of the word "wrapping". I modified it.
+    this.handleWrapping();
   // The move method is missing the ending brace. I added one.
   }
 
