@@ -27,7 +27,8 @@ class Prey {
     // Time properties for noise() function
     // Defining meaningless random function. I change the second value from 0 to 1000.
     this.tx = random(0, 1000); // To make x and y noise different
-    this.ty = random(0, 0); // we use random starting values
+    // Again defining meaningless random function. I change the second value from 0 to 1000.
+    this.ty = random(0, 1000); // we use random starting values
     // Health properties
     this.maxHealth = radius;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
