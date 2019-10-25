@@ -8,7 +8,7 @@
 // The predator loses health over time, so must keep eating to survive.
 
 ////////////////////
-// 8 ERRORS IN HERE
+// 10 ERRORS IN HERE
 ////////////////////
 
 // Our predator

@@ -15,7 +15,8 @@ class Predator {
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
   // Wrong parameter naming. I replaced "felt" with "fill".
-  construction(x, y, speed, fillColor, radius) {
+  // Wrong dictation of method name. I corrected constructor name.
+  constructor(x, y, speed, fillColor, radius) {
     // Position
     this.x = x;
     this.y = y;
