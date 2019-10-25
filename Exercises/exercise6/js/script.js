@@ -59,5 +59,6 @@ function draw() {
   // Again missing letter "e". Added letter 'e' at the end of the word 'antelop'.
   antelope.display();
   zebra.disploy();
-  b.display();
+  // Missing the two "ee" letters. I added them.
+  bee.display();
 }
