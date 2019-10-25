@@ -54,7 +54,8 @@ class Prey {
     this.ty += 0.01;
     // Handle wrapping
     this.handleWarping();
-
+  // The move method is missing the ending brace. I added one.
+  }
 
     // handleWrapping
     //
