@@ -56,7 +56,8 @@ function draw() {
 
   // Display all the "animals"
   tiger.display();
-  antelop.display();
+  // Again missing letter "e". Added letter 'e' at the end of the word 'antelop'.
+  antelope.display();
   zebra.disploy();
   b.display();
 }
