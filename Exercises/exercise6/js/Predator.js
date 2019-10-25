@@ -30,7 +30,8 @@ class Predator {
     this.healthGainPerEat = 1;
     // Display properties
     this.fillColor = fillColor;
-    this.radios = this.health; // Radius is defined in terms of health
+    // Wrong dictation of the word "radius". I replaced "o" with "u".
+    this.radius = this.health; // Radius is defined in terms of health
     // Input properties
     this.appKey = UP_ARROW;
     this.downKey = DOWN_ARROW;
