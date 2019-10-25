@@ -15,7 +15,8 @@
 let tiger;
 
 // The three prey
-let antelop;
+// Missing letter "e". I added letter 'e' at the end of the word 'antelop'.
+let antelope;
 let zebra;
 let bee;
 
