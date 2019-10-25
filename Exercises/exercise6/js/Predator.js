@@ -114,7 +114,7 @@ class Predator {
     // Calculate distance from this predator to the prey
     // Wrong way of using an object. I added a period between "this" and "x", and replaced uppercase 'x' with lowercase 'x'.
     // Same error for the this.Y object. Adding a period in between "this" and "y". Changing y from uppercase to lowercase.
-    let d = dist(this.x, thisY, prey.x, prey.y);
+    let d = dist(this.x, this.y, prey.x, prey.y);
     // Check if the distance is less than their two radii (an overlap)
     if (d < this.radius + prey.radius) {
       // Increase predator health and constrain it to its possible range
@@ -134,7 +134,8 @@ class Predator {
   // Draw the predator as an ellipse on the canvas
   // with a radius the same size as its current health.
   display() {
-    pish();
+    // Wrong dictation of the word "push". Replaced "i" with "u".
+    push();
     noStroke();
     fill(this.fillColor);
     this.radius = this.health;
