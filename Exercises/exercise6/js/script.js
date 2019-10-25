@@ -45,7 +45,10 @@ function draw() {
   background(0);
 
   // Handle input for the tiger
-
+  // Handle input was not called, so the tiger wasn't able to move.
+  // I added handleInput method so that it is called and enables the predator to move.
+  tiger.handleInput();
+  
   // Move all the "animals"
   tiger.move();
   antelope.move();
