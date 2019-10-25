@@ -76,7 +76,8 @@ class Prey {
         this.y += height;
       }
       else if (this.y > height) {
-        this.y -= hight;
+        // Missing the letter "e". I added one.
+        this.y -= height;
       }
     }
 
