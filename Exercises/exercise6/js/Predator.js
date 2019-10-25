@@ -33,7 +33,8 @@ class Predator {
     // Wrong dictation of the word "radius". I replaced "o" with "u".
     this.radius = this.health; // Radius is defined in terms of health
     // Input properties
-    this.appKey = UP_ARROW;
+    // Wrong object naming. I replaced "app" with "up".
+    this.upKey = UP_ARROW;
     this.downKey = DOWN_ARROW;
     this.leftKey = LEFT_ARROW;
     this.rightKey = RIGHT_ARROW;
