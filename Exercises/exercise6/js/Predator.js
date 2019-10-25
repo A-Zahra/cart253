@@ -76,8 +76,10 @@ class Predator {
   // Handles wrapping
   move() {
     // Update position
-    this.x = this.vx;
-    this.y = this.vy;
+    // The equations were missing the plus signs. I added two plus signs,
+    // so once the player presses the key, the predator moves across the screen.
+    this.x += this.vx;
+    this.y += this.vy;
     // Update health
     this.health = this.health - this.healthLossPerMove;
     this.health = constrain(this.health, 0, this.maxHealth);
