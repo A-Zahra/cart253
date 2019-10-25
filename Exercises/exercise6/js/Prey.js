@@ -107,6 +107,5 @@ class Prey {
       this.health = this.maxHealth;
       // Default radius
       this.radius = this.health;
-      // Erasing the extra ending brace.
   }
 }
