@@ -19,8 +19,11 @@ let rightPlayerImg
 
 // Whether the game started
 let gameStart = false;
+let gameRestart = false;
 // Whether the start screen is shown
 let startScreen = true;
+let endScreen = true;
+
 
 // Start button object declaration
 let rectProperties;
@@ -211,9 +214,9 @@ function draw() {
       leftPlayer.checkEating(actualPreys[i]);
       rightPlayer.checkEating(actualPreys[i]);
     }
-    for (let i = 0; i < lifePriorities.length; i++) {
-      lifePriorities[i].updateHealth();
-    }
+    // for (let i = 0; i < lifePriorities.length; i++) {
+    //   lifePriorities[i].updateHealth();
+    // }
     // Display all the "animals"
     for (let i = 0; i < lifePriorities.length; i++) {
       lifePriorities[i].display();
@@ -233,10 +236,12 @@ function draw() {
 // Display start screen
 function displayStart() {
   push();
-  let instruction = "INSTRUCTION";
-  let description = "1. Eat your five preys to win.\n2. Each prey is counted only once\n" +
-    "3. There are some side preys that are not counted.\nHowever, you can eat them to stay alive for a longer time.\n" +
-    '4. Use your sprint key to raise your speed.\nRight player sprint key is "SHIFT" and left player sprint key is "CAPS LOCK".';
+  let instruction = "GAME STORY : REAL LIFE ";
+  let description = "This game is about human real life.\nAs a player you are going to follow your goals in your life.\n" +
+  "Besides that You have four main priorities in your life.\nYou should take care of them while you are following your goals.\n" +
+  "Otherwise, you lose the game. There are also some\nbarriers in your way that if you hit them, it slows you down.\n" +
+  "The winner is the one who's been able to save more priorities and more goals. "
+  "Hint: To achieve your goals there is a key that can be used to sprint (Left Player: SHIFT / Right Player: CAPS LOCK).";
   let textX = width / 4;
   let instY = 200;
   let descY = 250;
@@ -274,20 +279,7 @@ function startButton() {
   pop();
 }
 
-// checkVictory
-//
-// check who is the winner
-// function checkVictory() {
-//   console.log(groupScore);
-//   if (groupScore > 3) {
-//     if (tiger.preyEaten > leopard.preyEaten) {
-//       tiger.victory = true;
-//     }
-//     else if (tiger.preyEaten < leopard.preyEaten) {
-//       leopard.victory = true;
-//     }
-//   }
-// }
+
 
 // tigerVictory
 //
@@ -299,7 +291,9 @@ function leftPlayerVictory() {
   textAlign(CENTER);
   textSize(30);
   text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.preyEaten}`, width / 2, height / 2);
+  restartButton();
   pop();
+
 }
 
 // leopardVictory()
@@ -312,9 +306,32 @@ function rightPlayerVictory() {
   textAlign(CENTER);
   textSize(30);
   text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved: ${rightPlayer.preyEaten}`, width / 2, height / 2);
+  restartButton();
   pop();
 }
 
+// restartButton()
+//
+// Draw restart button
+function restartButton() {
+  rectProperties = {
+    x: width / 2,
+    y: height / 2 + 170,
+    w: 180,
+    h: 100,
+    fillColor: color(35, 145, 200)
+  }
+  push();
+  noStroke();
+  rectMode(CENTER);
+  fill(rectProperties.fillColor);
+  rect(rectProperties.x, rectProperties.y, rectProperties.w, rectProperties.h);
+  fill(255);
+  textSize(30);
+  textAlign(CENTER);
+  text("RESTART", rectProperties.x, rectProperties.y + 10);
+  pop();
+}
 // start()
 //
 // Start the game
@@ -327,11 +344,30 @@ function start() {
   }
 }
 
+// restart()
+//
+// Restart the game()
+function restart() {
+  // If the distance between mouse position and
+  // the restart button was less than the button size reset the following values.
+  if (dist(mouseX, mouseY, rectProperties.x, rectProperties.y) < rectProperties.w) {
+    startScreen = true;
+    leftPlayer.victory = false;
+    rightPlayer.victory = false;
+    gameStart = false;
+    leftPlayer.preyEaten = 0;
+    rightPlayer.preyEaten = 0;
+  }
+}
+
 // mousePressed()
 //
 // Here to require a click to start playing the game
 function mousePressed() {
   if (!gameStart) {
     start();
+  }
+  else if (leftPlayer.victory || rightPlayer.victory) {
+    restart();
   }
 }

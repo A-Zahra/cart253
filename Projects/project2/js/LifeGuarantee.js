@@ -23,10 +23,12 @@ class LifeGuarantee {
     this.ty = random(0, 1000); // we use random starting values
     // Health properties
     this.maxHealth = 255;
+    this.minHealth = 255;
     this.health = 200 ; // Must be AFTER defining this.maxHealth
     // Display properties
     this.prioritiesImg = player.img;
     this.radius = 60;
+    this.r = 0;
 
   }
 
@@ -36,16 +38,20 @@ class LifeGuarantee {
   // Reduce the player's health (happens every frame)
   // Check if the player is dead
   updateHealth() {
+    push();
     // Reduce player health
     this.health = this.health - 0.4;
     // Constrain the result to a sensible range
+    //this.r = round(random(10));
     this.health = constrain(this.health, 0, this.maxHealth);
-    // Check if the player is dead (0 health)
-    if (this.health < 0) {
-      // If so, the game is over
-      gameOver = true;
-    }
+    // // Check if the player is dead (0 health)
+    // if (this.health < 0) {
+    //   // If so, the game is over
+    //   gameOver = true;
+    // }
+    pop();
   }
+
 
   // display
   //
@@ -54,7 +60,7 @@ class LifeGuarantee {
   display() {
     push();
     noStroke();
-    fill(255, this.health);
+  //  tint(this.minHealth, this.health);
     image(this.prioritiesImg, this.x, this.y, this.radius * 2, this.radius * 2);
     pop();
   }
