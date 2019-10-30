@@ -11,10 +11,11 @@
 // The victory screen has the color of the winner predator.
 // The number of preys eaten by the predator is shown on the victory screen.
 
-// Our predator
-let tiger;
-let leopard;
-
+// Our players
+let leftPlayer;
+let rightPlayer;
+let leftPlayerImg;
+let rightPlayerImg
 
 // Whether the game started
 let gameStart = false;
@@ -30,6 +31,14 @@ let numActualPreys = 5;
 // Declare an array to assign actual preys to
 let actualPreys = [];
 let lifePriorities = [];
+let familyLeft;
+let familyRight;
+let skatingLeft;
+let skatingRight;
+let cinema;
+let park;
+let friends;
+let freeStudy;
 
 // The side and actual prey arrays of colors
 let preysColor;
@@ -37,6 +46,20 @@ let preysColor;
 // preload()
 //
 // Preload all external images
+function preload() {
+  leftPlayerImg = loadImage ("assets/images/Left-Player.png");
+  rightPlayerImg = loadImage ("assets/images/Right-Player.png");
+
+  familyLeft = loadImage ("assets/images/familyLeft.png");
+  familyRight = loadImage ("assets/images/familyRight.png");
+  skatingLeft = loadImage ("assets/images/Skeleton.png");
+  skatingRight = loadImage ("assets/images/skatingOwl.png");
+  cinema = loadImage ("assets/images/cinema.png");
+  park = loadImage ("assets/images/park.png");
+  friends = loadImage ("assets/images/friends.png");
+  freeStudy = loadImage ("assets/images/novels.png");
+
+}
 // setup()
 //
 // Sets up a canvas
@@ -44,8 +67,8 @@ let preysColor;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   // Predator objects declaration and value assignment
-  tiger = new Predator(width / 5 + 50 , height / 3, 5, color(200, 200, 0), 40, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT);
-  leopard = new Predator(width - 350, height / 3, 5, color(200, 0, 200), 40, 87, 83, 65, 68, width - 450, height / 2, 10, 20);
+  leftPlayer = new Predator(width / 6 , height / 3, 5, color(200, 200, 0), 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT, leftPlayerImg);
+  rightPlayer = new Predator(width - 470, height / 3, 5, color(200, 0, 200), 70, 87, 83, 65, 68, width - 470, height / 2, 10, 20, rightPlayerImg);
 
   //Actual and side prey colors value assignment
   preysColor = [
@@ -80,54 +103,54 @@ function setup() {
     let prioritiesProp = [
     // Right side player priorities
     {
-      x: width / 8,
-      y: height / 4,
+      x: width / 10,
+      y: height / 5,
       // Rouged
-      color: color(255,20,94)
+      img: familyLeft
     },
     {
-      x: width / 3,
-      y: height / 4,
+      x: width / 3.5,
+      y: height / 5,
       // Purple
-      color: color(169,25,255)
+      img: skatingLeft
     },
     {
-      x: width / 8,
-      y: height - 170,
+      x: width / 10,
+      y: height - 260,
       // Navy Blue
-      color: color(37,66,232)
+      img: park
     },
     {
-      x: width / 3,
-      y: height - 170,
+      x: width / 3.5,
+      y: height - 260,
       // Turquoise blue
-      color: color(93,232,19)
+      img: friends
     },
+
     // Left side player priorities
     {
-      x: width/2 + 250,
-      y: height / 4,
+      x: width/2 + 170,
+      y: height / 5,
       // Grassy green
-      color: color(70,226,232)
+      img: familyRight
     },
     {
-      x: width - 200,
-      y: height / 4,
+      x: width - 300,
+      y: height / 5,
       // Pink
-      color: color(255,118,206)
+      img: skatingRight
     },
     {
-      x: width/2 + 250,
-      y: height - 170,
+      x: width/2 + 170,
+      y: height - 260,
       // Bluish Purple
-      color: color(119,162,255)
+      img: freeStudy
     },
     {
-      x: width - 200,
-      y: height - 170,
+      x: width - 300,
+      y: height - 260,
       // Carrot orange
-      color:  color(255,122,89)
-
+      img: cinema
     }
   ];
     let priority = new LifeGuarantee(prioritiesProp[i]);
@@ -150,23 +173,23 @@ function draw() {
     displayStart();
   }
   // Victory screen
-  // If the tiger won
-  else if (tiger.victory) {
-    tigerVictory();
+  // If the left player won
+  else if (leftPlayer.victory) {
+    leftPlayerVictory();
   }
-  // If the leopard won
-  else if (leopard.victory) {
-    leopardVictory();
+  // If the right player won
+  else if (rightPlayer.victory) {
+    rightPlayerVictory();
   }
   // Start the game
   else if (gameStart) {
     // Handle input for the tiger and the leopard
-    tiger.handleInput();
-    leopard.handleInput();
+    leftPlayer.handleInput();
+    rightPlayer.handleInput();
 
     // Move all the "animals"
-    tiger.move();
-    leopard.move();
+    leftPlayer.move();
+    rightPlayer.move();
     // for (let i = 0; i < sidePreys.length; i++) {
     //   sidePreys[i].move();
     // }
@@ -185,8 +208,8 @@ function draw() {
 
     // Check if the leopard or the tiger ate the real preys
     for (let i = 0; i < actualPreys.length; i++) {
-      tiger.checkEating(actualPreys[i]);
-      leopard.checkEating(actualPreys[i]);
+      leftPlayer.checkEating(actualPreys[i]);
+      rightPlayer.checkEating(actualPreys[i]);
     }
     for (let i = 0; i < lifePriorities.length; i++) {
       lifePriorities[i].updateHealth();
@@ -195,8 +218,8 @@ function draw() {
     for (let i = 0; i < lifePriorities.length; i++) {
       lifePriorities[i].display();
     }
-    tiger.display();
-    leopard.display();
+    leftPlayer.display();
+    rightPlayer.display();
     for (let i = 0; i < actualPreys.length; i++) {
       actualPreys[i].display();
     }
@@ -269,26 +292,26 @@ function startButton() {
 // tigerVictory
 //
 // Tiger victory screen
-function tigerVictory() {
+function leftPlayerVictory() {
   push();
-  background(tiger.fillColor);
+  background(leftPlayer.fillColor);
   fill(0);
   textAlign(CENTER);
   textSize(30);
-  text(`Good job Tiger!!\nYou won the game buddy!\nNumber of preys eaten: ${tiger.preyEaten}`, width / 2, height / 2);
+  text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.preyEaten}`, width / 2, height / 2);
   pop();
 }
 
 // leopardVictory()
 //
 // Leopard victory screen
-function leopardVictory() {
+function rightPlayerVictory() {
   push();
-  background(leopard.fillColor);
+  background(rightPlayer.fillColor);
   fill(0);
   textAlign(CENTER);
   textSize(30);
-  text(`Good job Leopard!!\nYou won the game buddy!\nNumber of preys eaten: ${leopard.preyEaten}`, width / 2, height / 2);
+  text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved: ${rightPlayer.preyEaten}`, width / 2, height / 2);
   pop();
 }
 

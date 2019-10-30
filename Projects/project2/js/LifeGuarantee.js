@@ -10,10 +10,10 @@ class LifeGuarantee {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(prey) {
+  constructor(player) {
     // Position
-    this.x = prey.x;
-    this.y = prey.y;
+    this.x = player.x;
+    this.y = player.y;
     // Velocity and speed
     // this.vx = 0;
     // this.vy = 0;
@@ -25,8 +25,8 @@ class LifeGuarantee {
     this.maxHealth = 255;
     this.health = 200 ; // Must be AFTER defining this.maxHealth
     // Display properties
-    this.fillColor = prey.color;
-    this.radius = 30;
+    this.prioritiesImg = player.img;
+    this.radius = 60;
 
   }
 
@@ -55,7 +55,7 @@ class LifeGuarantee {
     push();
     noStroke();
     fill(255, this.health);
-    ellipse(this.x, this.y, this.radius * 2);
+    image(this.prioritiesImg, this.x, this.y, this.radius * 2, this.radius * 2);
     pop();
   }
 

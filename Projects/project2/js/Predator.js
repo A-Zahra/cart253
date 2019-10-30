@@ -13,7 +13,7 @@ class Predator {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey) {
+  constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage) {
     // Position
     this.x = x;
     this.y = y;
@@ -28,6 +28,7 @@ class Predator {
     this.healthGainPerEat = 1;
     // Display properties
     this.fillColor = fillColor;
+    this.playerImage = playerImage;
     this.radius = this.health; // Radius is defined in terms of health
     // Input properties
     this.upKey = up;
@@ -197,19 +198,7 @@ class Predator {
     push();
     fill(255);
     textSize(30);
-    text(`Preys eaten: ${this.preyEaten}`, this.textX, this.textY);
-    pop();
-  }
-
-  // alarmMessage
-  //
-  // Display an alarm message when the predator is eating the wrong prey.
-  alarmMessage() {
-    push();
-    fill(255);
-    textAlign(CENTER);
-    textSize(30);
-    text("I am not a real prey sorry", this.messageX, this.messageY);
+    text(`Goals achieved: ${this.preyEaten}`, this.textX, this.textY);
     pop();
   }
 
@@ -232,9 +221,9 @@ class Predator {
   display() {
     push();
     noStroke();
-    fill(this.fillColor);
+    // fill(this.fillColor);
     this.radius = this.health;
-    ellipse(this.x, this.y, this.radius * 2);
+    image(this.playerImage, this.x, this.y, this.radius * 2, this.radius * 2);
     // Display the number of preys eaten by the player
     this.preyEatingTracker();
     pop();
