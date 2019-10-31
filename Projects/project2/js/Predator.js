@@ -185,9 +185,9 @@ class Predator {
         this.ateMeBefore();
       }
       // If the predator ate five preys, Show the victory screen
-      if (this.preyEaten === 5) {
-        this.victory = true;
-      }
+      // if (this.preyEaten === 5) {
+      //   this.victory = true;
+      // }
     }
   }
 
