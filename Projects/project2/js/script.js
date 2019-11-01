@@ -206,6 +206,8 @@ function draw() {
 
     lifePriorities[0].giveSupport(leftPlayer);
     lifePriorities[2].giveSupport(rightPlayer);
+    lifePriorities[1].augmentKnowledge(leftPlayer);
+    lifePriorities[3].augmentKnowledge(rightPlayer);
     // Display all the "animals"
 
 

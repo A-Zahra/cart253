@@ -14,6 +14,7 @@ class LifeGuarantee {
     // Position
     this.x = player.x;
     this.y = player.y;
+    this.speed = 20;
     // Velocity and speed
     // this.vx = 0;
     // this.vy = 0;
@@ -33,12 +34,17 @@ class LifeGuarantee {
   }
 
   giveSupport(player) {
-    let d = dist(this.x, this.y , player.x, player.y);
+    let d = dist(this.x, this.y, player.x, player.y);
     if (d < this.radius) {
       player.health = player.maxHealth;
     }
   }
-
+  augmentKnowledge(player) {
+    let d = dist(this.x, this.y, player.x, player.y);
+    if (d < this.radius) {
+      player.speed = this.speed;
+    }
+  }
   // display
   //
   // Draw the prey as an ellipse on the canvas
