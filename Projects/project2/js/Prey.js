@@ -40,36 +40,28 @@ class Prey {
   // Sets velocity based on the noise() function and the Prey's speed
   // Moves based on the resulting velocity and handles wrapping
   move() {
-    // Set velocity via noise()
+    // // Set velocity via noise()
     this.vx = map(noise(this.tx), 0, 1, -this.speed, this.speed);
     this.vy = map(noise(this.ty), 0, 1, -this.speed, this.speed);
     // Update position
     this.x += this.vx;
     this.y += this.vy;
-    // Update time properties
-    this.tx += 0.01;
-    this.ty += 0.01;
-    // Handle wrapping
-    this.handleWrapping();
+
+    this.checkGoalWallCollision();
   }
 
-  // handleWrapping
-  //
-  // Checks if the prey has gone off the canvas and
-  // wraps it to the other side if so
-  handleWrapping() {
-    // Off the left or right
-    if (this.x < 0) {
-      this.x += width;
-    } else if (this.x > width) {
-      this.x -= width;
+  checkGoalWallCollision() {
+    // Check for collisions with top or bottom...
+    if (this.x < 0 || this.y < 0 || this.x > width || this.y > height) {
+      // It hit so reverse velocity
+      this.x -= this.vx;
+      this.y -= this.vy;
+      // Update time properties
+      this.ty = random(0, 100);
+      this.tx = random(0, 100);
+      console.log("worked1");
     }
-    // Off the top or bottom
-    if (this.y < 0) {
-      this.y += height;
-    } else if (this.y > height) {
-      this.y -= height;
-    }
+
   }
 
   // display
@@ -80,6 +72,7 @@ class Prey {
     push();
     noStroke();
     fill(this.fillColor);
+    ellipseMode(CENTER);
     this.radius = this.health;
     ellipse(this.x, this.y, this.radius * 2);
     pop();

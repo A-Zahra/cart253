@@ -1,3 +1,6 @@
+
+
+
 class GameFeatures {
   constructor(textx, titley, descy, fillColor) {
     this.textX = textx;

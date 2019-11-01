@@ -26,6 +26,7 @@ class Predator {
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     this.healthLossPerMove = 0.1;
     this.healthGainPerEat = 1;
+
     // Display properties
     this.fillColor = fillColor;
     this.playerImage = playerImage;
@@ -112,31 +113,6 @@ class Predator {
     }
   }
 
-  // handleEating
-  //
-  // Takes a Prey object as an argument and checks if the predator
-  // overlaps it. If so, reduces the prey's health and increases
-  // the predator's. If the prey dies, it gets reset.
-  // handleEating(prey) {
-  //   // Calculate distance from this predator to the prey
-  //   let d = dist(this.x, this.y, prey.x, prey.y);
-  //   // Check if the distance is less than their two radii (an overlap)
-  //   if (d < this.radius + prey.radius) {
-  //     // Increase predator health and constrain it to its possible range
-  //     this.health += this.healthGainPerEat;
-  //     this.health = constrain(this.health, 0, this.maxHealth);
-  //     // Decrease prey health by the same amount
-  //     prey.health -= this.healthGainPerEat;
-  //     // Check if the prey died and reset it if so
-  //     // Warn the predator that is not eating the right prey
-  //     this.alarmMessage();
-  //     // Keeps the prey visible
-  //     if (prey.health < 4) {
-  //       prey.reset();
-  //     }
-  //   }
-  // }
-
   // checkEating
   //
   // Takes a Prey object as an argument and checks if the predator
@@ -184,10 +160,6 @@ class Predator {
       if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color || !prey.prey5Color) {
         this.ateMeBefore();
       }
-      // If the predator ate five preys, Show the victory screen
-      // if (this.preyEaten === 5) {
-      //   this.victory = true;
-      // }
     }
   }
 
@@ -213,7 +185,7 @@ class Predator {
     text("Don't cheat!! You ate me before!!", this.messageX - 35, this.textY + 200);
     pop();
   }
-
+  
   // display
   //
   // Draw the predator as an ellipse on the canvas
@@ -221,7 +193,7 @@ class Predator {
   display() {
     push();
     noStroke();
-    // fill(this.fillColor);
+    imageMode(CENTER);
     this.radius = this.health;
     image(this.playerImage, this.x, this.y, this.radius * 2, this.radius * 2);
     // Display the number of preys eaten by the player

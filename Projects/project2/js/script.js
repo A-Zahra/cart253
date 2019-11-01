@@ -30,7 +30,7 @@ let rectProperties;
 
 // Number of actual and side preys
 let numActualPreys = 5;
-
+let barrier = [];
 // Declare an array to assign actual preys to
 let actualPreys = [];
 let lifePriorities = [];
@@ -72,8 +72,8 @@ function setup() {
 
   game = new GameFeatures(width/4, 200, 250, 255);
   // Predator objects declaration and value assignment
-  leftPlayer = new Predator(width / 6 , height / 3, 5, color(200, 200, 0), 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT, leftPlayerImg);
-  rightPlayer = new Predator(width - 470, height / 3, 5, color(200, 0, 200), 70, 87, 83, 65, 68, width - 470, height / 2, 10, 20, rightPlayerImg);
+  leftPlayer = new Predator(width / 4 , height / 3, 5, color(200, 200, 0), 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT, leftPlayerImg);
+  rightPlayer = new Predator(width - 450, height / 3, 5, color(200, 0, 200), 70, 87, 83, 65, 68, width / 2 + 200, height / 2, 10, 20, rightPlayerImg);
 
   //Actual and side prey colors value assignment
   preysColor = [
@@ -91,7 +91,7 @@ function setup() {
 
   // Actual preys properties assignment to the objects and objects assignment to the array
   for (let i = 0; i < numActualPreys; i++) {
-    let speed = [10, 15, 20, 25, 15];
+    let speed = [15, 25, 20, 35, 30];
     let radius = [35, 45, 50, 35, 55];
     let preysProperties = [{
       x: width / 2,
@@ -104,64 +104,61 @@ function setup() {
   }
 
   // Side preys properties assignment to the objects and objects assignment to the array
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 4; i++) {
     let prioritiesProp = [
-    // Right side player priorities
+    // left side player priorities
     {
-      x: width / 10,
-      y: height / 5,
+      x: width / 7,
+      y: height / 3,
       // Rouged
       img: familyLeft
     },
     {
-      x: width / 3.5,
-      y: height / 5,
-      // Purple
-      img: skatingLeft
-    },
-    {
-      x: width / 10,
-      y: height - 260,
-      // Navy Blue
-      img: park
-    },
-    {
-      x: width / 3.5,
-      y: height - 260,
+      x: width / 7,
+      y: height/2 + 100,
       // Turquoise blue
-      img: friends
+      img: freeStudy
     },
 
-    // Left side player priorities
+    // right side player priorities
     {
-      x: width/2 + 170,
-      y: height / 5,
+      x: width - 270,
+      y: height / 3,
       // Grassy green
       img: familyRight
     },
     {
-      x: width - 300,
-      y: height / 5,
-      // Pink
-      img: skatingRight
-    },
-    {
-      x: width/2 + 170,
-      y: height - 260,
+      x: width - 270,
+      y: height/2 + 100,
       // Bluish Purple
       img: freeStudy
-    },
-    {
-      x: width - 300,
-      y: height - 260,
-      // Carrot orange
-      img: cinema
     }
   ];
     let priority = new LifeGuarantee(prioritiesProp[i]);
     lifePriorities.push(priority);
   }
 
+  for (let i = 0; i < 4; i++) {
+    let barrierx = [(width/4), 20, (width/2), (width - 50), (width/2 + 50), (width/5), (width/2 + 100), (width - 200)];
+    let barriery = [(height/2 + 300), (height/3), (height/2), (height/2 + 100), 100, 10, (height/2 + 150), (height - 20)];
+    let barrierProperties = [{
+      x: barrierx[i],
+      y: barriery[i],
+      w: random(100, 150),
+      h: random(50, 70)
+    },
+  {
+    x: barrierx[4+i],
+    y: barriery[4+i],
+    w: random(50, 70),
+    h: random(100, 150)
+  }
+  ];
+    let horizentalBarrier = new Barriers(barrierProperties[0]);
+    barrier.push(horizentalBarrier);
+    let verticalBarrier = new Barriers(barrierProperties[1]);
+    barrier.push(verticalBarrier);
+  }
 }
 
 // draw()
@@ -197,44 +194,43 @@ function draw() {
     // Move all the "animals"
     leftPlayer.move();
     rightPlayer.move();
-    // for (let i = 0; i < sidePreys.length; i++) {
-    //   sidePreys[i].move();
-    // }
     for (let i = 0; i < actualPreys.length; i++) {
       actualPreys[i].move();
     }
-
-    // // Handle the tiger eating any of the prey
-    // for (let i = 0; i < sidePreys.length; i++) {
-    //   tiger.handleEating(sidePreys[i]);
-    // }
-    // // Handle the leopard eating any of the prey
-    // for (let i = 0; i < sidePreys.length; i++) {
-    //   leopard.handleEating(sidePreys[i]);
-    // }
 
     // Check if the leopard or the tiger ate the real preys
     for (let i = 0; i < actualPreys.length; i++) {
       leftPlayer.checkEating(actualPreys[i]);
       rightPlayer.checkEating(actualPreys[i]);
     }
-    // for (let i = 0; i < lifePriorities.length; i++) {
-    //   lifePriorities[i].updateHealth();
-    // }
+
+    lifePriorities[0].giveSupport(leftPlayer);
+    lifePriorities[2].giveSupport(rightPlayer);
     // Display all the "animals"
+
+
+    for (let i = 0; i < barrier.length; i++) {
+      // for(let j = 0; j < lifePriorities.length; j++){
+      //   if (dist(lifePriorities[j].x, lifePriorities[j].y, barrier[i].x, barrier[i].y) < lifePriorities[j].radius * 3) {
+      //       barrier[i].x = random(width / 6, width/2);
+      //       barrier[i].y = random(0, height);
+      //     }
+      //   }
+        barrier[i].display();
+    }
+
     for (let i = 0; i < lifePriorities.length; i++) {
       lifePriorities[i].display();
     }
-    leftPlayer.display();
-    rightPlayer.display();
     for (let i = 0; i < actualPreys.length; i++) {
       actualPreys[i].display();
     }
+    leftPlayer.display();
+    rightPlayer.display();
 
-    if (leftPlayer.preyEaten + rightPlayer.preyEaten === 5){
+    if (leftPlayer.preyEaten + rightPlayer.preyEaten === 5 || leftPlayer.health < 10 || rightPlayer.health < 10){
       endScreen = true;
     }
-
   }
 }
 
@@ -264,7 +260,14 @@ function restart() {
     gameStart = false;
     leftPlayer.preyEaten = 0;
     rightPlayer.preyEaten = 0;
+    leftPlayer.health = leftPlayer.maxHealth;
+    rightPlayer.health = rightPlayer.maxHealth;
+    leftPlayer.x = width / 6;
+    leftPlayer.y = height / 3;
+    rightPlayer.x = width - 450;
+    rightPlayer.y = height / 3;
     endScreen = false;
+
   }
 }
 
