@@ -28,8 +28,25 @@ class LifeGuarantee {
     this.health = 200 ; // Must be AFTER defining this.maxHealth
     // Display properties
     this.prioritiesImg = player.img;
-    this.radius = 50;
+    this.radius = 35;
     this.r = 0;
+    this.awarenessIncrement = false;
+    this.goalFound = false;
+    this.color = [
+      // Orange
+      color(255, 100, 10),
+      // White
+      color(255, 255, 255),
+      // Red
+      color(204, 10, 0),
+      // green
+      color(25, 255, 130),
+      // lemon-colored
+      color(255, 244, 94)
+    ];
+    for (let i = 0; i < this.color.length; i++) {
+      this.fillColor = this.color[i];
+    }
 
   }
 
@@ -39,10 +56,30 @@ class LifeGuarantee {
       player.health = player.maxHealth;
     }
   }
-  augmentKnowledge(player) {
+  increaseAwareness(player) {
     let d = dist(this.x, this.y, player.x, player.y);
     if (d < this.radius) {
+      this.awarenessIncrement = true;
+    }
+  }
+  awareness(player) {
+    if (this.awarenessIncrement) {
       player.speed = this.speed;
+    }
+  }
+
+  consultFriends(player){
+    let d = dist(this.x, this.y, player.x, player.y);
+    if (d < this.radius) {
+      this.goalFound = true;
+    }
+  }
+  foundThemAgain (goal) {
+    if (this.goalFound) {
+      for (let i = 0; i < this.color.length; i++) {
+        goal.fillColor = this.color[i];
+      }
+      // this.goalFound = false;
     }
   }
   // display

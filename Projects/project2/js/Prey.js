@@ -26,6 +26,7 @@ class Prey {
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     // Display properties
     this.fillColor = color;
+    this.opacity = prey.opacity;
     this.radius = this.health;
     // Objects to check if the predator was eaten once
     this.prey1Color = true;
