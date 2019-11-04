@@ -39,6 +39,7 @@ class GameFeatures {
   //
   // Draw start button
   startButton() {
+    // Start button rectangle properties
     this.startRectProperties = {
       x: width / 2,
       y: height / 2 + 150,
@@ -58,9 +59,9 @@ class GameFeatures {
     pop();
   }
 
-  // tigerVictory
+  // leftPlayerVictory
   //
-  // Tiger victory screen
+  // Left player victory screen
   leftPlayerVictory() {
     push();
     background(leftPlayer.fillColor);
@@ -73,9 +74,9 @@ class GameFeatures {
 
   }
 
-  // leopardVictory()
+  // rightPlayerVictory()
   //
-  // Leopard victory screen
+  // right Player victory screen
   rightPlayerVictory() {
     push();
     background(rightPlayer.fillColor);
@@ -91,6 +92,7 @@ class GameFeatures {
   //
   // Draw restart button
   restartButton() {
+    // Restart button rectangle properties
     this.RestartRectProperties = {
       x: width / 2,
       y: height / 2 + 170,

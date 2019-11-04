@@ -1,4 +1,4 @@
-// Prey
+// goal
 //
 // A class that represents a goal that moves
 // on screen based on a noise() function. It's movement is restricted to the screen size.
@@ -10,24 +10,26 @@ class Prey {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(prey, color) {
+  constructor(goal, color) {
     // Position
-    this.x = prey.x;
-    this.y = prey.y;
+    this.x = goal.x;
+    this.y = goal.y;
     // Velocity and speed
     this.vx = 0;
     this.vy = 0;
-    this.speed = prey.speed;
+    this.speed = goal.speed;
     // Time properties for noise() function
     this.tx = random(0, 1000); // To make x and y noise different
     this.ty = random(0, 1000); // we use random starting values
     // Health properties
-    this.maxHealth = prey.radius;
+    this.maxHealth = goal.radius;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     // Display properties
     this.fillColor = color;
-    this.opacity = prey.opacity;
+    this.opacity = goal.opacity;
     this.radius = this.health;
+    this.name = goal.name;
+    this.nameSize = goal.nameSize;
     // Check if the player acheived the goal
     this.goalAcheived = false;
   }
@@ -72,13 +74,17 @@ class Prey {
     ellipseMode(CENTER);
     this.radius = this.health;
     ellipse(this.x, this.y, this.radius * 2);
+    textSize(this.nameSize);
+    fill(0);
+    textAlign(CENTER,CENTER);
+    text(this.name, this.x, this.y);
     pop();
   }
 
   // reset
   //
   // Set the position to a random location and reset health
-  // and radius back to default
+  // radius and speed back to default
   reset() {
     // Random position
     this.x = random(0, width);
@@ -87,7 +93,6 @@ class Prey {
     this.health = this.maxHealth;
     // Default radius
     this.radius = this.health;
-    this.fillColor = this.fillColor;
     // Random position
     this.speed = floor(random(15, 20));
   }

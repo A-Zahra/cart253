@@ -107,11 +107,15 @@ function setup() {
   for (let i = 0; i < numGoals; i++) {
     let speed = [15, 25, 20, 55, 30];
     let radius = [35, 45, 50, 35, 55];
+    let name = ["HigherSalary", "BetterJob", "Education", "ExpandBussiness", "Marriage"];
+    let nameSize = [10, 20, 25, 10, 30];
     let goalsProperties = [{
       x: width / 2,
       y: height / 2,
       speed: speed[i],
       radius: radius[i],
+      name: name[i],
+      nameSize: nameSize[i],
       opacity: 0
     }];
     // Declare and assign new goal object
@@ -228,8 +232,8 @@ function draw() {
 
     // Check if the players ate the goal.
     for (let i = 0; i < goals.length; i++) {
-      leftPlayer.checkEating(goals[i]);
-      rightPlayer.checkEating(goals[i]);
+      leftPlayer.checkAcheivement(goals[i]);
+      rightPlayer.checkAcheivement(goals[i]);
     }
 
     // If the player received support from his family, his health is refreshed.
@@ -310,6 +314,10 @@ function restart() {
   if (dist(mouseX, mouseY, game.RestartRectProperties.x, game.RestartRectProperties.y) < game.RestartRectProperties.w) {
     startScreen = true;
     gameStart = false;
+    for (let i = 0; i < goals.length; i++) {
+      goals[i].goalAcheived = false;
+      goals[i].reset();
+    }
     leftPlayer.preyEaten = 0;
     rightPlayer.preyEaten = 0;
     leftPlayer.health = leftPlayer.maxHealth;

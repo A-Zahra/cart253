@@ -1,18 +1,16 @@
-// Predator
+// player
 //
-// A class that represents a simple predator
+// A class that represents a player
 // controlled by the arrow keys. It can move around
-// the screen and consume Prey objects to maintain its health.
-// The number of preys that the predator eats is displayed on the screen
-// There is an alarm message to warn the predator that is not eating a real prey
-// There is a message that only appears on the screen once the predator ate a prey for the second time.
+// the screen and acheive goal objects to win the game.
+// The number of goals that the player acheives is displayed on screen.
 
 class Predator {
 
   // constructor
   //
-  // Sets the initial values for the Predator's properties
-  // Either sets default values or uses the arguments provided
+  // Sets the initial values for the Player's properties
+  // Either sets default values or uses the arguments provided.
   constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage) {
     // Position
     this.x = x;
@@ -26,33 +24,29 @@ class Predator {
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     this.healthLossPerMove = 0.1;
     this.healthGainPerEat = 1;
-
     // Display properties
     this.fillColor = fillColor;
     this.playerImage = playerImage;
     this.radius = this.health; // Radius is defined in terms of health
+    this.goalEaten = 0;
     // Input properties
     this.upKey = up;
     this.downKey = down;
     this.leftKey = left;
     this.rightKey = right;
-    this.preyEaten = 0;
-    // The preyEating tracker position
+    // The goal tracker position
     this.textX = textX;
     this.textY = textY;
+    // The More effort key
     this.sprintKey = sprintKey;
     this.sprint = sprint;
-    // The alarm and ateMeBefore messages position
-    this.messageX = width / 2;
-    this.messageY = height / 3;
-    this.Victory = false;
   }
 
   // handleInput
   //
-  // Checks if an arrow key is pressed and sets the predator's
+  // Checks if an arrow key is pressed and sets the player's
   // velocity appropriately.
-  // Add to the predator speed once the sprint key is pressed
+  // Add to the player speed once the sprint key is pressed.
   handleInput() {
     // Horizontal movement
     if (keyIsDown(this.leftKey)) {
@@ -96,8 +90,8 @@ class Predator {
 
   // handleWrapping
   //
-  // Checks if the predator has gone off the canvas and
-  // wraps it to the other side if so
+  // Checks if the player has gone off the canvas and
+  // wraps it to the other side if so.
   handleWrapping() {
     // Off the left or right
     if (this.x < 0) {
@@ -113,66 +107,48 @@ class Predator {
     }
   }
 
-  // checkEating
+  // checkAcheivement
   //
-  // Takes a Prey object as an argument and checks if the predator
-  // overlaps it. If so, reduces the prey's health and increases
-  // the predator's health. If the prey dies, it gets reset.
-  // If the prey health decreases to 0 or less, one point is added to the number of preys eaten by the predator
-  // If the predator ate a prey once, don't count it for the second time.
-  // If the predator ate 5 preys, the game ends.
-  checkEating(prey) {
-    // Calculate distance from this predator to the prey
-    let d = dist(this.x, this.y, prey.x, prey.y);
-    // Check if the distance is less than their two radii (an overlap)
-    if (d < this.radius + prey.radius) {
-      // Decrease prey health by the same amount
-      // Keeps the prey visible
-      if (prey.health > 0) {
-        prey.health -= this.healthGainPerEat;
-        prey.goalAcheived = true;
+  // Takes a goal object as an argument and checks if the player
+  // overlaps it. If so, reduces the goal's health. If the goal dies, it gets reset.
+  // If the goal health decreases to 0 or less, one point is added to the number of goals acheived by the player.
+  checkAcheivement(goal) {
+    // Calculate distance from this player to the goal
+    let d = dist(this.x, this.y, goal.x, goal.y);
+    // Check if the distance is less than their two radius (an overlap)
+    if (d < this.radius + goal.radius) {
+      // Decrease goal health by the same amount
+      // Keeps the goal visible
+      if (goal.health > 0) {
+        goal.health -= this.healthGainPerEat;
+        goal.goalAcheived = true;
       }
 
-      // If prey's health is less than 4, add one to the preyEaten value and reset the prey size
-      // Count the prey only once. If the same prey was eaten for the second time the point is not counted
-      // and instead the message is shown.
-      if (prey.health < 1) {
-        if (prey.goalAcheived) {
-          this.preyEaten++;
-          console.log(this.preyEaten);
-          prey.goalAcheived = false;
+      // If goal's health is less than 1, add one to the goalEaten value and Count the goal only once.
+      if (goal.health < 1) {
+        if (goal.goalAcheived) {
+          this.goalEaten++;
+          console.log(this.goalEaten);
+          goal.goalAcheived = false;
         }
-        console.log(this.preyEaten);
       }
     }
   }
 
-  // preyEatingTracker
+  // goalAcheivementTracker
   //
-  // Display the number of preys eaten by the predator
-  preyEatingTracker() {
+  // Display the number of goals eaten by the player
+  goalAcheivementTracker() {
     push();
     fill(255);
     textSize(30);
-    text(`Goals achieved: ${this.preyEaten}`, this.textX, this.textY);
+    text(`Goals achieved: ${this.goalEaten}`, this.textX, this.textY);
     pop();
   }
 
-  // ateMeBefore
-  //
-  // If the prey was eaten once before, show this message
-  // ateMeBefore() {
-  //   push();
-  //   fill(255);
-  //   textAlign(CENTER, CENTER);
-  //   textSize(30);
-  //   text("Don't cheat!! You ate me before!!", this.messageX - 35, this.textY + 200);
-  //   pop();
-  // }
-
   // display
   //
-  // Draw the predator as an ellipse on the canvas
+  // Draw the player as an image on the canvas
   // with a radius the same size as its current health.
   display() {
     push();
@@ -180,8 +156,8 @@ class Predator {
     imageMode(CENTER);
     this.radius = this.health;
     image(this.playerImage, this.x, this.y, this.radius * 2, this.radius * 2);
-    // Display the number of preys eaten by the player
-    this.preyEatingTracker();
+    // Display the number of goals acheived by the player
+    this.goalAcheivementTracker();
     pop();
   }
 }

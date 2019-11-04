@@ -1,25 +1,45 @@
+// barriers
+//
+// A class that represents Barriers on screen.
+// There are two kinds of barriers. The first kind makes
+// the player to hesitate about his goals. The second one makes the player
+// to rush to acheive his goals.
 
 class Barriers {
-  constructor (barrier) {
+
+  // constructor
+  //
+  //  Sets the initial values for the Barrier's properties
+  // Either sets default values or uses the arguments provided
+  constructor(barrier) {
+    // Position, size, fill color
+    // A boolean object to check if the goals disappeared.
     this.x = barrier.x;
     this.y = barrier.y;
     this.w = barrier.w;
     this.h = barrier.h;
     this.fillColor = color(179, 81, 8);
-    this.goalDisappeared = false;
+    this.hesitation = false;
   }
-  lostGoal(player) {
-    let d = dist(this.x, this.y, player.x, player.y);
+
+  // If the player encountered barrier, he hesitates.
+  lostGoal(barrier) {
+    let d = dist(this.x, this.y, barrier.x, barrier.y);
     if (d < this.w || d < this.h) {
-      this.goalDisappeared  = true;
+      this.hesitation = true;
     }
   }
-  goalInvisibility (goal) {
-    if (this.goalDisappeared) {
-      goal.fillColor = color(0,0,0,0);
-    
+  // If he hesitated, goals get invisible to him.
+  goalInvisibility(goal) {
+    if (this.hesitation) {
+      goal.fillColor = color(0, 0, 0, 0);
+
     }
   }
+
+  // Display
+  //
+  // Draw the barrier as an image on the canvas.
   display() {
     push()
     fill(this.fillColor);
