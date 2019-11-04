@@ -4,7 +4,7 @@
 // on screen based on a noise() function. It's movement is restricted to the screen size.
 // It can be acheived by the player.
 
-class Prey {
+class Goal {
 
   // constructor
   //
@@ -25,11 +25,8 @@ class Prey {
     this.maxHealth = goal.radius;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     // Display properties
-    this.fillColor = color;
-    this.opacity = goal.opacity;
     this.radius = this.health;
     this.img = goal.img;
-    this.nameSize = goal.nameSize;
     // Check if the player acheived the goal
     this.goalAcheived = false;
     this.goalDisappeared = false;
@@ -47,7 +44,6 @@ class Prey {
     // Update position
     this.x += this.vx;
     this.y += this.vy;
-
     this.checkGoalWallCollision();
   }
 
@@ -62,7 +58,6 @@ class Prey {
       this.tx = random(0, 100);
       console.log("worked1");
     }
-
   }
 
   // display
@@ -81,21 +76,5 @@ class Prey {
         pop();
       }
     }
-  }
-
-  // reset
-  //
-  // Set the position to a random location and reset health
-  // radius and speed back to default
-  reset() {
-    // Random position
-    this.x = random(0, width);
-    this.y = random(0, height);
-    // Default health
-    this.health = this.maxHealth;
-    // Default radius
-    this.radius = this.health;
-    // Random position
-    this.speed = floor(random(15, 20));
   }
 }

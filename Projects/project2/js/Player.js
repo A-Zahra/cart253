@@ -5,7 +5,7 @@
 // the screen and acheive goal objects to win the game.
 // The number of goals that the player acheives is displayed on screen.
 
-class Predator {
+class Player {
 
   // constructor
   //
@@ -28,7 +28,7 @@ class Predator {
     this.fillColor = fillColor;
     this.playerImage = playerImage;
     this.radius = this.health; // Radius is defined in terms of health
-    this.goalEaten = 0;
+    this.goalGained = 0;
     // Input properties
     this.upKey = up;
     this.downKey = down;
@@ -122,19 +122,19 @@ class Predator {
       // Keeps the goal visible
       if (goal.health > 1) {
         goal.health -= this.healthGainPerEat;
-
         goal.goalAcheived = true;
+
+        // Check if the goal was not previously acheived.
         if(goal.isCaught ===-1){
         goal.isCaught = this.playerId;
         }
-
       }
 
-      // If goal's health is less than 1, add one to the goalEaten value and Count the goal only once.
+      // If goal's health is less than 1, add one to the goalGained value and Count the goal only once.
       if (goal.health <= 1) {
         if (goal.goalAcheived) {
-          this.goalEaten++;
-          console.log(this.goalEaten);
+          this.goalGained++;
+          console.log(this.goalGained);
           goal.goalAcheived = false;
         }
       }
@@ -148,7 +148,7 @@ class Predator {
     push();
     fill(255);
     textSize(30);
-    text(`Goals achieved: ${this.goalEaten}`, this.textX, this.textY);
+    text(`Goals achieved: ${this.goalGained}`, this.textX, this.textY);
     pop();
   }
 
