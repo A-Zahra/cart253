@@ -11,7 +11,7 @@ class Predator {
   //
   // Sets the initial values for the Player's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage) {
+  constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage,playerId) {
     // Position
     this.x = x;
     this.y = y;
@@ -40,6 +40,7 @@ class Predator {
     // The More effort key
     this.sprintKey = sprintKey;
     this.sprint = sprint;
+    this.playerId = playerId;
   }
 
   // handleInput
@@ -119,13 +120,18 @@ class Predator {
     if (d < this.radius + goal.radius) {
       // Decrease goal health by the same amount
       // Keeps the goal visible
-      if (goal.health > 0) {
+      if (goal.health > 1) {
         goal.health -= this.healthGainPerEat;
+
         goal.goalAcheived = true;
+        if(goal.isCaught ===-1){
+        goal.isCaught = this.playerId;
+        }
+
       }
 
       // If goal's health is less than 1, add one to the goalEaten value and Count the goal only once.
-      if (goal.health < 1) {
+      if (goal.health <= 1) {
         if (goal.goalAcheived) {
           this.goalEaten++;
           console.log(this.goalEaten);

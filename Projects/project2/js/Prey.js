@@ -10,7 +10,7 @@ class Prey {
   //
   // Sets the initial values for the Predator's properties
   // Either sets default values or uses the arguments provided
-  constructor(goal, color) {
+  constructor(goal) {
     // Position
     this.x = goal.x;
     this.y = goal.y;
@@ -28,10 +28,12 @@ class Prey {
     this.fillColor = color;
     this.opacity = goal.opacity;
     this.radius = this.health;
-    this.name = goal.name;
+    this.img = goal.img;
     this.nameSize = goal.nameSize;
     // Check if the player acheived the goal
     this.goalAcheived = false;
+    this.goalDisappeared = false;
+    this.isCaught = -1;
   }
 
   // move
@@ -68,17 +70,17 @@ class Prey {
   // Draw the goal as an ellipse on the canvas
   // with a radius the same size as its current health.
   display() {
-    push();
-    noStroke();
-    fill(this.fillColor);
-    ellipseMode(CENTER);
-    this.radius = this.health;
-    ellipse(this.x, this.y, this.radius * 2);
-    textSize(this.nameSize);
-    fill(0);
-    textAlign(CENTER,CENTER);
-    text(this.name, this.x, this.y);
-    pop();
+    if(this.goalDisappeared ===false){
+      if (this.health> 2) {
+        push();
+        noStroke();
+        //tint(this.opacity);
+        imageMode(CENTER);
+        this.radius = this.health;
+        image(this.img, this.x, this.y, this.radius * 2, this.radius * 2);
+        pop();
+      }
+    }
   }
 
   // reset

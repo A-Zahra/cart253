@@ -36,6 +36,11 @@ let numGoals = 5;
 // Declare an array to assign goals to
 let goals = [];
 // The goals array of colors
+let championship;
+let education;
+let marriage;
+let toBeArtist;
+let toBeScientist;
 let goalsColor;
 
 // Number of essentials
@@ -65,6 +70,13 @@ function preload() {
   // Players images
   leftPlayerImg = loadImage("assets/images/Left-Player.png");
   rightPlayerImg = loadImage("assets/images/Right-Player.png");
+  // Goals images
+  championship = loadImage("assets/images/championship.png");
+  education = loadImage("assets/images/Education.png");
+  marriage = loadImage("assets/images/Marriage.png");
+  toBeScientist = loadImage("assets/images/Science.png");
+  toBeArtist = loadImage("assets/images/ToBeArtist.png");
+
   // Essentials images
   familyLeft = loadImage("assets/images/familyLeft.png");
   familyRight = loadImage("assets/images/familyRight.png");
@@ -83,11 +95,19 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   // Game start and end screen objects declaration and assignment
+  setUpGame();
+
+}
+
+function setUpGame(){
+  goals = [];
+  barrier =[];
+  successEssentials = [];
   game = new GameFeatures(width / 4, 200, 250, 255);
 
   // Players objects declaration and value assignment
-  leftPlayer = new Predator(width / 4, height / 3, 5, color(200, 200, 0), 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT, leftPlayerImg);
-  rightPlayer = new Predator(width - 450, height / 3, 5, color(200, 0, 200), 70, 87, 83, 65, 68, width / 2 + 200, height / 2, 10, 20, rightPlayerImg);
+  leftPlayer = new Predator(width / 4, height / 3, 5, color(200, 200, 0), 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT, leftPlayerImg,1);
+  rightPlayer = new Predator(width - 450, height / 3, 5, color(200, 0, 200), 70, 87, 83, 65, 68, width / 2 + 200, height / 2, 10, 20, rightPlayerImg,2);
 
   //Goals colors value assignment
   goalsColor = [
@@ -104,22 +124,22 @@ function setup() {
   ];
 
   // Goals properties assignment to the objects and objects assignment to the array
+  let speed = [15, 25, 20, 55, 30];
+  let radius = [35, 45, 50, 35, 55];
+  let name = [championship, education, marriage, toBeScientist, toBeArtist];
+  let nameSize = [10, 20, 25, 10, 30];
   for (let i = 0; i < numGoals; i++) {
-    let speed = [15, 25, 20, 55, 30];
-    let radius = [35, 45, 50, 35, 55];
-    let name = ["HigherSalary", "BetterJob", "Education", "ExpandBussiness", "Marriage"];
-    let nameSize = [10, 20, 25, 10, 30];
-    let goalsProperties = [{
+    let goalsProperties = {
       x: width / 2,
       y: height / 2,
       speed: speed[i],
       radius: radius[i],
-      name: name[i],
-      nameSize: nameSize[i],
-      opacity: 0
-    }];
+      img: name[i],
+      // nameSize: nameSize[i],
+      opacity: 255
+    };
     // Declare and assign new goal object
-    let newGoal = new Prey(goalsProperties[0], goalsColor[i]);
+    let newGoal = new Prey(goalsProperties);
     // Add the new goal object to the goals array
     goals.push(newGoal);
   }
@@ -192,6 +212,7 @@ function setup() {
     // Add the new vertical barrier object to the barriers array
     barrier.push(verticalBarrier);
   }
+
 }
 
 // draw()
@@ -208,12 +229,13 @@ function draw() {
   }
   // Victory screen
   else if (endScreen) {
+    console.log("END");
     // If the left player won
-    if (leftPlayer.preyEaten > rightPlayer.preyEaten) {
+    if (leftPlayer.goalEaten > rightPlayer.goalEaten) {
       game.leftPlayerVictory();
     }
     // If the right player won
-    else if (leftPlayer.preyEaten < rightPlayer.preyEaten) {
+    else if (leftPlayer.goalEaten < rightPlayer.goalEaten) {
       game.rightPlayerVictory();
     }
   }
@@ -230,10 +252,18 @@ function draw() {
       goals[i].move();
     }
 
-    // Check if the players ate the goal.
+    // Check if either of the players acheived the goal and if so the the acheived goal won't be shown to the other one.
     for (let i = 0; i < goals.length; i++) {
-      leftPlayer.checkAcheivement(goals[i]);
-      rightPlayer.checkAcheivement(goals[i]);
+      if ( goals[i].isCaught ===leftPlayer.playerId) {
+        leftPlayer.checkAcheivement(goals[i]);
+      }
+      else if ( goals[i].isCaught ===rightPlayer.playerId) {
+        rightPlayer.checkAcheivement(goals[i]);
+      }
+      else {
+          leftPlayer.checkAcheivement(goals[i]);
+          rightPlayer.checkAcheivement(goals[i]);
+      }
     }
 
     // If the player received support from his family, his health is refreshed.
@@ -246,27 +276,36 @@ function draw() {
     successEssentials[1].awareness(leftPlayer);
     successEssentials[4].awareness(rightPlayer);
 
-    // If the player came to his friends, he receives consultation.
-    successEssentials[2].consultFriends(leftPlayer);
-    successEssentials[5].consultFriends(rightPlayer);
-    // If the player received consultation, he finds his goals again.
-    for (let j = 0; j < goals.length; j++) {
-      successEssentials[2].foundThemAgain(goals[j]);
-      successEssentials[5].foundThemAgain(goals[j]);
-      for (let i = 0; i < barrier.length; i += 2) {
-        barrier[i].goalDisappeared = false;
+    // If either of the players consults his friends, the goals become visible to them again.
+    if(successEssentials[2].consultFriends(leftPlayer) ===true){
+      for (let i = 0; i < goals.length; i++) {
+        goals[i].goalDisappeared = false;
+      }
+    }
+    else if (successEssentials[5].consultFriends(rightPlayer)===true) {
+      for (let i = 0; i < goals.length; i++) {
+        goals[i].goalDisappeared = false;
       }
     }
 
-    // If the player encountered barriers, he hesitates about his goals
-    // If he hesitated, his goals get invisible.
-    for (let j = 0; j < goals.length; j++) {
-      for (let i = 0; i < barrier.length - 3; i += 2) {
-        barrier[i].lostGoal(leftPlayer);
-        barrier[i].lostGoal(rightPlayer);
-        barrier[i].goalInvisibility(goals[j]);
+    // If either of the players encountered a barrier, the goals become invisible to both of the players.
+      for (let i = 0; i < barrier.length ; i++) {
+        let leftHit = barrier[i].lostGoal(leftPlayer);
+        let rightHit =  barrier[i].lostGoal(rightPlayer);
+        if(leftHit ===true){
+          for (let i = 0; i < goals.length; i++) {
+            goals[i].goalDisappeared = true;
+          }
+          break;
+        }
+        else if(rightHit ===true){
+          for (let i = 0; i < goals.length; i++) {
+            goals[i].goalDisappeared = true;
+            console.log(goals[i].goalDisappeared);
+          }
+          break;
+        }
       }
-    }
 
     // Display all the elements
     // Barriers
@@ -278,17 +317,17 @@ function draw() {
       successEssentials[i].display();
     }
     // Goals
-    for (let i = 0; i < goals.length; i++) {
-      goals[i].display();
+    for (let j = 0; j < goals.length; j++) {
+        goals[j].display();
     }
-    // Left and right players
+
     leftPlayer.display();
     rightPlayer.display();
 
     // If all goals were acheived by both players or one of them died, the game ends.
-    if (leftPlayer.preyEaten + rightPlayer.preyEaten === 5 || leftPlayer.health < 10 || rightPlayer.health < 10) {
+    if (leftPlayer.goalEaten + rightPlayer.goalEaten === 5 || leftPlayer.health < 10 || rightPlayer.health < 10) {
       endScreen = true;
-      console.log(leftPlayer.preyEaten + rightPlayer.preyEaten);
+    //  console.log(leftPlayer.preyEaten + rightPlayer.preyEaten);
     }
   }
 }
@@ -314,19 +353,21 @@ function restart() {
   if (dist(mouseX, mouseY, game.RestartRectProperties.x, game.RestartRectProperties.y) < game.RestartRectProperties.w) {
     startScreen = true;
     gameStart = false;
-    for (let i = 0; i < goals.length; i++) {
-      goals[i].goalAcheived = false;
-      goals[i].reset();
-    }
-    leftPlayer.preyEaten = 0;
-    rightPlayer.preyEaten = 0;
-    leftPlayer.health = leftPlayer.maxHealth;
-    rightPlayer.health = rightPlayer.maxHealth;
-    leftPlayer.x = width / 6;
-    leftPlayer.y = height / 3;
-    rightPlayer.x = width - 450;
-    rightPlayer.y = height / 3;
+    // for (let i = 0; i < goals.length; i++) {
+    //   goals[i].goalAcheived = false;
+    //   goals[i].reset();
+    // }
+    // leftPlayer.preyEaten = 0;
+    // rightPlayer.preyEaten = 0;
+    // leftPlayer.health = leftPlayer.maxHealth;
+    // rightPlayer.health = rightPlayer.maxHealth;
+    // leftPlayer.x = width / 6;
+    // leftPlayer.y = height / 3;
+    // rightPlayer.x = width - 450;
+    // rightPlayer.y = height / 3;
     endScreen = false;
+    setUpGame();
+    console.log("restart");
 
   }
 }

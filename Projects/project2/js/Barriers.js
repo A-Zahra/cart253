@@ -26,13 +26,15 @@ class Barriers {
   lostGoal(barrier) {
     let d = dist(this.x, this.y, barrier.x, barrier.y);
     if (d < this.w || d < this.h) {
-      this.hesitation = true;
+      //this.hesitation = true;
+      return true;
     }
+    return false;
   }
   // If he hesitated, goals get invisible to him.
   goalInvisibility(goal) {
     if (this.hesitation) {
-      goal.fillColor = color(0, 0, 0, 0);
+      goal.opacity = 0;
 
     }
   }

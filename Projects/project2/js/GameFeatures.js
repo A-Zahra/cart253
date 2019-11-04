@@ -68,7 +68,7 @@ class GameFeatures {
     fill(0);
     textAlign(CENTER);
     textSize(30);
-    text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.preyEaten}`, width / 2, height / 2);
+    text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.goalEaten}`, width / 2, height / 2);
     this.restartButton();
     pop();
 
@@ -83,7 +83,7 @@ class GameFeatures {
     fill(0);
     textAlign(CENTER);
     textSize(30);
-    text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved: ${rightPlayer.preyEaten}`, width / 2, height / 2);
+    text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved: ${rightPlayer.goalEaten}`, width / 2, height / 2);
     this.restartButton();
     pop();
   }

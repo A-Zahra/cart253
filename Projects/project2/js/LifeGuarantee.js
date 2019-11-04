@@ -21,21 +21,22 @@ class LifeGuarantee {
     this.radius = 35;
     this.awarenessIncrement = false;
     this.goalFound = false;
-    this.color = [
-      // Orange
-      color(255, 100, 10),
-      // White
-      color(255, 255, 255),
-      // Red
-      color(204, 10, 0),
-      // green
-      color(25, 255, 130),
-      // lemon-colored
-      color(255, 244, 94)
-    ];
-    for (let i = 0; i < this.color.length; i++) {
-      this.fillColor = this.color[i];
-    }
+    // this.color = [
+    //   // Orange
+    //   color(255, 100, 10),
+    //   // White
+    //   color(255, 255, 255),
+    //   // Red
+    //   color(204, 10, 0),
+    //   // green
+    //   color(25, 255, 130),
+    //   // lemon-colored
+    //   color(255, 244, 94)
+    // ];
+    // for (let i = 0; i < this.color.length; i++) {
+    //   this.fillColor = this.color[i];
+    // }
+    this.opacity = 255;
   }
 
   // If the essential came to family, he receives support and be refreshed again.
@@ -64,17 +65,16 @@ class LifeGuarantee {
   consultFriends(essential) {
     let d = dist(this.x, this.y, essential.x, essential.y);
     if (d < this.radius) {
-      this.goalFound = true;
+      return true;
     }
+    return false;
   }
-  // If he received consultation, his goals appears again.
-  foundThemAgain(goal) {
-    if (this.goalFound) {
-      for (let i = 0; i < this.color.length; i++) {
-        goal.fillColor = this.color[i];
-      }
-    }
-  }
+  // // If he received consultation, his goals appears again.
+  // foundThemAgain(goal) {
+  //   if (this.goalFound) {
+  //       goal.display();
+  //   }
+  // }
 
   // display
   //
