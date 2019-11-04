@@ -1,5 +1,6 @@
-
-
+// GameFeatures
+//
+// A class that represents start, victory and end screen
 
 class GameFeatures {
   constructor(textx, titley, descy, fillColor) {

@@ -15,9 +15,6 @@ class LifeGuarantee {
     this.x = player.x;
     this.y = player.y;
     this.speed = 20;
-    // Velocity and speed
-    // this.vx = 0;
-    // this.vy = 0;
 
     // Time properties for noise() function
     this.tx = random(0, 1000); // To make x and y noise different
@@ -47,7 +44,6 @@ class LifeGuarantee {
     for (let i = 0; i < this.color.length; i++) {
       this.fillColor = this.color[i];
     }
-
   }
 
   giveSupport(player) {
@@ -82,14 +78,14 @@ class LifeGuarantee {
       // this.goalFound = false;
     }
   }
+
   // display
   //
-  // Draw the prey as an ellipse on the canvas
-  // with a radius the same size as its current health.
+  // Draw the life essential as an image on the canvas
   display() {
     push();
     noStroke();
-  //  tint(this.minHealth, this.health);
+    //  tint(this.minHealth, this.health);
     fill(255);
     ellipseMode(CENTER);
     ellipse(this.x, this.y, this.radius * 2.5, this.radius * 2.5);
@@ -97,5 +93,4 @@ class LifeGuarantee {
     image(this.prioritiesImg, this.x, this.y, this.radius * 2, this.radius * 2);
     pop();
   }
-
 }

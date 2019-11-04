@@ -1,8 +1,8 @@
 // Prey
 //
-// A class that represents a simple prey that moves
-// on screen based on a noise() function. It can move around
-// the screen and be consumed by Predator objects.
+// A class that represents a goal that moves
+// on screen based on a noise() function. It's movement is restricted to the screen size.
+// It can be acheived by the player.
 
 class Prey {
 
@@ -28,17 +28,13 @@ class Prey {
     this.fillColor = color;
     this.opacity = prey.opacity;
     this.radius = this.health;
-    // Objects to check if the predator was eaten once
-    this.prey1Color = true;
-    this.prey2Color = true;
-    this.prey3Color = true;
-    this.prey4Color = true;
-    this.prey5Color = true;
+    // Check if the player acheived the goal
+    this.goalAcheived = false;
   }
 
   // move
   //
-  // Sets velocity based on the noise() function and the Prey's speed
+  // Sets velocity based on the noise() function and the goal's speed
   // Moves based on the resulting velocity and handles wrapping
   move() {
     // // Set velocity via noise()
@@ -67,7 +63,7 @@ class Prey {
 
   // display
   //
-  // Draw the prey as an ellipse on the canvas
+  // Draw the goal as an ellipse on the canvas
   // with a radius the same size as its current health.
   display() {
     push();
@@ -91,6 +87,7 @@ class Prey {
     this.health = this.maxHealth;
     // Default radius
     this.radius = this.health;
+    this.fillColor = this.fillColor;
     // Random position
     this.speed = floor(random(15, 20));
   }

@@ -126,39 +126,23 @@ class Predator {
     let d = dist(this.x, this.y, prey.x, prey.y);
     // Check if the distance is less than their two radii (an overlap)
     if (d < this.radius + prey.radius) {
-      // Increase predator health and constrain it to its possible range
-      this.health += this.healthGainPerEat;
-      this.health = constrain(this.health, 0, this.maxHealth);
       // Decrease prey health by the same amount
       // Keeps the prey visible
-      if (prey.health > 3) {
+      if (prey.health > 0) {
         prey.health -= this.healthGainPerEat;
+        prey.goalAcheived = true;
       }
 
       // If prey's health is less than 4, add one to the preyEaten value and reset the prey size
       // Count the prey only once. If the same prey was eaten for the second time the point is not counted
       // and instead the message is shown.
-      if (prey.health < 4) {
-        if (prey.prey1Color) {
+      if (prey.health < 1) {
+        if (prey.goalAcheived) {
           this.preyEaten++;
-          prey.prey1Color = false;
-        } else if (prey.prey2Color) {
-          this.preyEaten++;
-          prey.prey2Color = false;
-        } else if (prey.prey3Color) {
-          this.preyEaten++;
-          prey.prey3Color = false;
-        } else if (prey.prey4Color) {
-          this.preyEaten++;
-          prey.prey4Color = false;
-        } else if (prey.prey5Color) {
-          this.preyEaten++;
-          prey.prey5Color = false;
+          console.log(this.preyEaten);
+          prey.goalAcheived = false;
         }
-        prey.reset();
-      }
-      if (!prey.prey1Color || !prey.prey2Color || !prey.prey3Color || !prey.prey4Color || !prey.prey5Color) {
-        this.ateMeBefore();
+        console.log(this.preyEaten);
       }
     }
   }
@@ -177,15 +161,15 @@ class Predator {
   // ateMeBefore
   //
   // If the prey was eaten once before, show this message
-  ateMeBefore() {
-    push();
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(30);
-    text("Don't cheat!! You ate me before!!", this.messageX - 35, this.textY + 200);
-    pop();
-  }
-  
+  // ateMeBefore() {
+  //   push();
+  //   fill(255);
+  //   textAlign(CENTER, CENTER);
+  //   textSize(30);
+  //   text("Don't cheat!! You ate me before!!", this.messageX - 35, this.textY + 200);
+  //   pop();
+  // }
+
   // display
   //
   // Draw the predator as an ellipse on the canvas
