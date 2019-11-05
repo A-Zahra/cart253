@@ -11,7 +11,7 @@ class Player {
   //
   // Sets the initial values for the Player's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y, speed, fillColor, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage,playerId) {
+  constructor(x, y, speed, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage, playerId) {
     // Position
     this.x = x;
     this.y = y;
@@ -25,7 +25,6 @@ class Player {
     this.healthLossPerMove = 0.1;
     this.healthGainPerEat = 1;
     // Display properties
-    this.fillColor = fillColor;
     this.playerImage = playerImage;
     this.radius = this.health; // Radius is defined in terms of health
     this.goalGained = 0;
@@ -125,8 +124,8 @@ class Player {
         goal.goalAcheived = true;
 
         // Check if the goal was not previously acheived.
-        if(goal.isCaught ===-1){
-        goal.isCaught = this.playerId;
+        if (goal.isCaught === -1) {
+          goal.isCaught = this.playerId;
         }
       }
 

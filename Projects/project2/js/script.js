@@ -53,12 +53,7 @@ let successEssentials = [];
 // images of success essentials
 let familyLeft;
 let familyRight;
-let skatingLeft;
-let skatingRight;
-let cinema;
-let park;
 let friends;
-let freeStudy;
 
 // Number of barriers (Multiply by two)
 let numBarriers = 4;
@@ -83,12 +78,7 @@ function preload() {
   // Essentials images
   familyLeft = loadImage("assets/images/familyLeft.png");
   familyRight = loadImage("assets/images/familyRight.png");
-  skatingLeft = loadImage("assets/images/Skeleton.png");
-  skatingRight = loadImage("assets/images/skatingOwl.png");
-  cinema = loadImage("assets/images/cinema.png");
-  park = loadImage("assets/images/park.png");
   friends = loadImage("assets/images/friends.png");
-  freeStudy = loadImage("assets/images/novels.png");
 }
 
 // setup()
@@ -102,30 +92,27 @@ function setup() {
 
 }
 
-function setUpGame(){
+function setUpGame() {
   goals = [];
-  barrier =[];
+  barrier = [];
   successEssentials = [];
-  game = new GameFeatures(width / 4, 200, 250, 255);
+  game = new GameFeatures(width / 10, 150, 200, color(128, 89, 76), leftPlayerImg, rightPlayerImg, friends, familyLeft, familyRight);
 
   // Players objects declaration and value assignment
-  leftPlayer = new Player(width / 4, height / 3, 5, color(200, 200, 0), 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 10, SHIFT, leftPlayerImg,1);
-  rightPlayer = new Player(width - 450, height / 3, 5, color(200, 0, 200), 70, 87, 83, 65, 68, width / 2 + 200, height / 2, 10, 20, rightPlayerImg,2);
+  leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1);
+  rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 200, height / 2, 12, 20, rightPlayerImg, 2);
 
   // Goals properties assignment to the objects and objects assignment to the array
   let speed = [15, 25, 20, 55, 30];
   let radius = [35, 45, 50, 35, 55];
   let name = [championship, education, marriage, toBeScientist, toBeArtist];
-  let nameSize = [10, 20, 25, 10, 30];
   for (let i = 0; i < numGoals; i++) {
     let goalsProperties = {
       x: width / 2,
       y: height / 2,
       speed: speed[i],
       radius: radius[i],
-      img: name[i],
-      // nameSize: nameSize[i],
-      opacity: 255
+      img: name[i]
     };
     // Declare and assign new goal object
     let newGoal = new Goal(goalsProperties);
@@ -212,10 +199,12 @@ function draw() {
     // If the left player won
     if (leftPlayer.goalGained > rightPlayer.goalGained) {
       game.leftPlayerVictory();
+      console.log(leftPlayer.goalGained);
     }
     // If the right player won
     else if (leftPlayer.goalGained < rightPlayer.goalGained) {
       game.rightPlayerVictory();
+        console.log(rightPlayer.goalGained);
     }
   }
   // Start the game
@@ -233,15 +222,13 @@ function draw() {
 
     // Check if either of the players acheived the goal and if so the the acheived goal won't be shown to the other one.
     for (let i = 0; i < goals.length; i++) {
-      if ( goals[i].isCaught ===leftPlayer.playerId) {
+      if (goals[i].isCaught === leftPlayer.playerId) {
         leftPlayer.checkAcheivement(goals[i]);
-      }
-      else if ( goals[i].isCaught ===rightPlayer.playerId) {
+      } else if (goals[i].isCaught === rightPlayer.playerId) {
         rightPlayer.checkAcheivement(goals[i]);
-      }
-      else {
-          leftPlayer.checkAcheivement(goals[i]);
-          rightPlayer.checkAcheivement(goals[i]);
+      } else {
+        leftPlayer.checkAcheivement(goals[i]);
+        rightPlayer.checkAcheivement(goals[i]);
       }
     }
 
@@ -250,35 +237,33 @@ function draw() {
     successEssentials[2].giveSupport(rightPlayer);
 
     // If either of the players consults his friends, the goals become visible to them again.
-    if(successEssentials[1].consultFriends(leftPlayer) ===true){
+    if (successEssentials[1].consultFriends(leftPlayer) === true) {
       for (let i = 0; i < goals.length; i++) {
         goals[i].goalDisappeared = false;
       }
-    }
-    else if (successEssentials[3].consultFriends(rightPlayer)===true) {
+    } else if (successEssentials[3].consultFriends(rightPlayer) === true) {
       for (let i = 0; i < goals.length; i++) {
         goals[i].goalDisappeared = false;
       }
     }
 
     // If either of the players encountered a barrier, the goals become invisible to both of the players.
-      for (let i = 0; i < barrier.length ; i++) {
-        let leftHit = barrier[i].lostGoal(leftPlayer);
-        let rightHit =  barrier[i].lostGoal(rightPlayer);
-        if(leftHit ===true){
-          for (let i = 0; i < goals.length; i++) {
-            goals[i].goalDisappeared = true;
-          }
-          break;
+    for (let i = 0; i < barrier.length; i++) {
+      let leftHit = barrier[i].lostGoal(leftPlayer);
+      let rightHit = barrier[i].lostGoal(rightPlayer);
+      if (leftHit === true) {
+        for (let i = 0; i < goals.length; i++) {
+          goals[i].goalDisappeared = true;
         }
-        else if(rightHit ===true){
-          for (let i = 0; i < goals.length; i++) {
-            goals[i].goalDisappeared = true;
-            console.log(goals[i].goalDisappeared);
-          }
-          break;
+        break;
+      } else if (rightHit === true) {
+        for (let i = 0; i < goals.length; i++) {
+          goals[i].goalDisappeared = true;
+          console.log(goals[i].goalDisappeared);
         }
+        break;
       }
+    }
 
     // Display all the elements
     // Barriers
@@ -291,7 +276,7 @@ function draw() {
     }
     // Goals
     for (let j = 0; j < goals.length; j++) {
-        goals[j].display();
+      goals[j].display();
     }
 
     leftPlayer.display();

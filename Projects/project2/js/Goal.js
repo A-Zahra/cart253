@@ -65,8 +65,8 @@ class Goal {
   // Draw the goal as an ellipse on the canvas
   // with a radius the same size as its current health.
   display() {
-    if(this.goalDisappeared ===false){
-      if (this.health> 2) {
+    if (this.goalDisappeared === false) {
+      if (this.health > 2) {
         push();
         noStroke();
         //tint(this.opacity);
