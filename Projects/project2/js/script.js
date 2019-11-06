@@ -37,7 +37,7 @@ let rectProperties;
 // Number of goals
 let numGoals = 5;
 // Declare an array to assign goals to
-let goals = [];
+let goals;
 // The goals array of colors
 let championship;
 let education;
@@ -49,7 +49,7 @@ let goalsColor;
 // Number of essentials
 let numEssentials = 4;
 // Declare an array to assign success essentials to
-let successEssentials = [];
+let successEssentials;
 // images of success essentials
 let familyLeft;
 let familyRight;
@@ -58,7 +58,7 @@ let friends;
 // Number of barriers (Multiply by two)
 let numBarriers = 4;
 // Declare an array to assign barrier objects to
-let barrier = [];
+let barrier;
 
 
 // preload()
@@ -70,10 +70,10 @@ function preload() {
   rightPlayerImg = loadImage("assets/images/Right-Player.png");
   // Goals images
   championship = loadImage("assets/images/championship.png");
-  education = loadImage("assets/images/Education.png");
-  marriage = loadImage("assets/images/Marriage.png");
-  toBeScientist = loadImage("assets/images/Science.png");
-  toBeArtist = loadImage("assets/images/ToBeArtist.png");
+  education = loadImage("assets/images/education.png");
+  marriage = loadImage("assets/images/marriage.png");
+  toBeScientist = loadImage("assets/images/toBeScientist.png");
+  toBeArtist = loadImage("assets/images/toBeArtist.png");
 
   // Essentials images
   familyLeft = loadImage("assets/images/familyLeft.png");
@@ -93,6 +93,7 @@ function setup() {
 }
 
 function setUpGame() {
+  // Declare goals, barriers and success essentials.
   goals = [];
   barrier = [];
   successEssentials = [];
@@ -100,7 +101,7 @@ function setUpGame() {
 
   // Players objects declaration and value assignment
   leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1);
-  rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 200, height / 2, 12, 20, rightPlayerImg, 2);
+  rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 235, height / 2, 12, 20, rightPlayerImg, 2);
 
   // Goals properties assignment to the objects and objects assignment to the array
   let speed = [15, 25, 20, 55, 30];
@@ -126,23 +127,23 @@ function setUpGame() {
       // left side player priorities
       {
         x: width / 7,
-        y: height / 3.5,
+        y: height / 3,
         img: familyLeft
       },
       {
         x: width / 7,
-        y: height / 2 + 150,
+        y: height / 2 + 100,
         img: friends
       },
       //right side player priorities
       {
         x: width - 270,
-        y: height / 3.5,
+        y: height / 3,
         img: familyRight
       },
       {
         x: width - 270,
-        y: height / 2 + 150,
+        y: height / 2 + 100,
         img: friends
       }
     ];
@@ -159,14 +160,14 @@ function setUpGame() {
     let barrierProperties = [{
         x: barrierx[i],
         y: barriery[i],
-        w: random(50, 100),
-        h: random(30, 50)
+        w: random(100, 130),
+        h: random(50, 70)
       },
       {
         x: barrierx[4 + i],
         y: barriery[4 + i],
-        w: random(30, 50),
-        h: random(50, 100)
+        w: random(50, 70),
+        h: random(100, 130)
       }
     ];
     // Declare and assign new horizental barrier object
@@ -192,6 +193,7 @@ function draw() {
   // Show start screen
   if (startScreen) {
     game.displayStart();
+    
   }
   // Victory screen
   else if (victoryScreen) {
@@ -205,6 +207,9 @@ function draw() {
     else if (leftPlayer.goalGained < rightPlayer.goalGained) {
       game.rightPlayerVictory();
         console.log(rightPlayer.goalGained);
+    }
+    else {
+      game.displayEndScreen();
     }
   }
   // Start the game
@@ -283,7 +288,7 @@ function draw() {
     rightPlayer.display();
 
     // If all goals were acheived by both players, or one of them died, the game ends.
-    if (leftPlayer.goalGained + rightPlayer.goalGained === 5 || leftPlayer.health < 10 || rightPlayer.health < 10) {
+    if (leftPlayer.goalGained + rightPlayer.goalGained === 1 || leftPlayer.health < 10 || rightPlayer.health < 10) {
       victoryScreen = true;
     }
   }

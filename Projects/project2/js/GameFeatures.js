@@ -9,7 +9,8 @@ class GameFeatures {
     this.introX = width - 320;
     this.titleY = titley;
     this.descY = descy;
-    // Images positions
+    // Images positions and radius
+    this.radius = 50;
     // Players
     this.leftImgx = width - 315;
     this.rightImgx = width - 215;
@@ -22,17 +23,21 @@ class GameFeatures {
     // Barrier
     this.barrierx = width - 265;
     this.barriery = height - 150;
+
+    // Description and barrier color
     this.fillColor = fillColor;
     this.barrierColor = color(179, 81, 8);
-    this.radius = 50;
     // Transfer sample images
     this.leftPlayerImg = leftPlayerImg;
     this.rightPlayerImg = rightPlayerImg;
     this.friends = friends;
     this.familyLeft = familyLeft;
     this.familyRight = familyRight;
+    // start and restart button properties objects declaration
     this.startRectProperties = 0;
     this.RestartRectProperties = 0;
+
+    this.angle = 0;
   }
 
   // displayStart()
@@ -41,19 +46,20 @@ class GameFeatures {
   displayStart() {
 
     let title = "GAME STORY : REAL LIFE ";
-    let descriptionFirstPart = "In real life, you follow your goals. You acheive your goals step by step and as long as\n" +
-                              "you are not sure one goal has been fully acheived you might not go for the next one!\n" +
-                              "However, the path to reach to your goals is not always easy and with no trouble. There are\n" +
+    let descriptionFirstPart = "In real life, you follow your goals. You acheive them step by step and as long as\n" +
+                              "you are not sure one goal has been fully acheived, you might not go for the next one!\n" +
+                              "However, the path to reach the goals is not always easy and with no trouble. There are\n" +
                               "always some barriers in front of you which makes you hesitate that whether you still want\n" +
-                              "the goal or not.Or when people around you hesitate about their goal, it may affect you and\n";
-    let descriptionSecondPart = "makes you hesitate about your goals too. The moment hesitation comes to your mind, goals are\n" +
+                              "to acheive them or not.Or when people around you hesitate about their goals, it may affect\n";
+    let descriptionSecondPart = "you and makes you hesitate about yours. The moment hesitation comes to your mind, goals are\n" +
                               "hidden from your view. At such moments, most often asking for friends help and consulting with\n" +
-                              "them is helpful. It helps you to get certain about your goals again. Moreover, family support is\n" +
-                              "always helpful for you to reach to your goals, otherwise tiredness of not acheiving one of your\n"+
-                              "goals can prevents you from achieving your other goals too. In real life you always try to acheive\n" +
+                              "them is helpful. It helps you to get certain about your goals again. Moreover, family support can\n" +
+                              "always be helpful to reach what you want, otherwise tiredness of not acheiving even one of your\n"+
+                              "goals can prevent you from achieving the other ones. In real life, you most often try to acheive\n" +
                               "as much goal as possible cause this is one of the main things that gives meaning to your life.\n" +
                               "So, do the same in this game to win.\n" +
                               "Hint: To achieve your goals there is a key that can be used to speed up\n(Left Player: SHIFT / Right Player: CAPS LOCK).\n";
+    let note = "Note: Don't play this game with your mom! There is no equal condition in this game!"
   push();
     noStroke();
     // Barrier shape
@@ -80,11 +86,12 @@ class GameFeatures {
     textSize(20);
     text(descriptionFirstPart, this.textX, this.descY);
     text(descriptionSecondPart, this.textX , this.descY * 1.63);
+    text(note, this.textX, this.descY * 2.76);
     textSize(30);
     textAlign(LEFT);
     text(10);
     text("Players", this.introX, this.titleY);
-    text("Friends and Family", this.introX - 75, this.titleY * 2.3);
+    text("Friends and Families", this.introX - 85, this.titleY * 2.3);
     text("Barriers", this.introX , this.titleY * 3.5);
   pop();
     this.startButton();
@@ -118,23 +125,32 @@ class GameFeatures {
   //
   // Left player victory screen
   leftPlayerVictory() {
+    background(255);
+    // push();
+
+    // rotateX(radians(this.angle));
+    imageMode(CENTER);
+    image(this.leftPlayerImg, width / 2, height / 3, this.radius * 4, this.radius * 4);
+    // pop()
     push();
-    background(this.fillColor);
     fill(0);
     textAlign(CENTER);
     textSize(30);
     text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.goalGained}`, width / 2, height / 2);
     this.restartButton();
     pop();
-
+    this.angle += 0.01;
   }
 
   // rightPlayerVictory()
   //
   // right Player victory screen
   rightPlayerVictory() {
+
     push();
-    background(this.fillColor);
+    background(255);
+    imageMode(CENTER);
+    image(this.rightPlayerImg, width / 2, height / 3, this.radius * 4, this.radius * 4);
     fill(0);
     textAlign(CENTER);
     textSize(30);
@@ -143,6 +159,19 @@ class GameFeatures {
     pop();
   }
 
+  // displayEndScreen
+  //
+  // Display end screen
+  displayEndScreen() {
+    push();
+    background(this.barrierColor);
+    fill(0);
+    textAlign(CENTER);
+    textSize(30);
+    text("What kind of players are you???\nHow you could both die and not acheive even one goal??", width / 2, height / 2);
+    this.restartButton();
+    pop();
+  }
   // restartButton()
   //
   // Draw restart button
