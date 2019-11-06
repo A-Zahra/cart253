@@ -123,16 +123,17 @@ class Player {
         goal.health -= this.healthGainPerEat;
         goal.goalAcheived = true;
 
-        // Check if the goal was not previously acheived.
-        if (goal.isCaught === -1) {
-          goal.isCaught = this.playerId;
-        }
+
       }
 
       // If goal's health is less than 1, add one to the goalGained value and Count the goal only once.
       if (goal.health <= 1) {
         if (goal.goalAcheived) {
           this.goalGained++;
+          // Check if the goal was not previously acheived.
+          if (goal.isCaught === -1) {
+            goal.isCaught = this.playerId;
+          }
           console.log(this.goalGained);
           goal.goalAcheived = false;
         }

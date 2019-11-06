@@ -97,7 +97,7 @@ function setUpGame() {
   goals = [];
   barrier = [];
   successEssentials = [];
-  game = new GameFeatures(width / 10, 150, 200, color(128, 89, 76), leftPlayerImg, rightPlayerImg, friends, familyLeft, familyRight);
+  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), leftPlayerImg, rightPlayerImg, friends, familyLeft, familyRight);
 
   // Players objects declaration and value assignment
   leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1);
@@ -193,7 +193,7 @@ function draw() {
   // Show start screen
   if (startScreen) {
     game.displayStart();
-    
+
   }
   // Victory screen
   else if (victoryScreen) {
@@ -288,7 +288,7 @@ function draw() {
     rightPlayer.display();
 
     // If all goals were acheived by both players, or one of them died, the game ends.
-    if (leftPlayer.goalGained + rightPlayer.goalGained === 1 || leftPlayer.health < 10 || rightPlayer.health < 10) {
+    if (leftPlayer.goalGained + rightPlayer.goalGained === 5 || leftPlayer.health < 10 || rightPlayer.health < 10) {
       victoryScreen = true;
     }
   }

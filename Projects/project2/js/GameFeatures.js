@@ -14,15 +14,15 @@ class GameFeatures {
     // Players
     this.leftImgx = width - 315;
     this.rightImgx = width - 215;
-    this.imgy = height / 3.2;
+    this.imgy = height / 3.8;
     // Essentials
-    this.friendsFamilyY = height / 1.8;
+    this.friendsFamilyY = height / 2.1;
     this.friendsX = width - 350;
     this.familyLeftX = width - 260;
     this.familyRightX = width - 180;
     // Barrier
     this.barrierx = width - 265;
-    this.barriery = height - 150;
+    this.barriery = height - 250;
 
     // Description and barrier color
     this.fillColor = fillColor;
@@ -38,6 +38,19 @@ class GameFeatures {
     this.RestartRectProperties = 0;
 
     this.angle = 0;
+
+    // this.rightPlayerKeys = {
+    //   x: width / 3.8,
+    //   y: height - 60,
+    //   w: 70,
+    //   h: 40
+    // }
+    this.controlsx = 0;
+    this.controlsy = 0
+    this.controlsw = 60;
+    this.controlsh = 40;
+    this.controlsNames = 0;
+    this.numKeys = 6;
   }
 
   // displayStart()
@@ -61,23 +74,6 @@ class GameFeatures {
                               "Hint: To achieve your goals there is a key that can be used to speed up\n(Left Player: SHIFT / Right Player: CAPS LOCK).\n";
     let note = "Note: Don't play this game with your mom! There is no equal condition in this game!"
   push();
-    noStroke();
-    // Barrier shape
-    rectMode(CENTER);
-    fill(this.barrierColor);
-    rect(this.barrierx, this.barriery, this.radius * 2, this.radius);
-    console.log(this.barrierColor);
-    imageMode(CENTER);
-    // Players images
-    image(this.leftPlayerImg, this.leftImgx, this.imgy, this.radius * 2, this.radius * 2);
-    image(this.rightPlayerImg, this.rightImgx, this.imgy, this.radius * 2, this.radius * 2);
-    // Success essentials images
-    image(this.friends, this.friendsX, this.friendsFamilyY, this.radius * 2, this.radius * 2);
-    image(this.familyLeft, this.familyLeftX, this.friendsFamilyY, this.radius * 2, this.radius * 2);
-    image(this.familyRight, this.familyRightX, this.friendsFamilyY, this.radius * 2, this.radius * 2);
-
-  pop();
-  push();
     fill(this.fillColor);
     textSize(30);
     textAlign(LEFT);
@@ -85,16 +81,75 @@ class GameFeatures {
     text(title, this.textX, this.titleY);
     textSize(20);
     text(descriptionFirstPart, this.textX, this.descY);
-    text(descriptionSecondPart, this.textX , this.descY * 1.63);
-    text(note, this.textX, this.descY * 2.76);
+    text(descriptionSecondPart, this.textX , this.descY * 1.7);
+    text(note, this.textX, this.descY * 2.95);
+  pop();
+  this.displayElements();
+  this.displayControlKeys();
+  this.startButton();
+
+  }
+  // displayElements
+  //
+  // display sample images of players, essentials
+  displayElements() {
+    push();
+      noStroke();
+      // Barrier shape
+      rectMode(CENTER);
+      fill(this.barrierColor);
+      rect(this.barrierx, this.barriery, this.radius * 2, this.radius);
+      console.log(this.barrierColor);
+      imageMode(CENTER);
+      // Players images
+      image(this.leftPlayerImg, this.leftImgx, this.imgy, this.radius * 2, this.radius * 2);
+      image(this.rightPlayerImg, this.rightImgx, this.imgy, this.radius * 2, this.radius * 2);
+      // Success essentials images
+      image(this.friends, this.friendsX, this.friendsFamilyY, this.radius * 2, this.radius * 2);
+      image(this.familyLeft, this.familyLeftX, this.friendsFamilyY, this.radius * 2, this.radius * 2);
+      image(this.familyRight, this.familyRightX, this.friendsFamilyY, this.radius * 2, this.radius * 2);
+    pop();
+    push();
+    fill(this.fillColor);
     textSize(30);
     textAlign(LEFT);
-    text(10);
     text("Players", this.introX, this.titleY);
-    text("Friends and Families", this.introX - 85, this.titleY * 2.3);
-    text("Barriers", this.introX , this.titleY * 3.5);
-  pop();
-    this.startButton();
+    text("Friends and Families", this.introX - 85, this.titleY * 2.35);
+    text("Barriers", this.introX , this.titleY * 3.7);
+    pop();
+  }
+
+  // displayControlKeys
+  //
+  // Introduce players control keys
+  displayControlKeys() {
+    push();
+    this.controlsx = [width / 4.1, width/ 3.36, width / 3 + 30, width / 2.23, width / 2 + 5, width / 2 + 89, width/ 3.36, width / 2 + 5];
+    this.controlsy = [height - 60, height - 120];
+    this.controlsNames = ["A", "S", "D", "LEFT", "DOWN", "RIGHT", "W", "UP"];
+    rectMode(CENTER);
+    fill(200, 180, 120);
+      for (let i = 0; i < this.numKeys; i++) {
+        rect(this.controlsx[i], this.controlsy[0],this.controlsw, this.controlsh);
+        rect(this.controlsx[i + 6], this.controlsy[1],this.controlsw, this.controlsh);
+      }
+    pop();
+    push();
+    fill(this.fillColor);
+    textSize(20);
+    textAlign(LEFT);
+    text("Right Player Control Keys", width / 4.5 , height - 170);
+    text("Left Player Control Keys", width / 2 - 105 , height - 170);
+    textSize(15);
+    textAlign(CENTER,CENTER);
+    for (let i = 0; i < this.numKeys ; i+=3) {
+      text(this.controlsNames[i], this.controlsx[i], this.controlsy[0]);
+      text(this.controlsNames[i+1], this.controlsx[i+1] , this.controlsy[0]);
+      text(this.controlsNames[i+2], this.controlsx[i+2], this.controlsy[0]);
+      text(this.controlsNames[6], this.controlsx[6] , this.controlsy[1]);
+      text(this.controlsNames[7], this.controlsx[7] , this.controlsy[1]);
+    }
+    pop();
   }
 
   // startButton()
@@ -103,8 +158,8 @@ class GameFeatures {
   startButton() {
     // Start button rectangle properties
     this.startRectProperties = {
-      x: width / 3,
-      y: height / 2 + 250,
+      x: width / 7.1,
+      y: height / 2 + 230,
       w: 150,
       h: 80,
       fillColor: color(35, 145, 200)
