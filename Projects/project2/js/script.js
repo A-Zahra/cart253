@@ -36,8 +36,10 @@ let rectProperties;
 // Start screen sample images of players, essentials and goals
 let startScreenImages;
 
-// Number of goals
+// Number of goals, sum of goals acheived and players health rate
 let numGoals = 5;
+let sumGoals = 5;
+let healthRate = 10;
 // Declare an array to assign goals to
 let goals;
 // The goals array of colors
@@ -196,46 +198,41 @@ function setUpGame() {
     // Add the new vertical barrier object to the barriers array
     barrier.push(verticalBarrier);
   }
-
 }
 
 // draw()
 //
-// Handles input, movement, eating, and displaying for the system's objects
+// Handles input, movement, acheivement, and displaying for the system's objects
 function draw() {
-
   // Clear the background to black
   background(0);
 
   // Show start screen
   if (startScreen) {
     game.displayStart();
-
   }
   // Victory screen
   else if (victoryScreen) {
-    console.log("END");
     // If the left player won
     if (leftPlayer.goalGained > rightPlayer.goalGained) {
       game.leftPlayerVictory();
-      console.log(leftPlayer.goalGained);
     }
     // If the right player won
     else if (leftPlayer.goalGained < rightPlayer.goalGained) {
       game.rightPlayerVictory();
-        console.log(rightPlayer.goalGained);
     }
+    // If both players died
     else {
       game.displayEndScreen();
     }
   }
   // Start the game
   else if (gameStart) {
-    // Handle input for left and right players
+    // Handle input for left and right players.
     leftPlayer.handleInput();
     rightPlayer.handleInput();
 
-    // Move all the players and goals
+    // Move all the players and goals.
     leftPlayer.move();
     rightPlayer.move();
     for (let i = 0; i < goals.length; i++) {
@@ -254,11 +251,11 @@ function draw() {
       }
     }
 
-    // If the player received support from his family, his health is refreshed.
+    // If the player overlapped family, his health is refreshed.
     successEssentials[0].giveSupport(leftPlayer);
     successEssentials[2].giveSupport(rightPlayer);
 
-    // If either of the players consults his friends, the goals become visible to them again.
+    // If either of the players overlapped their friends, the goals become visible again.
     if (successEssentials[1].consultFriends(leftPlayer) === true) {
       for (let i = 0; i < goals.length; i++) {
         goals[i].goalDisappeared = false;
@@ -269,10 +266,12 @@ function draw() {
       }
     }
 
-    // If either of the players encountered a barrier, the goals become invisible to both of the players.
+    // If either of the players overlapped barrier, all goals become invisible to both of the players.
     for (let i = 0; i < barrier.length; i++) {
+      // If player overlapped barrier, send true
       let leftHit = barrier[i].lostGoal(leftPlayer);
       let rightHit = barrier[i].lostGoal(rightPlayer);
+      // If either of the hits is true, goals disappear
       if (leftHit === true) {
         for (let i = 0; i < goals.length; i++) {
           goals[i].goalDisappeared = true;
@@ -281,7 +280,6 @@ function draw() {
       } else if (rightHit === true) {
         for (let i = 0; i < goals.length; i++) {
           goals[i].goalDisappeared = true;
-          console.log(goals[i].goalDisappeared);
         }
         break;
       }
@@ -300,12 +298,12 @@ function draw() {
     for (let j = 0; j < goals.length; j++) {
       goals[j].display();
     }
-
+    // Players
     leftPlayer.display();
     rightPlayer.display();
 
-    // If all goals were acheived by both players, or one of them died, the game ends.
-    if (leftPlayer.goalGained + rightPlayer.goalGained === 5 || leftPlayer.health < 10 || rightPlayer.health < 10) {
+    // If all goals were acheived by players, or one of them died, the game ends.
+    if (leftPlayer.goalGained + rightPlayer.goalGained === sumGoals || leftPlayer.health < healthRate || rightPlayer.health < healthRate) {
       victoryScreen = true;
     }
   }
@@ -334,14 +332,12 @@ function restart() {
     gameStart = false;
     victoryScreen = false;
     setUpGame();
-    console.log("restart");
-
   }
 }
 
 // mousePressed()
 //
-// Here to require a click to start playing the game
+// Here to require a click to start or restart playing the game
 function mousePressed() {
   if (!gameStart) {
     start();

@@ -3,8 +3,13 @@
 // A class that represents start, victory and end screen
 
 class GameFeatures {
+
+  // constructor
+  //
+  // Sets the initial values for the screen's properties
+  // Either sets default values or uses the arguments provided.
   constructor(textx, titley, descy, fillColor, startScreenImages) {
-    // Title and description position
+    // Titles and description position
     this.textX = textx;
     this.introX = width - 310;
     this.titleY = titley;
@@ -19,14 +24,17 @@ class GameFeatures {
     this.barrierx = width - 265;
     this.barriery = height - 220;
 
-    // Description and barrier colors
+    // Description, barrier, keys and victory screen text colors
     this.fillColor = fillColor;
     this.barrierColor = color(179, 81, 8);
-    // Show sample images
+    this.keysColor = color (200, 180, 120);
+    this.victoryScreenBackground = color(0);
+    // Add sample images to arrays
+    // Specify the number of images in order to be used in for loops
     this.playersEssentialsImgs = [startScreenImages.playerLeft, startScreenImages.playerRight, startScreenImages.friends, startScreenImages.familyLeft, startScreenImages.familyRight];
     this.goalsImgs = [startScreenImages.championship, startScreenImages.education, startScreenImages.marriage, startScreenImages.toBeScientist, startScreenImages.toBeArtist];
     this.numImages = 5;
-    // start and restart button properties objects declaration
+    // start and restart button objects declaration
     this.startRectProperties = 0;
     this.RestartRectProperties = 0;
 
@@ -42,9 +50,8 @@ class GameFeatures {
 
   // displayStart()
   //
-  // Display start screen
+  // Display start screen elements
   displayStart() {
-
     let title = "GAME STORY : REAL LIFE ";
     let descriptionFirstPart = "In real life, you follow your goals. You acheive them step by step and as long as\n" +
       "you are not sure one goal has been fully acheived, you might not go for the next one!\n" +
@@ -74,8 +81,8 @@ class GameFeatures {
     this.displayElements();
     this.displayControlKeys();
     this.startButton();
-
   }
+
   // displayElements
   //
   // display sample images of players, essentials
@@ -117,7 +124,7 @@ class GameFeatures {
   displayControlKeys() {
     push();
     rectMode(CENTER);
-    fill(200, 180, 120);
+    fill(this.keysColor);
     for (let i = 0; i < this.numKeys; i++) {
       rect(this.controlsx[i], this.controlsy[0], this.controlsw, this.controlsh);
       rect(this.controlsx[i + 6], this.controlsy[1], this.controlsw, this.controlsh);
@@ -172,12 +179,12 @@ class GameFeatures {
   //
   // Left player victory screen
   leftPlayerVictory() {
-    background(255);
+    background(this.victoryScreenBackground);
     // rotateX(radians(this.angle));
     push();
     imageMode(CENTER);
     image(this.playersEssentialsImgs[0], width / 2, height / 3, this.radius * 4, this.radius * 4);
-    fill(0);
+    fill(255);
     textAlign(CENTER);
     textSize(30);
     text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.goalGained}`, width / 2, height / 2);
@@ -190,11 +197,11 @@ class GameFeatures {
   //
   // right Player victory screen
   rightPlayerVictory() {
+    background(this.victoryScreenBackground);
     push();
-    background(255);
     imageMode(CENTER);
     image(this.playersEssentialsImgs[0], width / 2, height / 3, this.radius * 4, this.radius * 4);
-    fill(0);
+    fill(255);
     textAlign(CENTER);
     textSize(30);
     text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved: ${rightPlayer.goalGained}`, width / 2, height / 2);
@@ -215,7 +222,7 @@ class GameFeatures {
     this.restartButton();
     pop();
   }
-  
+
   // restartButton()
   //
   // Draw restart button
