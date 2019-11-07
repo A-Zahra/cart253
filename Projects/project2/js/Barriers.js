@@ -17,14 +17,18 @@ class Barriers {
     this.w = barrier.w;
     this.h = barrier.h;
     this.fillColor = color(179, 81, 8);
+    this.sound = 0;
   }
 
   // lostGoal
   //
   // If player overlapped barrier, goals become invisible (send true).
-  lostGoal(player) {
+  lostGoal(player, sound) {
     let d = dist(this.x, this.y, player.x, player.y);
-    if (d < this.w / 1.5 || d < this.h / 1.5) {
+    this.sound = sound;
+    if (d < this.w && d < this.h) {
+      // this.sound.currentTime = 0;
+      this.sound.play();
       return true;
     }
     return false;

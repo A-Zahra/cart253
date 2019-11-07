@@ -22,25 +22,31 @@ class SuccessEssentials {
     this.awarenessIncrement = false;
     this.goalFound = false;
     this.fillColor = color(255);
+    this.friendSound = 0;
+    this.familySound = 0;
 
   }
 
   // giveSupport
   //
   // If player overlapped family, sets his health to default value.
-  giveSupport(player) {
+  giveSupport(player, sound) {
     let d = dist(this.x, this.y, player.x, player.y);
     if (d < this.radius) {
       player.health = player.maxHealth;
+      this.familySound = sound;
+      this.familySound.play();
     }
   }
 
   // consultFriends
   //
   // If player overlapped friends, displays all goals again (send true).
-  consultFriends(player) {
+  consultFriends(player, sound) {
     let d = dist(this.x, this.y, player.x, player.y);
     if (d < this.radius) {
+      this.friendSound = sound;
+      this.friendSound.play();
       return true;
     }
     return false;

@@ -18,6 +18,26 @@
 // The number of goals acheived is shown on the victory screen.
 // If the player dies an end screen is shown.
 /****************************************************************************/
+//
+/****************************************************************************/
+// Reference
+//
+// --** Images **--
+// Friends:
+// https://www.clipartmax.com/middle/m2H7H7d3d3G6K9i8_inspirational-photos-of-winnie-the-pooh-and-friends-winnie-de-pooh-sticker/
+//
+// Familys:
+// https://shopacefamily.com/products/sticker-pack-cartoon
+//
+// Players:
+// https://i0.wp.com/www.grfxpro.com/uploads/img_lg/20062016065344.jpg
+//
+// Goals:
+// https://appadvice.com/app/teacher-education-stickers/1435187736
+
+// --** Audios **--
+
+/****************************************************************************/
 
 // Our players and their images
 let leftPlayer;
@@ -38,17 +58,16 @@ let startScreenImages;
 
 // Number of goals, sum of goals acheived and players health rate
 let numGoals = 5;
-let sumGoals = 1;
+let sumGoals = 5;
 let healthRate = 10;
 // Declare an array to assign goals to
 let goals;
-// The goals array of colors
+// Declare variables for goals images
 let championship;
 let education;
 let marriage;
 let toBeArtist;
 let toBeScientist;
-let goalsColor;
 
 // Number of essentials
 let numEssentials = 4;
@@ -57,18 +76,24 @@ let successEssentials;
 // images of success essentials
 let familyLeft;
 let familyRight;
+let hitFamily;
 let friends;
+let hitFriend;
 
 // Number of barriers (Multiply by two)
 let numBarriers = 4;
 // Declare an array to assign barrier objects to
 let barrier;
+// Barriers sound
+let hitBarrier;
 
 
 // preload()
 //
 // Preload all external images
 function preload() {
+  // Images
+
   // Players images
   leftPlayerImg = loadImage("assets/images/Left-Player.png");
   rightPlayerImg = loadImage("assets/images/Right-Player.png");
@@ -82,6 +107,15 @@ function preload() {
   familyLeft = loadImage("assets/images/familyLeft.png");
   familyRight = loadImage("assets/images/familyRight.png");
   friends = loadImage("assets/images/friends.png");
+
+  // Audios
+
+  // If hit barriers
+  hitBarrier = new Audio("assets/sounds/hitBarrier.wav");
+  // If hit friends
+  hitFriend = new Audio ("assets/sounds/hitFriend.wav");
+  // If hit family
+  hitFamily = new Audio("assets/sounds/hitFamily.wav");
 }
 
 // setup()
@@ -252,15 +286,15 @@ function draw() {
     }
 
     // If the player overlapped family, his health is refreshed.
-    successEssentials[0].giveSupport(leftPlayer);
-    successEssentials[2].giveSupport(rightPlayer);
+    successEssentials[0].giveSupport(leftPlayer, hitFamily);
+    successEssentials[2].giveSupport(rightPlayer, hitFamily);
 
     // If either of the players overlapped their friends, the goals become visible again.
-    if (successEssentials[1].consultFriends(leftPlayer) === true) {
+    if (successEssentials[1].consultFriends(leftPlayer, hitFriend) === true) {
       for (let i = 0; i < goals.length; i++) {
         goals[i].goalDisappeared = false;
       }
-    } else if (successEssentials[3].consultFriends(rightPlayer) === true) {
+    } else if (successEssentials[3].consultFriends(rightPlayer, hitFriend) === true) {
       for (let i = 0; i < goals.length; i++) {
         goals[i].goalDisappeared = false;
       }
@@ -269,8 +303,8 @@ function draw() {
     // If either of the players overlapped barrier, all goals become invisible to both of the players.
     for (let i = 0; i < barrier.length; i++) {
       // If player overlapped barrier, send true
-      let leftHit = barrier[i].lostGoal(leftPlayer);
-      let rightHit = barrier[i].lostGoal(rightPlayer);
+      let leftHit = barrier[i].lostGoal(leftPlayer, hitBarrier);
+      let rightHit = barrier[i].lostGoal(rightPlayer, hitBarrier);
       // If either of the hits is true, goals disappear
       if (leftHit === true) {
         for (let i = 0; i < goals.length; i++) {
