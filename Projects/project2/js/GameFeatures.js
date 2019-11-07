@@ -8,7 +8,7 @@ class GameFeatures {
   //
   // Sets the initial values for the screen's properties
   // Either sets default values or uses the arguments provided.
-  constructor(textx, titley, descy, fillColor, startScreenImages, deathSound, victorySound) {
+  constructor(textx, titley, descy, fillColor, startScreenImages) {
     // Titles and description position
     this.textX = textx;
     this.introX = width - 310;
@@ -18,7 +18,7 @@ class GameFeatures {
     this.radius = 50;
     // Players, essentials and goals
     this.imagesx = [width - 315, width - 215, width - 350, width - 260, width - 180];
-    this.imagesy = [height / 3.8, height / 2, height/ 1.1];
+    this.imagesy = [height / 3.8, height / 2, height / 1.1];
     this.goalsImgx = [width / 2 + 250, width - 435, width - 350, width - 265, width - 180];
     // Barrier
     this.barrierx = width - 265;
@@ -27,8 +27,7 @@ class GameFeatures {
     // Description, barrier, keys and victory screen text colors
     this.fillColor = fillColor;
     this.barrierColor = color(179, 81, 8);
-    this.keysColor = color (200, 180, 120);
-    this.victoryScreenBackground = color(0);
+    this.keysColor = color(200, 180, 120);
 
     // Add sample images to arrays
     // Specify the number of images in order to be used in for loops
@@ -43,14 +42,17 @@ class GameFeatures {
     // Victory screen elements properties
     this.victory = {
       x: width / 2,
-      winnery: height / 2,
-      losery: height / 2 + 115,
+      winnery: height / 2.3,
+      losery: height / 2 + 65,
       imagey: height / 3,
       textSize: 30,
-      textColor: 255
+      textColor: 255,
+      backgroundColor: color (35, 145, 200, 210),
+      backgroundy: height / 2,
+      backgroundw: 600,
+      backgroundh: 200
     };
 
-    this.angle = 0;
     // Control keys positions, sizes, number of them and names
     this.controlsx = [width / 4.1, width / 3.36, width / 3 + 30, width / 2.23, width / 2 + 5, width / 2 + 89, width / 3.36, width / 2 + 5];
     this.controlsy = [height - 60, height - 120];
@@ -58,9 +60,6 @@ class GameFeatures {
     this.controlsw = 60;
     this.controlsh = 40;
     this.numKeys = 6;
-    // Victory and end sounds
-    this.deathSound = deathSound;
-    this.victorySound = victorySound;
   }
 
   // displayStart()
@@ -193,40 +192,35 @@ class GameFeatures {
   //
   // Left player victory screen
   leftPlayerVictory() {
-
-    background(this.victoryScreenBackground);
-    // rotateX(radians(this.angle));
     push();
-    imageMode(CENTER);
-    image(this.playersEssentialsImgs[0], this.victory.x, this.victory.imagey, this.radius * 4, this.radius * 4);
+    noStroke();
+    fill(this.victory.backgroundColor);
+    rectMode(CENTER);
+    rect(this.victory.x, this.victory.backgroundy, this.victory.backgroundw, this.victory.backgroundh);
     fill(this.victory.textColor);
     textAlign(CENTER);
     textSize(this.victory.textSize);
     text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved by winner: ${leftPlayer.goalGained}\n`, this.victory.x, this.victory.winnery);
     text(`Number of goals achieved by loser: ${rightPlayer.goalGained}`, this.victory.x, this.victory.losery);
     pop();
-    // Victory sound
-    this.victorySound.play();
     this.restartButton();
-    this.angle += 0.01;
   }
 
   // rightPlayerVictory()
   //
   // right Player victory screen
   rightPlayerVictory() {
-    background(this.victoryScreenBackground);
     push();
-    imageMode(CENTER);
-    image(this.playersEssentialsImgs[1], this.victory.x, this.victory.imagey, this.radius * 4, this.radius * 4);
+    noStroke();
+    fill(this.victory.backgroundColor);
+    rectMode(CENTER);
+    rect(this.victory.x, this.victory.backgroundy, this.victory.backgroundw, this.victory.backgroundh);
     fill(this.victory.textColor);
     textAlign(CENTER);
     textSize(this.victory.textSize);
     text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved by winner: ${rightPlayer.goalGained}\n`, this.victory.x, this.victory.winnery);
     text(`Number of goals achieved by loser: ${leftPlayer.goalGained}`, this.victory.x, this.victory.losery);
     pop();
-    // Victory Sound
-    this.victorySound.play();
     this.restartButton();
   }
 
@@ -239,10 +233,8 @@ class GameFeatures {
     fill(0);
     textAlign(CENTER);
     textSize(30);
-    text("What kind of players are you???\nHow you could both die and not acheive even one goal??", width / 2, height / 2);
+    text("What kind of players are you???\nHow you could both die and neither of you won the game??", width / 2, height / 2);
     pop();
-    // If both player died, makes this sound.
-    this.deathSound.play();
     this.restartButton();
   }
 

@@ -23,6 +23,9 @@
 // Reference
 //
 // --** Images **--
+// background image:
+// https://www.vectorstock.com/royalty-free-vector/modern-building-with-night-city-background-vector-8255579
+//
 // Friends:
 // https://www.clipartmax.com/middle/m2H7H7d3d3G6K9i8_inspirational-photos-of-winnie-the-pooh-and-friends-winnie-de-pooh-sticker/
 //
@@ -36,8 +39,10 @@
 // https://appadvice.com/app/teacher-education-stickers/1435187736
 
 // --** Audios **--
-
+// https://www.noiseforfun.com/
 /****************************************************************************/
+// Background image
+let cityBackground;
 
 // Our players and their images
 let leftPlayer;
@@ -61,7 +66,7 @@ let startScreenImages;
 let numGoals = 5;
 let sumGoals = 5;
 let healthRate = 10;
-// Declare an array to assign goals to
+// Declare an array to assign goals
 let goals;
 let hitGoal;
 // Declare variables for goals images
@@ -73,7 +78,7 @@ let toBeScientist;
 
 // Number of essentials
 let numEssentials = 4;
-// Declare an array to assign success essentials to
+// Declare an array to assign success essentials
 let successEssentials;
 // images of success essentials
 let familyLeft;
@@ -84,18 +89,26 @@ let hitFriend;
 
 // Number of barriers (Multiply by two)
 let numBarriers = 4;
-// Declare an array to assign barrier objects to
+// Declare an array to assign barrier objects
 let barrier;
 // Barriers sound
 let hitBarrier;
 
+// Declare variables to assign rotating images properties
+let rotatingImgX;
+let rotatingImgY;
+let numRotatingImg;
+let spinningImg;
+let angleSize;
 
 // preload()
 //
 // Preload all external images
 function preload() {
   // Images
-
+  //
+  // Background
+  cityBackground = loadImage("assets/images/CityBackground.jpg");
   // Players images
   leftPlayerImg = loadImage("assets/images/Left-Player.png");
   rightPlayerImg = loadImage("assets/images/Right-Player.png");
@@ -111,16 +124,16 @@ function preload() {
   friends = loadImage("assets/images/friends.png");
 
   // Audios
-
-  // If hit barriers
+  //
+  // If hit barriers...
   hitBarrier = new Audio("assets/sounds/hitBarrier.wav");
-  // If hit friends
-  hitFriend = new Audio ("assets/sounds/hitFriend.wav");
-  // If hit family
+  // If hit friends...
+  hitFriend = new Audio("assets/sounds/hitFriend.wav");
+  // If hit family...
   hitFamily = new Audio("assets/sounds/hitFamily.wav");
-  // If hit goal
+  // If hit goal...
   hitGoal = new Audio("assets/sounds/hitGoal.wav");
-  // If both player Died
+  // If both player Died or one of them won...
   bothDied = new Audio("assets/sounds/BothDied.wav");
   victorySound = new Audio("assets/sounds/victorySound.wav");
 }
@@ -143,6 +156,15 @@ function setUpGame() {
   goals = [];
   barrier = [];
   successEssentials = [];
+  // Declare arrays to assign victory screen player images positions
+  rotatingImgX = [];
+  rotatingImgY = [];
+  // Assign a default value
+  angleSize = 0;
+  // Random positions
+  let rx;
+  let ry;
+
   // Assign start screen images to an object
   startScreenImages = {
     playerLeft: leftPlayerImg,
@@ -156,8 +178,9 @@ function setUpGame() {
     toBeScientist: toBeScientist,
     toBeArtist: toBeArtist
   };
+
   // Game features objects declaration and value assignment.
-  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages, bothDied, victorySound);
+  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages);
 
   // Players objects declaration and value assignment
   leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1, hitGoal);
@@ -215,19 +238,19 @@ function setUpGame() {
 
   // Barriers properties assignment to the objects and objects assignment to the array
   for (let i = 0; i < numBarriers; i++) {
-    let barrierx = [(width / 4), 20, (width / 2), (width - 50), (width / 2 + 50), (width / 5), (width / 2 + 100), (width - 200)];
-    let barriery = [(height / 2 + 300), (height / 3), (height / 2), (height / 2 + 100), 100, 10, (height / 2 + 150), (height - 20)];
+    let barrierx = [(width / 4), (width - 350), (width / 2.2), (width - 50), (width / 2 + 50), (width / 5), (width / 2 + 100), (width - 200)];
+    let barriery = [(height / 2 + 300), 50, (height / 2), (height / 2 + 100), 100, 50, (height / 2 + 150), (height - 20)];
     let barrierProperties = [{
         x: barrierx[i],
         y: barriery[i],
-        w: random(100, 130),
-        h: random(50, 70)
+        w: random(120, 140),
+        h: random(60, 75)
       },
       {
         x: barrierx[4 + i],
         y: barriery[4 + i],
-        w: random(50, 70),
-        h: random(100, 130)
+        w: random(60, 75),
+        h: random(120, 140)
       }
     ];
     // Declare and assign new horizental barrier object
@@ -239,36 +262,57 @@ function setUpGame() {
     // Add the new vertical barrier object to the barriers array
     barrier.push(verticalBarrier);
   }
+
+  // number of rotating and enlarging images
+  numRotatingImg = 200;
+  // Victory screen spinning images positions
+  for (let i = 0; i < numRotatingImg; i++) {
+    rx = floor(random(0, width));
+    ry = floor(random(0, height));
+    rotatingImgX.push(rx);
+    rotatingImgY.push(ry);
+  }
+  // Assign properties to spinning image object
+  spinningImg = {
+    centerX: 0,
+    centerY: 0,
+    w: 150,
+    h: 150,
+    maxAngleSize: 360
+  };
 }
 
 // draw()
 //
 // Handles input, movement, acheivement, and displaying for the system's objects
 function draw() {
-  // Clear the background to black
-  background(0);
+  // Background image
+  background(cityBackground);
 
   // Show start screen
   if (startScreen) {
+    // Clear the background to black
+    background(0);
     game.displayStart();
   }
   // Victory screen
   else if (victoryScreen) {
+    // Clear the background to black
+    background(0);
     // If the left player won
     if (leftPlayer.goalGained > rightPlayer.goalGained) {
+      leftWinnerPrize();
       game.leftPlayerVictory();
     }
     // If the right player won
     else if (leftPlayer.goalGained < rightPlayer.goalGained) {
+      rightWinnerPrize();
       game.rightPlayerVictory();
     }
     // If both players died
     else {
       game.displayEndScreen();
-    //  bothDied.stop();
     }
-    bothDied.stop();
-    victorySound.stop();
   }
   // Start the game
   else if (gameStart) {
@@ -347,11 +391,55 @@ function draw() {
     rightPlayer.display();
 
     // If all goals were acheived by players, or one of them died, the game ends.
-    if (leftPlayer.goalGained + rightPlayer.goalGained === sumGoals || leftPlayer.health < healthRate || rightPlayer.health < healthRate) {
+    if (leftPlayer.goalGained + rightPlayer.goalGained === sumGoals) {
       victoryScreen = true;
+      // Victory sound
+      victorySound.play();
+    } else if (leftPlayer.health < healthRate || rightPlayer.health < healthRate) {
+      victoryScreen = true;
+      // Death sound
+      bothDied.play();
     }
   }
+}
 
+// leftWinnerPrize
+//
+// This is the prize of the winner.
+// 200 hundred images rotating and enlarging.
+function leftWinnerPrize() {
+    for (let i = 0; i < numRotatingImg; i++) {
+      push();
+      translate(rotatingImgX[i],rotatingImgY[i]);
+      rotate(radians(angleSize));
+      scale(radians(angleSize / 3));
+      imageMode(CENTER);
+      image(leftPlayerImg, spinningImg.centerX, spinningImg.centerY, spinningImg.w, spinningImg.h);
+      // add 0.05 to angle and size each round
+      // Constrain the value of angleSize to a reasonable number
+        angleSize += 0.05;
+        angleSize = constrain(angleSize, 100, spinningImg.maxAngleSize);
+      pop();
+  }
+}
+// rightWinnerPrize
+//
+// This is the rpize of the winner.
+// 200 hundred images rotating and enlarging.
+function rightWinnerPrize() {
+  for (let i = 0; i < numRotatingImg; i++) {
+    push();
+    translate(rotatingImgX[i],rotatingImgY[i]);
+    rotate(radians(angleSize));
+    scale(radians(angleSize / 3));
+    imageMode(CENTER);
+    image(rightPlayerImg, spinningImg.centerX, spinningImg.centerY, spinningImg.w, spinningImg.h);
+    // add 0.05 to angle and size each round
+    // Constrain the value of angleSize to a reasonable number
+      angleSize += 0.05;
+      angleSize = constrain(angleSize, 0, spinningImg.maxAngleSize);
+    pop();
+  }
 }
 
 // start()

@@ -27,7 +27,7 @@ class Barriers {
   lostGoal(player, sound) {
     let d = dist(this.x, this.y, player.x, player.y);
     this.sound = sound;
-    if (d < this.w && d < this.h) {
+    if (d < this.w + 10 && d < this.h + 10) {
       // this.sound.currentTime = 0;
       this.sound.play();
       return true;
@@ -40,6 +40,7 @@ class Barriers {
   // Draw the barrier as an image on the canvas.
   display() {
     push()
+    noStroke();
     fill(this.fillColor);
     rectMode(CENTER);
     rect(this.x, this.y, this.w, this.h);
