@@ -33,6 +33,8 @@ let startScreen = true;
 let victoryScreen = false;
 // Start button object declaration
 let rectProperties;
+// Start screen sample images of players, essentials and goals
+let startScreenImages;
 
 // Number of goals
 let numGoals = 5;
@@ -74,7 +76,6 @@ function preload() {
   marriage = loadImage("assets/images/marriage.png");
   toBeScientist = loadImage("assets/images/toBeScientist.png");
   toBeArtist = loadImage("assets/images/toBeArtist.png");
-
   // Essentials images
   familyLeft = loadImage("assets/images/familyLeft.png");
   familyRight = loadImage("assets/images/familyRight.png");
@@ -89,15 +90,30 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   // Game start and end screen objects declaration and assignment
   setUpGame();
-
 }
 
+// setUpGame
+//
+// Assign all the necessary initial values to arrays, variables and objects
 function setUpGame() {
   // Declare goals, barriers and success essentials.
   goals = [];
   barrier = [];
   successEssentials = [];
-  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), leftPlayerImg, rightPlayerImg, friends, familyLeft, familyRight);
+  // Assign start screen images to an object
+  startScreenImages = {
+    playerLeft: leftPlayerImg,
+    playerRight: rightPlayerImg,
+    familyLeft: familyLeft,
+    familyRight: familyRight,
+    friends: friends,
+    championship: championship,
+    education: education,
+    marriage: marriage,
+    toBeScientist: toBeScientist,
+    toBeArtist: toBeArtist
+  };
+  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages);
 
   // Players objects declaration and value assignment
   leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1);
