@@ -30,7 +30,9 @@ class Goal {
     // Check if the player acheived the goal
     this.goalAcheived = false;
     this.goalDisappeared = false;
+    // If the player acheived a goal, assign his ID to isCaught so that the goal is now displayed or counted again
     this.isCaught = -1;
+    this.stillExist = 2;
   }
 
   // move
@@ -47,6 +49,9 @@ class Goal {
     this.checkGoalWallCollision();
   }
 
+  // checkGoalWallCollision
+  //
+  // Check if goal collided one of the screen edges. If so, reverse the direction.
   checkGoalWallCollision() {
     // Check for collisions with top or bottom...
     if (this.x < 0 || this.y < 0 || this.x > width || this.y > height) {
@@ -56,7 +61,6 @@ class Goal {
       // Update time properties
       this.ty = random(0, 100);
       this.tx = random(0, 100);
-      console.log("worked1");
     }
   }
 
@@ -64,12 +68,13 @@ class Goal {
   //
   // Draw the goal as an ellipse on the canvas
   // with a radius the same size as its current health.
+  // If the goal health was less than the value of stillExist or goalDisappeared gots true,
+  // don't display it.
   display() {
     if (this.goalDisappeared === false) {
-      if (this.health > 2) {
+      if (this.health > this.stillExist) {
         push();
         noStroke();
-        //tint(this.opacity);
         imageMode(CENTER);
         this.radius = this.health;
         image(this.img, this.x, this.y, this.radius * 2, this.radius * 2);

@@ -1,15 +1,15 @@
 // barriers
 //
 // A class that represents Barriers on screen.
-// The barriers make the player to hesitate about his goals
-// they become invisible to the player.
+// The barrier makes the player to hesitate about his goals.
+// It becomes invisible to the player.
 
 class Barriers {
 
   // constructor
   //
   //  Sets the initial values for the Barrier's properties
-  // Either sets default values or uses the arguments provided
+  // Either sets default values or uses the arguments provided.
   constructor(barrier) {
     // Position, size, fill color
     this.x = barrier.x;
@@ -19,10 +19,12 @@ class Barriers {
     this.fillColor = color(179, 81, 8);
   }
 
-  // If the player encountered barrier, he hesitates (send true).
+  // lostGoal
+  //
+  // If player overlapped barrier, goals become invisible (send true).
   lostGoal(player) {
     let d = dist(this.x, this.y, player.x, player.y);
-    if (d < this.w / 2 || d < this.h / 2) {
+    if (d < this.w / 1.5 || d < this.h / 1.5) {
       return true;
     }
     return false;

@@ -173,13 +173,10 @@ class GameFeatures {
   // Left player victory screen
   leftPlayerVictory() {
     background(255);
-    // push();
-
     // rotateX(radians(this.angle));
-    imageMode(CENTER);
-    image(this.leftPlayerImg, width / 2, height / 3, this.radius * 4, this.radius * 4);
-    // pop()
     push();
+    imageMode(CENTER);
+    image(this.playersEssentialsImgs[0], width / 2, height / 3, this.radius * 4, this.radius * 4);
     fill(0);
     textAlign(CENTER);
     textSize(30);
@@ -193,11 +190,10 @@ class GameFeatures {
   //
   // right Player victory screen
   rightPlayerVictory() {
-
     push();
     background(255);
     imageMode(CENTER);
-    image(this.rightPlayerImg, width / 2, height / 3, this.radius * 4, this.radius * 4);
+    image(this.playersEssentialsImgs[0], width / 2, height / 3, this.radius * 4, this.radius * 4);
     fill(0);
     textAlign(CENTER);
     textSize(30);
@@ -219,6 +215,7 @@ class GameFeatures {
     this.restartButton();
     pop();
   }
+  
   // restartButton()
   //
   // Draw restart button

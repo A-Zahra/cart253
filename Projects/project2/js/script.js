@@ -113,6 +113,7 @@ function setUpGame() {
     toBeScientist: toBeScientist,
     toBeArtist: toBeArtist
   };
+  // Game features objects declaration and value assignment.
   game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages);
 
   // Players objects declaration and value assignment

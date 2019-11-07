@@ -21,10 +21,13 @@ class SuccessEssentials {
     this.radius = 35;
     this.awarenessIncrement = false;
     this.goalFound = false;
+    this.fillColor = color(255);
 
   }
 
-  // If player came to family, he receives support and be refreshed again.
+  // giveSupport
+  //
+  // If player overlapped family, sets his health to default value.
   giveSupport(player) {
     let d = dist(this.x, this.y, player.x, player.y);
     if (d < this.radius) {
@@ -32,7 +35,9 @@ class SuccessEssentials {
     }
   }
 
-  // If player came to friends, he receives consultation (send true).
+  // consultFriends
+  //
+  // If player overlapped friends, displays all goals again (send true).
   consultFriends(player) {
     let d = dist(this.x, this.y, player.x, player.y);
     if (d < this.radius) {
@@ -47,7 +52,7 @@ class SuccessEssentials {
   display() {
     push();
     noStroke();
-    fill(255);
+    fill(this.fillColor);
     ellipseMode(CENTER);
     ellipse(this.x, this.y, this.radius * 2.5, this.radius * 2.5);
     imageMode(CENTER);

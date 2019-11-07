@@ -4,6 +4,8 @@
 // controlled by the arrow keys. It can move around
 // the screen and acheive goal objects to win the game.
 // The number of goals that the player acheives is displayed on screen.
+// Player can acheive each goal only once.
+// Player health diminishes gradually and to survive, he should keep receiving family support.
 
 class Player {
 
@@ -33,12 +35,14 @@ class Player {
     this.downKey = down;
     this.leftKey = left;
     this.rightKey = right;
-    // The goal tracker position
+    // The goal tracker message position and color
     this.textX = textX;
     this.textY = textY;
-    // The More effort key
+    this.fillColor = color(255);
+    // Sprint
     this.sprintKey = sprintKey;
     this.sprint = sprint;
+    // Player id. Is used to ensure player acheives each goal only once.
     this.playerId = playerId;
   }
 
@@ -110,7 +114,7 @@ class Player {
   // checkAcheivement
   //
   // Takes a goal object as an argument and checks if the player
-  // overlaps it. If so, reduces the goal's health. If the goal dies, it gets reset.
+  // overlaps it. If so, reduces the goal's health. If the goal got acheived, it is reset.
   // If the goal health decreases to 0 or less, one point is added to the number of goals acheived by the player.
   checkAcheivement(goal) {
     // Calculate distance from this player to the goal
@@ -122,8 +126,6 @@ class Player {
       if (goal.health > 1) {
         goal.health -= this.healthGainPerEat;
         goal.goalAcheived = true;
-
-
       }
 
       // If goal's health is less than 1, add one to the goalGained value and Count the goal only once.
@@ -134,7 +136,6 @@ class Player {
           if (goal.isCaught === -1) {
             goal.isCaught = this.playerId;
           }
-          console.log(this.goalGained);
           goal.goalAcheived = false;
         }
       }
@@ -143,10 +144,10 @@ class Player {
 
   // goalAcheivementTracker
   //
-  // Display the number of goals eaten by the player
+  // Display the number of goals acheived by player.
   goalAcheivementTracker() {
     push();
-    fill(255);
+    fill(this.fillColor);
     textSize(30);
     text(`Goals achieved: ${this.goalGained}`, this.textX, this.textY);
     pop();
