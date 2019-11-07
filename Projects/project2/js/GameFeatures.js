@@ -8,7 +8,7 @@ class GameFeatures {
   //
   // Sets the initial values for the screen's properties
   // Either sets default values or uses the arguments provided.
-  constructor(textx, titley, descy, fillColor, startScreenImages) {
+  constructor(textx, titley, descy, fillColor, startScreenImages, deathSound, victorySound) {
     // Titles and description position
     this.textX = textx;
     this.introX = width - 310;
@@ -58,6 +58,9 @@ class GameFeatures {
     this.controlsw = 60;
     this.controlsh = 40;
     this.numKeys = 6;
+    // Victory and end sounds
+    this.deathSound = deathSound;
+    this.victorySound = victorySound;
   }
 
   // displayStart()
@@ -201,8 +204,10 @@ class GameFeatures {
     textSize(this.victory.textSize);
     text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved by winner: ${leftPlayer.goalGained}\n`, this.victory.x, this.victory.winnery);
     text(`Number of goals achieved by loser: ${rightPlayer.goalGained}`, this.victory.x, this.victory.losery);
-    this.restartButton();
     pop();
+    // Victory sound
+    this.victorySound.play();
+    this.restartButton();
     this.angle += 0.01;
   }
 
@@ -219,8 +224,10 @@ class GameFeatures {
     textSize(this.victory.textSize);
     text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved by winner: ${rightPlayer.goalGained}\n`, this.victory.x, this.victory.winnery);
     text(`Number of goals achieved by loser: ${leftPlayer.goalGained}`, this.victory.x, this.victory.losery);
-    this.restartButton();
     pop();
+    // Victory Sound
+    this.victorySound.play();
+    this.restartButton();
   }
 
   // displayEndScreen
@@ -233,8 +240,10 @@ class GameFeatures {
     textAlign(CENTER);
     textSize(30);
     text("What kind of players are you???\nHow you could both die and not acheive even one goal??", width / 2, height / 2);
-    this.restartButton();
     pop();
+    // If both player died, makes this sound.
+    this.deathSound.play();
+    this.restartButton();
   }
 
   // restartButton()
@@ -259,5 +268,6 @@ class GameFeatures {
     textAlign(CENTER);
     text("RESTART", this.RestartRectProperties.x, this.RestartRectProperties.y + 10);
     pop();
+
   }
 }

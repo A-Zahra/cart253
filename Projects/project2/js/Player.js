@@ -13,7 +13,7 @@ class Player {
   //
   // Sets the initial values for the Player's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y, speed, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage, playerId) {
+  constructor(x, y, speed, radius, up, down, left, right, textX, textY, sprint, sprintKey, playerImage, playerId, sound) {
     // Position
     this.x = x;
     this.y = y;
@@ -30,6 +30,8 @@ class Player {
     this.playerImage = playerImage;
     this.radius = this.health; // Radius is defined in terms of health
     this.goalGained = 0;
+    // If player overlapped a goal, makes this sound
+    this.sound = sound;
     // Input properties
     this.upKey = up;
     this.downKey = down;
@@ -127,6 +129,7 @@ class Player {
         goal.health -= this.healthGainPerEat;
         goal.goalAcheived = true;
       }
+      this.sound.play();
 
       // If goal's health is less than 1, add one to the goalGained value and Count the goal only once.
       if (goal.health <= 1) {

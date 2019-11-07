@@ -44,7 +44,8 @@ let leftPlayer;
 let rightPlayer;
 let leftPlayerImg;
 let rightPlayerImg;
-
+let bothDied;
+let victorySound;
 // Whether the game started or restarted
 let gameStart = false;
 let gameRestart = false;
@@ -62,6 +63,7 @@ let sumGoals = 5;
 let healthRate = 10;
 // Declare an array to assign goals to
 let goals;
+let hitGoal;
 // Declare variables for goals images
 let championship;
 let education;
@@ -116,6 +118,11 @@ function preload() {
   hitFriend = new Audio ("assets/sounds/hitFriend.wav");
   // If hit family
   hitFamily = new Audio("assets/sounds/hitFamily.wav");
+  // If hit goal
+  hitGoal = new Audio("assets/sounds/hitGoal.wav");
+  // If both player Died
+  bothDied = new Audio("assets/sounds/BothDied.wav");
+  victorySound = new Audio("assets/sounds/victorySound.wav");
 }
 
 // setup()
@@ -150,11 +157,11 @@ function setUpGame() {
     toBeArtist: toBeArtist
   };
   // Game features objects declaration and value assignment.
-  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages);
+  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages, bothDied, victorySound);
 
   // Players objects declaration and value assignment
-  leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1);
-  rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 235, height / 2, 12, 20, rightPlayerImg, 2);
+  leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1, hitGoal);
+  rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 235, height / 2, 12, 20, rightPlayerImg, 2, hitGoal);
 
   // Goals properties assignment to the objects and objects assignment to the array
   let speed = [15, 25, 20, 55, 30];
@@ -258,7 +265,10 @@ function draw() {
     // If both players died
     else {
       game.displayEndScreen();
+    //  bothDied.stop();
     }
+    bothDied.stop();
+    victorySound.stop();
   }
   // Start the game
   else if (gameStart) {
@@ -341,6 +351,7 @@ function draw() {
       victoryScreen = true;
     }
   }
+
 }
 
 // start()

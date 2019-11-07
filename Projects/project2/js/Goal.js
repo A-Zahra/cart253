@@ -32,6 +32,7 @@ class Goal {
     this.goalDisappeared = false;
     // If the player acheived a goal, assign his ID to isCaught so that the goal is now displayed or counted again
     this.isCaught = -1;
+    // If goal's health is still more than 2, keeps showing it.
     this.stillExist = 2;
   }
 

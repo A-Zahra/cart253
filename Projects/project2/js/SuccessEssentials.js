@@ -22,6 +22,7 @@ class SuccessEssentials {
     this.awarenessIncrement = false;
     this.goalFound = false;
     this.fillColor = color(255);
+    // If player overlapped family or friend image, makes these sound.
     this.friendSound = 0;
     this.familySound = 0;
 

@@ -17,6 +17,7 @@ class Barriers {
     this.w = barrier.w;
     this.h = barrier.h;
     this.fillColor = color(179, 81, 8);
+    // If player overlapped barrier, makes this sound.
     this.sound = 0;
   }
 
