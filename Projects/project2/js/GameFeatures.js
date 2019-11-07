@@ -233,7 +233,7 @@ class GameFeatures {
     fill(0);
     textAlign(CENTER);
     textSize(30);
-    text("What kind of players are you???\nHow you could both die and neither of you won the game??", width / 2, height / 2);
+    text("What kind of players are you???\nHow you could both die and neither of you win the game??", width / 2, height / 2);
     pop();
     this.restartButton();
   }
