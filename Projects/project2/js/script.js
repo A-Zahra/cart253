@@ -49,8 +49,10 @@ let leftPlayer;
 let rightPlayer;
 let leftPlayerImg;
 let rightPlayerImg;
+// victory and death sound
 let bothDied;
 let victorySound;
+
 // Whether the game started or restarted
 let gameStart = false;
 let gameRestart = false;
@@ -103,7 +105,7 @@ let angleSize;
 
 // preload()
 //
-// Preload all external images
+// Preload all external images and audios
 function preload() {
   // Images
   //
@@ -141,10 +143,9 @@ function preload() {
 // setup()
 //
 // Sets up a canvas
-// Creates objects for the players, goals, essentials, barriers
+// Creates objects for the players, goals, essentials, barriers and start, victory and end screens
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  // Game start and end screen objects declaration and assignment
   setUpGame();
 }
 
@@ -152,7 +153,7 @@ function setup() {
 //
 // Assign all the necessary initial values to arrays, variables and objects
 function setUpGame() {
-  // Declare goals, barriers and success essentials.
+  // Declare goals, barriers and success essentials variables.
   goals = [];
   barrier = [];
   successEssentials = [];
@@ -179,14 +180,14 @@ function setUpGame() {
     toBeArtist: toBeArtist
   };
 
-  // Game features objects declaration and value assignment.
+  // Game features object declaration and value assignment.
   game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages);
 
   // Players objects declaration and value assignment
   leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1, hitGoal);
   rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 235, height / 2, 12, 20, rightPlayerImg, 2, hitGoal);
 
-  // Goals properties assignment to the objects and objects assignment to the array
+  // Goals properties assignment to an object and objects assignment to the main array
   let speed = [15, 25, 20, 55, 30];
   let radius = [35, 45, 50, 35, 55];
   let name = [championship, education, marriage, toBeScientist, toBeArtist];
@@ -204,7 +205,7 @@ function setUpGame() {
     goals.push(newGoal);
   }
 
-  // Success essentials properties assignment to the objects and objects assignment to the array
+  // Success essentials properties assignment to an array of objects and array assignment to the main array
   for (let i = 0; i < numEssentials; i++) {
     let essentialsProp = [
       // left side player priorities
@@ -236,7 +237,7 @@ function setUpGame() {
     successEssentials.push(newEssential);
   }
 
-  // Barriers properties assignment to the objects and objects assignment to the array
+  // Barriers properties assignment to the objects and objects assignment to the main array
   for (let i = 0; i < numBarriers; i++) {
     let barrierx = [(width / 4), (width - 350), (width / 2.2), (width - 50), (width / 2 + 50), (width / 5), (width / 2 + 100), (width - 200)];
     let barriery = [(height / 2 + 300), 50, (height / 2), (height / 2 + 100), 100, 50, (height / 2 + 150), (height - 20)];

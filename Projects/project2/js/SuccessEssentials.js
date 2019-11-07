@@ -25,7 +25,6 @@ class SuccessEssentials {
     // If player overlapped family or friend image, makes these sound.
     this.friendSound = 0;
     this.familySound = 0;
-
   }
 
   // giveSupport

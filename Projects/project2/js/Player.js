@@ -23,6 +23,7 @@ class Player {
     this.speed = speed;
     // Health properties
     this.maxHealth = radius;
+    this.minHealth = 1;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
     this.healthLossPerMove = 0.3;
     this.healthGainPerEat = 1;
@@ -125,14 +126,14 @@ class Player {
     if (d < this.radius + goal.radius) {
       // Decrease goal health by the same amount
       // Keeps the goal visible
-      if (goal.health > 1) {
+      if (goal.health > this.minHealth) {
         goal.health -= this.healthGainPerEat;
         goal.goalAcheived = true;
       }
       this.sound.play();
 
       // If goal's health is less than 1, add one to the goalGained value and Count the goal only once.
-      if (goal.health <= 1) {
+      if (goal.health <= this.minHealth) {
         if (goal.goalAcheived) {
           this.goalGained++;
           // Check if the goal was not previously acheived.
