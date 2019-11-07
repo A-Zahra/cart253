@@ -38,7 +38,7 @@ let startScreenImages;
 
 // Number of goals, sum of goals acheived and players health rate
 let numGoals = 5;
-let sumGoals = 5;
+let sumGoals = 1;
 let healthRate = 10;
 // Declare an array to assign goals to
 let goals;

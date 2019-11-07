@@ -29,14 +29,26 @@ class GameFeatures {
     this.barrierColor = color(179, 81, 8);
     this.keysColor = color (200, 180, 120);
     this.victoryScreenBackground = color(0);
+
     // Add sample images to arrays
     // Specify the number of images in order to be used in for loops
     this.playersEssentialsImgs = [startScreenImages.playerLeft, startScreenImages.playerRight, startScreenImages.friends, startScreenImages.familyLeft, startScreenImages.familyRight];
     this.goalsImgs = [startScreenImages.championship, startScreenImages.education, startScreenImages.marriage, startScreenImages.toBeScientist, startScreenImages.toBeArtist];
     this.numImages = 5;
+
     // start and restart button objects declaration
     this.startRectProperties = 0;
     this.RestartRectProperties = 0;
+
+    // Victory screen elements properties
+    this.victory = {
+      x: width / 2,
+      winnery: height / 2,
+      losery: height / 2 + 115,
+      imagey: height / 3,
+      textSize: 30,
+      textColor: 255
+    };
 
     this.angle = 0;
     // Control keys positions, sizes, number of them and names
@@ -93,7 +105,6 @@ class GameFeatures {
     rectMode(CENTER);
     fill(this.barrierColor);
     rect(this.barrierx, this.barriery, this.radius * 2, this.radius);
-    console.log(this.barrierColor);
     imageMode(CENTER);
     // Players images
     for (let i = 0; i < this.numImages - 3; i++) {
@@ -179,15 +190,17 @@ class GameFeatures {
   //
   // Left player victory screen
   leftPlayerVictory() {
+
     background(this.victoryScreenBackground);
     // rotateX(radians(this.angle));
     push();
     imageMode(CENTER);
-    image(this.playersEssentialsImgs[0], width / 2, height / 3, this.radius * 4, this.radius * 4);
-    fill(255);
+    image(this.playersEssentialsImgs[0], this.victory.x, this.victory.imagey, this.radius * 4, this.radius * 4);
+    fill(this.victory.textColor);
     textAlign(CENTER);
-    textSize(30);
-    text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved: ${leftPlayer.goalGained}`, width / 2, height / 2);
+    textSize(this.victory.textSize);
+    text(`Good job left player!!\nYou won the game buddy!\nNumber of goals achieved by winner: ${leftPlayer.goalGained}\n`, this.victory.x, this.victory.winnery);
+    text(`Number of goals achieved by loser: ${rightPlayer.goalGained}`, this.victory.x, this.victory.losery);
     this.restartButton();
     pop();
     this.angle += 0.01;
@@ -200,11 +213,12 @@ class GameFeatures {
     background(this.victoryScreenBackground);
     push();
     imageMode(CENTER);
-    image(this.playersEssentialsImgs[0], width / 2, height / 3, this.radius * 4, this.radius * 4);
-    fill(255);
+    image(this.playersEssentialsImgs[1], this.victory.x, this.victory.imagey, this.radius * 4, this.radius * 4);
+    fill(this.victory.textColor);
     textAlign(CENTER);
-    textSize(30);
-    text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved: ${rightPlayer.goalGained}`, width / 2, height / 2);
+    textSize(this.victory.textSize);
+    text(`Good job right player!!\nYou won the game buddy!\nNumber of goals achieved by winner: ${rightPlayer.goalGained}\n`, this.victory.x, this.victory.winnery);
+    text(`Number of goals achieved by loser: ${leftPlayer.goalGained}`, this.victory.x, this.victory.losery);
     this.restartButton();
     pop();
   }
@@ -230,7 +244,7 @@ class GameFeatures {
     // Restart button rectangle properties
     this.RestartRectProperties = {
       x: width / 2,
-      y: height / 2 + 170,
+      y: height / 2 + 200,
       w: 180,
       h: 100,
       fillColor: color(35, 145, 200)
