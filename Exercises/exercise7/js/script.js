@@ -1,38 +1,77 @@
+// Pong Simulation
+// by Zahra Ahmadi
+
+/****************************************************************************/
+
+/****************************************************************************/
+//
+//
+/****************************************************************************/
+// Reference
+//
+// --** Images **--
+
+
+// --** Audios **--
+//
+/****************************************************************************/
+
+// Decides when to show start screen, game screen, end screen
 let gameStart = false;
 let startScreen = true;
 let gameOver = false;
+
+// Declare barriers array
 let barriers = [];
 let MAX_BARRIERS = 5;
 
+// Declare paddle object
 let paddle;
-let player;
 
+// Declare ball object
+let ball;
+
+// setup()
+//
+// Sets up all intial values
 function setup() {
-  // put setup code here
   createCanvas(windowWidth, windowHeight - 5);
   setUpGame();
 }
 
+// setUpGame
+//
+// Sets up all initial values in an independent function so that it can be used in functions like restart function.
 function setUpGame() {
 
+  // Makes an object of gameStructure and assign default values to
   gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2.5);
 
+  // Makes an array of barrier objects and assign random default values to objects
   for (let i = 0; i < MAX_BARRIERS; i++) {
     barriers[i] = new BarrierStraight(i * 75.0, random(height / 2, height - 100));
   }
 
-  player = new PlayerStraight(width / 2 + 50, height - 70);
+  // Makes ball object and assign default values to
+  ball = new BallStraight(width / 2 + 50, height - 70);
+  // Makes paddle object and assign default values to
   paddle = new PaddleStraight(width / 2, height - 50);
 }
 
+// draw()
+//
+// Handles and displays all game elements
 function draw() {
+  // Start screen
   if (startScreen) {
     background(255);
     gameStructure.startScreenDisplay();
-  } else if (gameStart) {
+  }
+  // Game screen
+  else if (gameStart) {
     background(0);
 
-    // Reset paddle position
+    // Resets paddle position
     paddle.x = mouseX;
     paddle.y = mouseY;
 
@@ -41,56 +80,59 @@ function draw() {
     //   barriers[i].display();
     // }
 
-    // player handle input
-    player.handleInput();
+    // Handles ball input
+    ball.handleInput();
 
-    //if player is jumping
-    if (player.isJumping === true) {
+    // Check if ball is jumping
+    if (ball.isJumping === true) {
       // it is not falling
-      player.isFalling = false;
-      // increase the y Speed of player
-      player.ySpeed += 1;
-      // update its y
-      player.y += player.ySpeed;
+      ball.isFalling = false;
+      // increase the y Speed of ball
+      ball.ySpeed += 1;
+      // update its y position
+      ball.y += ball.ySpeed;
 
-      // if is jumping and collided with paddle - then stop jumping.
-      if (paddle.collidesWithPlayer(player)) {
+      // Check if is jumping and collided with paddle - then stop jumping.
+      if (paddle.collidesWithBall(ball)) {
 
-        player.y = paddle.y - 12;
-        player.ySpeed = 0;
-        player.isJumping = false;
-        player.isFalling = false;
-
-        
-        player.goJump();
+        ball.y = paddle.y - 12;
+        ball.ySpeed = 0;
+        ball.isJumping = false;
+        ball.isFalling = false;
+        // Ball jumps
+        ball.goJump();
       }
-
     } else {
-      player.y = paddle.y - 12;
+      ball.y = paddle.y - 12;
     }
+    // Updates ball position based on paddle position
+    ball.updatePosition(paddle.x + 50);
 
+    // Displays Ball and paddle
     paddle.display();
-    player.updatePosition(paddle.x + 50);
-    player.display();
+    ball.display();
 
-    console.log(player.y);
+    console.log(ball.y);
 
-    // put drawing code here
-    if (player.y > height) {
+    // If ball goes off the screen, game is over.
+    if (ball.y > height) {
       gameOver = true;
       gameStart = false;
     }
-  } else if (gameOver) {
+  }
+  // Game over screen
+  else if (gameOver) {
     background(0);
     gameStructure.gameOverDisplay();
   }
 }
+
 // start()
 //
 // Start the game
 function play() {
   // If the distance between mouse position and
-  // the start button was less than the button size reset the following values.
+  // the start button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.playButton.x, gameStructure.playButton.y) < gameStructure.playButton.w) {
     gameStart = true;
     startScreen = false;
@@ -102,7 +144,7 @@ function play() {
 // Restart the game()
 function restart() {
   // If the distance between mouse position and
-  // the restart button was less than the button size reset the following values.
+  // the restart button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.restartButton.x, gameStructure.restartButton.y) < gameStructure.restartButton.w) {
     startScreen = true;
     gameStart = false;
@@ -111,11 +153,12 @@ function restart() {
   }
 }
 
+// If mouse is pressed apply the following code.
 function mousePressed() {
   if (startScreen) {
     play();
   } else if (gameStart) {
-    player.isJumping = true;
+    ball.isJumping = true;
   } else if (gameOver) {
     restart();
   }

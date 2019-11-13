@@ -2,6 +2,10 @@
 
 class GameStructure {
 
+  // Constructor
+  //
+  // Sets the initial values for the game's start and end screen properties
+  // Either sets default values or uses the arguments provided.
   constructor(startTitleX, startTitleY, endTitleX, endTitleY) {
     this.startTitleX = startTitleX;
     this.startTitleY = startTitleY;
@@ -14,7 +18,9 @@ class GameStructure {
     this.fillColor = color(25, 37, 123);
 
   }
-
+  // startScreenDisplay
+  //
+  // Displays start screen
   startScreenDisplay () {
     push();
     let title = this.gameName;
@@ -28,9 +34,9 @@ class GameStructure {
 
   // playButton()
     //
-    // Draw start button
+    // Draw play button
     play() {
-      // Start button rectangle properties
+      // play button properties
       this.playButton = {
         x: width / 2,
         y: height / 2 + 50,
@@ -54,7 +60,9 @@ class GameStructure {
       text("PLAY", this.playButton.x, this.playButton.y + 10);
       pop();
     }
-
+    //gameOverDisplay
+    //
+    // Displays game over screen
     gameOverDisplay() {
       push();
       let title = this.gameOver;
@@ -70,11 +78,11 @@ class GameStructure {
   //
   // Draw restart button
   restart() {
-    // Restart button rectangle properties
+    // Restart button properties
     this.restartButton = {
       x: width / 2,
-      y: height / 2 + 200,
-      w: 180,
+      y: height / 2 + 50,
+      w: 200,
       h: 100,
       tl: 15,
       tr: 15,
@@ -87,12 +95,11 @@ class GameStructure {
     noStroke();
     rectMode(CENTER);
     fill(this.restartButton.fillColor);
-    rect(this.restartButton.x, this.restartButton.y, this.restartButton.w, this.restartButton.h);
+    rect(this.restartButton.x, this.restartButton.y, this.restartButton.w, this.restartButton.h, this.restartButton.tl, this.restartButton.tr, this.restartButton.br, this.restartButton.bl);
     fill(255);
     textSize(this.restartButton.textSize);
     textAlign(CENTER);
     text("RESTART", this.restartButton.x, this.restartButton.y + 10);
     pop();
-
   }
 }

@@ -1,13 +1,16 @@
-// class Straight
+// class ball Straight
 //
 //
-class PlayerStraight extends Player {
+class BallStraight extends Ball {
 
   // Constructor
+  //
+  // Sets the initial values for the ball's properties
+  // Either sets default values or uses the arguments provided.
   constructor(x, y) {
     super(x, y);
   }
-
+  // Makes the ball jump
   goJump() {
     // only jump when we are not in the middle of a jump
     if (this.isJumping === false && this.isFalling === false) {
@@ -16,7 +19,7 @@ class PlayerStraight extends Player {
       this.ySpeed = this.maxJumpHeight;
     }
   }
-  // Updates player x position based on paddle x position
+  // Updates ball x position based on paddle x position
   updatePosition(paddleX) {
     this.x = paddleX;
   }
@@ -26,5 +29,4 @@ class PlayerStraight extends Player {
     fill(255, 0, 0);
     ellipse(this.x, this.y, this.size * 2, this.size * 2);
   }
-
 }

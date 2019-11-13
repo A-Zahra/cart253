@@ -1,27 +1,29 @@
 // class Straight
 //
 //
-class PaddleStraight extends Paddle{
+class PaddleStraight extends Paddle {
 
-  constructor(x, y){
+  // Constructor
+  //
+  // Sets the initial values for the paddle's properties
+  // Either sets default values or uses the arguments provided.
+  constructor(x, y) {
     super(x, y);
   }
 
-  display()
- {
-   fill(255);
-   rectMode(CORNER);
-   rect(this.x,this.y,this.paddleW,this.paddleH);
- }
+  // Methode to check if player collides with paddle.
+  collidesWithBall(ball) {
+    if (ball.x > this.x && ball.x < this.x + this.paddleW &&
+      ball.y + (ball.size / 2) > this.y && ball.y - (ball.size / 2) < this.y + this.paddleH) {
+      return true;
+    }
+    return false;
+  }
 
- //function to check if player collides with paddle.
-  collidesWithPlayer(p)
- {
-   if(p.x > this.x && p.x< this.x+this.paddleW
-   && p.y +(p.size/2)> this.y &&  p.y - (p.size/2)< this.y+this.paddleH)
-   {
-     return true;
-   }
-   return false;
- }
+  // Displays paddle
+  display() {
+    fill(255);
+    rectMode(CORNER);
+    rect(this.x, this.y, this.paddleW, this.paddleH);
+  }
 }

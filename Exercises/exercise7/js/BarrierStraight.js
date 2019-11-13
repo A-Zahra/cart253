@@ -2,6 +2,11 @@
 //
 //
 class BarrierStraight {
+
+  // Constructor
+  //
+  // Sets the initial values for the barrier's properties
+  // Either sets default values or uses the arguments provided.
   constructor( _x, _y)
   {
     this.x=_x;
