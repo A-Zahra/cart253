@@ -17,6 +17,9 @@ class Target {
     this.r = random(0.06, 1.5);
   }
 
+  // updateHealth
+  //
+  // Updates target health 
   updateHealth() {
     // Reduce player health
     this.health = this.health - this.r;

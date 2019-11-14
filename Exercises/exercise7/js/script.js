@@ -36,6 +36,10 @@ let d;
 let barriers = [];
 let MAX_BARRIERS = 5;
 
+// Decides whether to show targets or not.
+let show = 1;
+let hide = 2;
+
 // setup()
 //
 // Sets up all intial values
@@ -116,9 +120,12 @@ function draw() {
 
     // Displays play area
     gameStructure.playArea();
-    // Displays targets
+    // Displays targets (makes the targets blink)
     for (let i = 0; i < targets.length; i++) {
-      targets[i].display();
+      let r = floor(random(1, 3));
+      if (r === show) {
+        targets[i].display();
+      }
     }
 
     // // Displays barriers
@@ -154,17 +161,20 @@ function draw() {
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
 
-    for (let i = 0; i < targets.length; i++) {
-      targets[i].updateHealth();
-    }
+    // Updates target health. reduces health based on a random speed
+    // for (let i = 0; i < targets.length; i++) {
+    //   targets[i].updateHealth();
+    // }
+
     // Displays Ball and paddle
     paddle.display();
     ball.display();
 
+    // Check if all targets disappeared.
     for (let i = 0; i < targets.length; i++) {
       if (targets[i].health < 5) {
-          targetsLost ++;
-        }
+        targetsLost++;
+      }
     }
 
     // If ball goes off the bottom of screen or all targets disappeared, game is over.
