@@ -10,6 +10,7 @@ class BallStraight extends Ball {
   constructor(x, y) {
     super(x, y);
   }
+  
   // Makes the ball jump
   goJump() {
     // only jump when we are not in the middle of a jump
@@ -19,6 +20,7 @@ class BallStraight extends Ball {
       this.ySpeed = this.maxJumpHeight;
     }
   }
+
   // Updates ball x position based on paddle x position
   updatePosition(paddleX) {
     this.x = paddleX;

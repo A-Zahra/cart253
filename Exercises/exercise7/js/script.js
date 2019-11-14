@@ -27,10 +27,12 @@ let paddle;
 // Declare ball object
 let ball;
 
+// Declare objects and variables related to targets
 let targets = [];
 let maxTarget = 50;
 let targetProperties = [];
 let targetsLost = 0;
+let targetId = 0;
 let d;
 // Declare barriers array
 let barriers = [];
@@ -58,37 +60,63 @@ function setUpGame() {
 
   // Targets drawing code was borrowed from:
   // <Daniel Shiffman> (<15/March/2016>) <Random Circles with No Overlap> (https://www.youtube.com/watch?v=XATr_jdh-44).
+  // However, most parts of it got modified.
   for (let i = 0; i < maxTarget; i++) {
-    // Declare and assign random positions and sizes
-    let target = {
+    // Declare and assign targets properties
+    let target = [{
       x: random(100, width - 100),
-      y: random(0, (height / 2 + 100)),
-      radius: random(20, 80)
-    };
+      y: random(370, (height / 2) + 50),
+      radius: 25,
+      id: targetId,
+      fillColor: color (74, 136, 47),
+      proximity: 1
+    },
+    {
+      x: random(100, width - 100),
+      y: random(230, (height / 2) - 100),
+      radius: 40,
+      id: targetId,
+      fillColor: color(206, 42, 100),
+      proximity: 1.5
+    },
+    {
+      x: random(150, width - 100),
+      y: random(100, (height / 2) - 250),
+      radius: 60,
+      id: targetId,
+      fillColor: color(49, 220, 136),
+      proximity: 2
+    }];
+
+    // Gives id to targets
+    targetId++;
+
     // To check whether the two circles overlapped.
     let overlapping = false;
     // Check the distance between the new circle and all the old ones.
     // If the distance between the two is less than sum of both circles radius,
     // don't add the new circle to the array.
-    for (let i = 0; i < targetProperties.length; i++) {
-      let other = targetProperties[i];
-      let d = dist(target.x, target.y, other.x, other.y);
-      if (d < (target.radius + other.radius) / 2) {
-        overlapping = true;
-        break;
+    for (let j = 0; j < 3; j++) {
+      for (let i = 0; i < targetProperties.length; i++) {
+        let other = targetProperties[i];
+        let d = dist(target[j].x, target[j].y, other.x, other.y);
+        if (d < (target[j].radius + other.radius) / target[j].proximity) {
+          overlapping = true;
+          break;
+        }
       }
-    }
-    // If is not overlapping add to the array
-    if (!overlapping) {
-      targetProperties.push(target);
+      // If is not overlapping add to the array
+      if (!overlapping) {
+        targetProperties.push(target[j]);
+      }
     }
   }
   // Makes new target objects and assign target properties to
   for (let i = 0; i < targetProperties.length; i++) {
-    targets[i] = new Target(targetProperties[i].x, targetProperties[i].y, targetProperties[i].radius);
+    targets[i] = new Target(targetProperties[i]);
   }
 
-  // Makes an array of barrier objects and assign random default values to objects
+  // Makes an array of barrier objects and assign random default values to objects (not yet)
   // for (let i = 0; i < MAX_BARRIERS; i++) {
   //   barriers[i] = new BarrierStraight(i * 75.0, random(height / 2, height - 100));
   // }
@@ -120,15 +148,13 @@ function draw() {
 
     // Displays play area
     gameStructure.playArea();
-    // Displays targets (makes the targets blink)
+
+    // Displays targets
     for (let i = 0; i < targets.length; i++) {
-      let r = floor(random(1, 3));
-      if (r === show) {
-        targets[i].display();
-      }
+      targets[i].display();
     }
 
-    // // Displays barriers
+    // // Displays barriers (not yet)
     // for (let i = 0; i < barriers.length; i++) {
     //   barriers[i].display();
     // }
@@ -141,7 +167,7 @@ function draw() {
       // it is not falling
       ball.isFalling = false;
       // increase the y Speed of ball
-      ball.ySpeed += 1;
+      ball.ySpeed += 3;
       // update its y position
       ball.y += ball.ySpeed;
 
@@ -158,10 +184,19 @@ function draw() {
     } else {
       ball.y = paddle.y - 12;
     }
+
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
 
-    // Updates target health. reduces health based on a random speed
+    // Not a complete code.
+    // It will check if ball hits the specific targets or not
+    // If so adds points to the score tracker(that does not exist yet! :D)
+    for (let i = 0; i < targets.length; i++) {
+      targets[i].goalAchieved(ball);
+    }
+
+    // Updates target health. reduces health based on a random speed.
+    // I keep this code cause I might use it again
     // for (let i = 0; i < targets.length; i++) {
     //   targets[i].updateHealth();
     // }
@@ -178,7 +213,7 @@ function draw() {
     }
 
     // If ball goes off the bottom of screen or all targets disappeared, game is over.
-    if (ball.y > height || targetsLost === 50) {
+    if (ball.y > height) {
       gameOver = true;
       gameStart = false;
     }

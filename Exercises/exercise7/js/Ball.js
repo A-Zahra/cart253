@@ -13,20 +13,21 @@ class Ball {
     this.size = 25;
     this.isJumping = false;
     this.isFalling = false;
-    this.ySpeed = 50;
-    this.maxJumpHeight = -25;
+    this.ySpeed = 1;
+    this.maxJumpHeight = -35;
+    this.numTargetsAchieved = 0;
   }
 
   // Handles ball input
   handleInput() {
     // jump when j is pressed
     if (keyIsDown(SHIFT)) {
-      ball.maxJumpHeight += -1;
+      ball.maxJumpHeight += -2;
       ball.ySpeed += 0.2;
 
     } else if (keyIsDown(CONTROL)) {
-      ball.maxJumpHeight = -25;
-      ball.ySpeed = 50;
+      ball.maxJumpHeight = -35;
+      ball.ySpeed = 1;
     }
   }
 

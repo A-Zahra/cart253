@@ -9,13 +9,14 @@ class GameStructure {
     this.startTitleY = startTitleY;
     this.endTitleX = endTitleX;
     this.endTitleY = endTitleY;
-    this.gameName = "Real Life 2";
+    this.gameName = "Game of life!";
     this.gameOver = "Game Over!";
     this.playButton = 0;
     this.restartButton = 0;
     this.fillColor = color(25, 37, 123);
 
   }
+
   // startScreenDisplay
   //
   // Displays start screen
@@ -30,6 +31,7 @@ class GameStructure {
     this.play();
   }
 
+  // Defines a specific play area for the paddle.
   playArea() {
     push();
     strokeWeight(5);
