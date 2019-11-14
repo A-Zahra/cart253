@@ -21,15 +21,25 @@ let gameStart = false;
 let startScreen = true;
 let gameOver = false;
 
-// Declare barriers array
-let barriers = [];
-let MAX_BARRIERS = 5;
-
 // Declare paddle object
 let paddle;
 
 // Declare ball object
 let ball;
+
+let targets = [];
+let maxTarget = 50;
+let targetProperties = [];
+let targetX;
+let targetY;
+let targetSize;
+let otherTargetX = 0;
+let otherTargetY = 0;
+
+let d;
+// Declare barriers array
+let barriers = [];
+let MAX_BARRIERS = 5;
 
 // setup()
 //
@@ -47,10 +57,42 @@ function setUpGame() {
   // Makes an object of gameStructure and assign default values to
   gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2.5);
 
-  // Makes an array of barrier objects and assign random default values to objects
-  for (let i = 0; i < MAX_BARRIERS; i++) {
-    barriers[i] = new BarrierStraight(i * 75.0, random(height / 2, height - 100));
+  // Targets drawing code was borrowed from:
+  // <Daniel Shiffman> (<15/March/2016>) <Random Circles with No Overlap> (https://www.youtube.com/watch?v=XATr_jdh-44).
+  for (let i = 0; i < maxTarget; i++) {
+    // Declare and assign random positions and sizes
+    let target = {
+      x: random(100, width - 100),
+      y: random(0, (height / 2 + 100)),
+      radius: random(20, 80)
+    };
+    // To check whether the two circles overlapped.
+    let overlapping = false;
+    // Check the distance between the new circle and all the old ones.
+    // If the distance between the two is less than sum of both circles radius,
+    // don't add the new circle to the array.
+    for (let i = 0; i < targetProperties.length; i++) {
+      let other = targetProperties[i];
+      let d = dist(target.x, target.y, other.x, other.y);
+      if (d < (target.radius + other.radius) / 2) {
+        overlapping = true;
+        break;
+      }
+    }
+    // If is not overlapping add to the array
+    if (!overlapping) {
+      targetProperties.push(target);
+    }
   }
+  // Makes new target objects and assign target properties to
+  for (let i = 0; i < targetProperties.length; i++) {
+    targets[i] = new Target(targetProperties[i].x, targetProperties[i].y, targetProperties[i].radius);
+  }
+
+  // Makes an array of barrier objects and assign random default values to objects
+  // for (let i = 0; i < MAX_BARRIERS; i++) {
+  //   barriers[i] = new BarrierStraight(i * 75.0, random(height / 2, height - 100));
+  // }
 
   // Makes ball object and assign default values to
   ball = new BallStraight(width / 2 + 50, height - 70);
@@ -75,7 +117,12 @@ function draw() {
     paddle.x = mouseX;
     paddle.y = mouseY;
 
-    // // Display barriers
+    // Displays targets
+    for (let i = 0; i < targets.length; i++) {
+      targets[i].display();
+    }
+
+    // // Displays barriers
     // for (let i = 0; i < barriers.length; i++) {
     //   barriers[i].display();
     // }
@@ -130,6 +177,7 @@ function draw() {
 // start()
 //
 // Start the game
+// (Borrowed from my second project)
 function play() {
   // If the distance between mouse position and
   // the start button is less than the button size reset the following values.
@@ -142,6 +190,7 @@ function play() {
 // restart()
 //
 // Restart the game()
+//(Borrowed from my second project)
 function restart() {
   // If the distance between mouse position and
   // the restart button is less than the button size reset the following values.

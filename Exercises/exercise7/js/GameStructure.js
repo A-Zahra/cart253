@@ -35,6 +35,7 @@ class GameStructure {
   // playButton()
     //
     // Draw play button
+    // (Borrowed from my second project)
     play() {
       // play button properties
       this.playButton = {
@@ -63,10 +64,11 @@ class GameStructure {
     //gameOverDisplay
     //
     // Displays game over screen
+
     gameOverDisplay() {
       push();
       let title = this.gameOver;
-      fill(this.fillColor);
+      fill(255);
       textSize(70);
       textAlign(CENTER,CENTER);
       text(title, this.endTitleX, this.endTitleY);
@@ -77,6 +79,7 @@ class GameStructure {
     // restartButton()
   //
   // Draw restart button
+  // (Borrowed from my second project)
   restart() {
     // Restart button properties
     this.restartButton = {
