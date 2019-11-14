@@ -1,4 +1,6 @@
-
+// class Target
+//
+//
 class Target {
 
   // Constructor
@@ -12,6 +14,7 @@ class Target {
     this.size = radius;
   }
 
+  // Display target
   display() {
     push();
     noStroke();

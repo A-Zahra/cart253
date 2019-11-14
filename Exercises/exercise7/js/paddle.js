@@ -7,13 +7,12 @@ class Paddle {
   //
   // Sets the initial values for the paddle's properties
   // Either sets default values or uses the arguments provided.
-  constructor( _x, _y)
-  {
-    this.x=_x;
-    this.y=_y;
-    this.paddleW=100;
-    this.paddleH =40;
-    this.onPaddle =true;
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.paddleW = 100;
+    this.paddleH = 40;
+    this.onPaddle = true;
   }
 
   display() {
