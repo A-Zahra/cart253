@@ -1,5 +1,3 @@
-
-
 class GameStructure {
 
   // Constructor
@@ -21,62 +19,71 @@ class GameStructure {
   // startScreenDisplay
   //
   // Displays start screen
-  startScreenDisplay () {
+  startScreenDisplay() {
     push();
     let title = this.gameName;
     fill(this.fillColor);
     textSize(70);
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER, CENTER);
     text(title, this.startTitleX, this.startTitleY);
     pop();
     this.play();
   }
 
+  playArea() {
+    push();
+    strokeWeight(5);
+    stroke(123, 47, 186, 255);
+    noFill();
+    rectMode(CENTER);
+    rect(width/2, height / 2 + 290, width, 160);
+    pop();
+  }
   // playButton()
-    //
-    // Draw play button
-    // (Borrowed from my second project)
-    play() {
-      // play button properties
-      this.playButton = {
-        x: width / 2,
-        y: height / 2 + 50,
-        w: 150,
-        h: 80,
-        tl: 15,
-        tr: 15,
-        bl: 15,
-        br: 15,
-        textSize: 35,
-        fillColor: color(35, 145, 200)
-      }
-      push();
-      noStroke();
-      rectMode(CENTER);
-      fill(this.playButton.fillColor);
-      rect(this.playButton.x, this.playButton.y, this.playButton.w, this.playButton.h, this.playButton.tl, this.playButton.tr, this.playButton.br, this.playButton.bl);
-      fill(255);
-      textSize(this.playButton.textSize);
-      textAlign(CENTER);
-      text("PLAY", this.playButton.x, this.playButton.y + 10);
-      pop();
+  //
+  // Draw play button
+  // (Borrowed from my second project)
+  play() {
+    // play button properties
+    this.playButton = {
+      x: width / 2,
+      y: height / 2 + 50,
+      w: 150,
+      h: 80,
+      tl: 15,
+      tr: 15,
+      bl: 15,
+      br: 15,
+      textSize: 35,
+      fillColor: color(35, 145, 200)
     }
-    //gameOverDisplay
-    //
-    // Displays game over screen
+    push();
+    noStroke();
+    rectMode(CENTER);
+    fill(this.playButton.fillColor);
+    rect(this.playButton.x, this.playButton.y, this.playButton.w, this.playButton.h, this.playButton.tl, this.playButton.tr, this.playButton.br, this.playButton.bl);
+    fill(255);
+    textSize(this.playButton.textSize);
+    textAlign(CENTER);
+    text("PLAY", this.playButton.x, this.playButton.y + 10);
+    pop();
+  }
+  //gameOverDisplay
+  //
+  // Displays game over screen
 
-    gameOverDisplay() {
-      push();
-      let title = this.gameOver;
-      fill(255);
-      textSize(70);
-      textAlign(CENTER,CENTER);
-      text(title, this.endTitleX, this.endTitleY);
-      pop();
-      this.restart();
-    }
+  gameOverDisplay() {
+    push();
+    let title = this.gameOver;
+    fill(255);
+    textSize(70);
+    textAlign(CENTER, CENTER);
+    text(title, this.endTitleX, this.endTitleY);
+    pop();
+    this.restart();
+  }
 
-    // restartButton()
+  // restartButton()
   //
   // Draw restart button
   // (Borrowed from my second project)

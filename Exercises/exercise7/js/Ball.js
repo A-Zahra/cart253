@@ -13,8 +13,8 @@ class Ball {
     this.size = 25;
     this.isJumping = false;
     this.isFalling = false;
-    this.ySpeed = 6;
-    this.maxJumpHeight = -15;
+    this.ySpeed = 50;
+    this.maxJumpHeight = -25;
   }
 
   // Handles ball input
@@ -22,11 +22,11 @@ class Ball {
     // jump when j is pressed
     if (keyIsDown(SHIFT)) {
       ball.maxJumpHeight += -1;
-      ball.ySpeed += 0.1;
+      ball.ySpeed += 0.2;
 
     } else if (keyIsDown(CONTROL)) {
-      ball.maxJumpHeight = -15;
-      ball.ySpeed = 6;
+      ball.maxJumpHeight = -25;
+      ball.ySpeed = 50;
     }
   }
 

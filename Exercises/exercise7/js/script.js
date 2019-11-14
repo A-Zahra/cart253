@@ -30,12 +30,7 @@ let ball;
 let targets = [];
 let maxTarget = 50;
 let targetProperties = [];
-let targetX;
-let targetY;
-let targetSize;
-let otherTargetX = 0;
-let otherTargetY = 0;
-
+let targetsLost = 0;
 let d;
 // Declare barriers array
 let barriers = [];
@@ -113,10 +108,14 @@ function draw() {
   else if (gameStart) {
     background(0);
 
-    // Resets paddle position
-    paddle.x = mouseX;
-    paddle.y = mouseY;
+    // Resets paddle position and define play area
+    if (mouseY > (height / 2 + 200) && mouseY < (height)) {
+      paddle.x = mouseX;
+      paddle.y = mouseY;
+    }
 
+    // Displays play area
+    gameStructure.playArea();
     // Displays targets
     for (let i = 0; i < targets.length; i++) {
       targets[i].display();
@@ -155,14 +154,21 @@ function draw() {
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
 
+    for (let i = 0; i < targets.length; i++) {
+      targets[i].updateHealth();
+    }
     // Displays Ball and paddle
     paddle.display();
     ball.display();
 
-    console.log(ball.y);
+    for (let i = 0; i < targets.length; i++) {
+      if (targets[i].health < 5) {
+          targetsLost ++;
+        }
+    }
 
-    // If ball goes off the screen, game is over.
-    if (ball.y > height) {
+    // If ball goes off the bottom of screen or all targets disappeared, game is over.
+    if (ball.y > height || targetsLost === 50) {
       gameOver = true;
       gameStart = false;
     }
