@@ -1,6 +1,8 @@
-// class Straight
+// Paddle Straight
 //
-//
+// A class that represents paddle in it's normal mode
+// Has methods which control ball movement, and
+// collision with other elements.
 class PaddleStraight extends Paddle {
 
   // Constructor

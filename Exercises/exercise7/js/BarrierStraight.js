@@ -1,6 +1,6 @@
 // Barrier
 //
-//
+// A class that represents barrier
 class BarrierStraight {
 
   // Constructor

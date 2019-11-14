@@ -1,6 +1,6 @@
-// class Target
+// Target
 //
-//
+// A class that represents targets.
 class Target {
 
   // Constructor

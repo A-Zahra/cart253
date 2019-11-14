@@ -1,6 +1,6 @@
-// class ball Straight
+// Ball Straight
 //
-//
+// A class that represents ball in it's normal mode.
 class BallStraight extends Ball {
 
   // Constructor
@@ -10,7 +10,7 @@ class BallStraight extends Ball {
   constructor(x, y) {
     super(x, y);
   }
-  
+
   // Makes the ball jump
   goJump() {
     // only jump when we are not in the middle of a jump

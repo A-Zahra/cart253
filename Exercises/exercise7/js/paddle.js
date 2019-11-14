@@ -1,6 +1,6 @@
-// Class will
+// Paddle
 //
-//
+// Parent class that includes common properites and methods of rotated and not rotated paddle
 class Paddle {
 
   // Constructor

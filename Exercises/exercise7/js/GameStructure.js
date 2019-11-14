@@ -1,3 +1,6 @@
+// Game structure
+//
+// A class that represents game start and end screen
 class GameStructure {
 
   // Constructor

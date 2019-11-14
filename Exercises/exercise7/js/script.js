@@ -116,7 +116,7 @@ function setUpGame() {
     targets[i] = new Target(targetProperties[i]);
   }
 
-  // Makes an array of barrier objects and assign random default values to objects (not yet)
+  // Makes an array of barrier objects and assign random default values to objects (be used soon)
   // for (let i = 0; i < MAX_BARRIERS; i++) {
   //   barriers[i] = new BarrierStraight(i * 75.0, random(height / 2, height - 100));
   // }
@@ -154,7 +154,7 @@ function draw() {
       targets[i].display();
     }
 
-    // // Displays barriers (not yet)
+    // // Displays barriers (be used soon)
     // for (let i = 0; i < barriers.length; i++) {
     //   barriers[i].display();
     // }

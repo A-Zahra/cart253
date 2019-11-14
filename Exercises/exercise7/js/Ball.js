@@ -1,6 +1,6 @@
 // class Ball
 //
-//
+// Parent class that includes common properties of rotated and not rotated ball.
 class Ball {
 
   // Constructor
