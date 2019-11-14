@@ -52,7 +52,8 @@ function setup() {
 
 // setUpGame
 //
-// Sets up all initial values in an independent function so that it can be used in functions like restart function.
+// Sets up all initial values in an independent function
+// so that it can be used in functions like restart function.
 function setUpGame() {
 
   // Makes an object of gameStructure and assign default values to
