@@ -11,11 +11,35 @@ class BallStraight extends Ball {
     super(x, y);
   }
 
+  // Handle jumping
+  handleJumping(paddle) {
+    // Check if ball is jumping
+    if (this.isJumping === true) {
+      // it is not falling
+      this.isFalling = false;
+      // increase the y Speed of ball
+      this.ySpeed += 3;
+      // update its y position
+      this.y += this.ySpeed;
+
+      // Check if is jumping and collided with paddle - then stop jumping.
+      if (paddle.collidesWithBall(this)) {
+        this.y = paddle.y - 12;
+        this.ySpeed = 0;
+        this.isJumping = false;
+        this.isFalling = false;
+        // Ball jumps
+        this.goJump();
+      }
+    } else {
+      this.y = paddle.y - 12;
+    }
+  }
+
   // Makes the ball jump
   goJump() {
-    // only jump when we are not in the middle of a jump
+    // Only jump when we are not in the middle of a jump
     if (this.isJumping === false && this.isFalling === false) {
-
       this.isJumping = true;
       this.ySpeed = this.maxJumpHeight;
     }

@@ -16,13 +16,11 @@ class GameStructure {
     this.gameOver = "Game Over!";
     this.playButton = 0;
     this.restartButton = 0;
-    this.fillColor = color(25, 37, 123);
+    this.fillColor = color(0, 0, 0);
     this.winned = 0;
     this.failed = 0;
   }
 
-  // startScreenDisplay
-  //
   // Displays start screen
   startScreenDisplay() {
     push();
@@ -35,8 +33,6 @@ class GameStructure {
     this.play();
   }
 
-  // playButton()
-  //
   // Draw play button
   // (Borrowed from my second project)
   play() {
@@ -51,7 +47,7 @@ class GameStructure {
       bl: 15,
       br: 15,
       textSize: 35,
-      fillColor: color(35, 145, 200)
+      fillColor: color(255, 64, 99)
     }
     push();
     noStroke();
@@ -65,8 +61,6 @@ class GameStructure {
     pop();
   }
 
-  // playArea()
-  //
   // Defines a specific play area for the paddle.
   playArea() {
     push();
@@ -74,12 +68,10 @@ class GameStructure {
     stroke(123, 47, 186, 255);
     noFill();
     rectMode(CENTER);
-    rect(width/2, height / 2 + 290, width, 160);
+    rect(width / 2, height / 2 + 290, width, 160);
     pop();
   }
 
-  //TransitionScreenDisplay()
-  //
   // Display the screen that connects layers to each other.
   // This screen would either congradulates the player victory and send him to next step
   // or asks him to play again.
@@ -92,19 +84,17 @@ class GameStructure {
     text(title, this.startTitleX, this.startTitleY);
     pop();
     // If player won
-   if (result) {
-     this.winned = true;
-     this.next();
-   }
-   // If he failed
-   else {
-     this.failed = false;
-     this.next();
-   }
+    if (result) {
+      this.winned = true;
+      this.next();
+    }
+    // If he failed
+    else {
+      this.failed = false;
+      this.next();
+    }
   }
 
-  // next()
-  //
   // Draw next button
   next() {
     // next button properties
@@ -118,7 +108,7 @@ class GameStructure {
       bl: 15,
       br: 15,
       textSize: 35,
-      fillColor: color(35, 145, 200)
+      fillColor: color(255, 64, 99)
     }
     push();
     noStroke();
@@ -131,16 +121,13 @@ class GameStructure {
     let message = 0;
     if (this.winned) {
       message = "Next Step";
-    }
-    else if (!this.failed) {
+    } else if (!this.failed) {
       message = "Play Again";
     }
     text(message, this.nextButton.x, this.nextButton.y + 10);
     pop();
   }
 
-  //gameOverDisplay
-  //
   // Displays game over screen
   gameOverDisplay() {
     push();
@@ -153,8 +140,6 @@ class GameStructure {
     this.restart();
   }
 
-  // restartButton()
-  //
   // Draw restart button
   // (Borrowed from my second project)
   restart() {
@@ -169,7 +154,7 @@ class GameStructure {
       bl: 15,
       br: 15,
       textSize: 35,
-      fillColor: color(35, 145, 200)
+      fillColor: color(255, 64, 99)
     }
     push();
     noStroke();

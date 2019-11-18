@@ -15,7 +15,8 @@
 // --** Audios **--
 //
 /****************************************************************************/
-
+let j=0;
+let startBackground;
 // Decides when to show start screen, game screen, end screen
 let startScreen = true;
 let firstStep = false;
@@ -34,7 +35,6 @@ let ball;
 let targets = [];
 let maxTarget = 100;
 let targetProperties = [];
-let targetsLost = 0;
 let numTarget;
 // Decides whether to show targets or not.
 let isTrue = [];
@@ -46,8 +46,15 @@ let targetSum = [];
 let isSumTrue = [];
 // Declare barriers array
 let barriers = [];
-let MAX_BARRIERS = 5;
+let barrierY = [];
+let MAX_BARRIERS = 15;
 
+// preload()
+//
+// Insert all external files
+function preload() {
+  startBackground = loadImage("assets/images/cityBackground.jpg");
+}
 
 // setup()
 //
@@ -67,8 +74,9 @@ function setUpGame() {
   hideRow = [false, false, false];
   isTrue = [1, 3, 5];
   isFalse = [2, 4, 6];
-  isOver = [8, 7, 6];
-  isSumTrue = [7, 6, 5];
+  isOver = [4, 3, 2];
+  isSumTrue = [3, 2, 1];
+
   // Makes an object of gameStructure and assign default values to
   gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2.5);
 
@@ -107,7 +115,7 @@ function setUpGame() {
     // To check whether the two circles overlapped.
     let overlapping = false;
     // Check the distance between the new circle and all the old ones.
-    // If the distance between the two is less than sum of both circles radius,
+    // If the distance between the two is less than sum of both radius,
     // don't add the new circle to the array.
     for (let j = 0; j < 3; j++) {
       for (let i = 0; i < targetProperties.length; i++) {
@@ -135,15 +143,12 @@ function setUpGame() {
 
   // Makes an array of barrier objects and assign random default values to objects (be used soon)
   for (let i = 0; i < MAX_BARRIERS; i++) {
-    barriers[i] = new BarrierStraight(i * 75.0, random(height / 2, height - 100));
+    barriers[i] = new BarrierStraight(i * 200.0, random(100, height - 100));
   }
-
   // Makes ball object and assign default values to
   ball = new BallStraight(width / 2 + 50, height - 140);
   // Makes paddle object and assign default values to
   paddle = new PaddleStraight(width / 2, height - 120);
-
-
 }
 
 // draw()
@@ -152,7 +157,7 @@ function setUpGame() {
 function draw() {
   // Start screen
   if (startScreen) {
-    background(255);
+    background(startBackground);
     gameStructure.startScreenDisplay();
   }
   // Game first step
@@ -168,31 +173,11 @@ function draw() {
     displayTargets();
     // Displays play area
     gameStructure.playArea();
+
     // Handles ball input
     ball.handleInput();
-
     // Check if ball is jumping
-    if (ball.isJumping === true) {
-      // it is not falling
-      ball.isFalling = false;
-      // increase the y Speed of ball
-      ball.ySpeed += 3;
-      // update its y position
-      ball.y += ball.ySpeed;
-
-      // Check if is jumping and collided with paddle - then stop jumping.
-      if (paddle.collidesWithBall(ball)) {
-        ball.y = paddle.y - 12;
-        ball.ySpeed = 0;
-        ball.isJumping = false;
-        ball.isFalling = false;
-        // Ball jumps
-        ball.goJump();
-      }
-    } else {
-      ball.y = paddle.y - 12;
-    }
-
+    ball.handleJumping(paddle);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
 
@@ -216,12 +201,12 @@ function draw() {
   // Transition screen
   else if (stepIsOver) {
     if (firstWin) {
-      background(0);
-      gameStructure.TransitionScreenDisplay("good job buddy!", firstWin);
+      background(255);
+      gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin);
     }
     else if (!firstFailure) {
-      background(0);
-      gameStructure.TransitionScreenDisplay("oops you've got too ambitous!", firstFailure);
+      background(255);
+      gameStructure.TransitionScreenDisplay("Oops you've got too ambitous!", firstFailure);
     }
   }
   // Game second step
@@ -239,28 +224,8 @@ function draw() {
 
     // Handles ball input
     ball.handleInput();
-
     // Check if ball is jumping
-    if (ball.isJumping === true) {
-      // it is not falling
-      ball.isFalling = false;
-      // increase the y Speed of ball
-      ball.ySpeed += 3;
-      // update its y position
-      ball.y += ball.ySpeed;
-
-      // Check if is jumping and collided with paddle - then stop jumping.
-      if (paddle.collidesWithBall(ball)) {
-        ball.y = paddle.y - 12;
-        ball.ySpeed = 0;
-        ball.isJumping = false;
-        ball.isFalling = false;
-        // Ball jumps
-        ball.goJump();
-      }
-    } else {
-      ball.y = paddle.y - 12;
-    }
+    ball.handleJumping(paddle);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
     // Updates target health. reduces health based on a random speed.
@@ -286,85 +251,49 @@ function draw() {
   }
 }
 
-// displayTargets
+// displayTargets()
 //
 // Display targets
 function displayTargets() {
   for (let i = 0; i < targets.length; i++) {
-    if (targets[i].targetIdTrue === isTrue[0] && targetSum[0] < isOver[0]) {
-      if (targetSum[0] < isOver[0]) {
-        targetSum[0]++;
+    // Check if the target belongs to the row currently being displayed
+    // and if the number of achieved targets has not reached a certain number
+      if (targets[i].targetIdTrue === isTrue[j] && targetSum[j] < isOver[j]) {
+        // If so, add one to the number of achieved targets
+        if (targetSum[j] < isOver[j]) {
+            targetSum[j] ++;
+        }
+        // Change the target id so that it won't be counted again
+        targets[i].targetIdTrue = isFalse[j];
+        // If the number of targets achieved reached the specified value
+        if (targetSum[j] === isSumTrue[j] && hideRow[j] === false) {
+          // Hide that row
+          showRow[j] = false;
+          // In order not to exceed the number of existing rows
+          if (!((j+1) === 3)) {
+            // Show next row
+              showRow[j+1] = true;
+          }
+          // Reset sum of targets
+          targetSum[j] = 0;
+          // Make this conditional statement totally out of access
+          // so that it won't be used in next round.
+          hideRow[j] = true;
+          // Go to the next row
+          j++;
+        }
       }
-      targets[i].targetIdTrue = isFalse[0];
-      console.log("target sum 0 " + targetSum[0]);
-      //  console.log("small target true"+ targets[i].targetIdTrue);
-      if (targetSum[0] === isSumTrue[0] && hideRow[0] === false) {
-        showRow[0] = false;
-        showRow[1] = true;
-        targetSum[0] = 0;
-        hideRow[0] = true;
-      }
-    } else if (targets[i].targetIdTrue2 === isTrue[1] && targetSum[1] < isOver[1]) {
-      if (targetSum[1] < isOver[1]) {
-        targetSum[1]++;
-      }
-      //  targetSum[1] ++;
-      targets[i].targetIdTrue2 = isFalse[1];
-      console.log("target sum 1 " + targetSum[1]);
-      if (targetSum[1] === isSumTrue[1] && hideRow[1] === false) {
-        showRow[1] = false;
-        showRow[2] = true;
-        targetSum[1] = 0;
-        hideRow[1] = true;
-      }
-    } else if (targets[i].targetIdTrue3 === isTrue[2] && targetSum[2] < isOver[2]) {
-      if (targetSum[2] < isOver[2]) {
-        targetSum[2]++;
-      }
-      //targetSum[2]++;
-      targets[i].targetIdTrue3 = isFalse[2];
-      console.log("target sum 2 " + targetSum[2]);
-      if (targetSum[2] === isSumTrue[2] && hideRow[2] === false) {
-        showRow[2] = false;
-        hideRow[2] === true;
-        targetSum[2] = 0;
-        firstStep = false;
-        stepIsOver = true;
-        firstWin = true;
+      // Display target
+      if (targets[i].targetId === isTrue[j] && showRow[j] === true) {
+        targets[i].display();
       }
     }
-    if (targets[i].targetId === isTrue[0] && showRow[0] === true) {
-      targets[i].display();
-    } else if (targets[i].targetId === isTrue[1] && showRow[1] === true) {
-      targets[i].display();
-    } else if (targets[i].targetId === isTrue[2] && showRow[2] === true) {
-      targets[i].display();
+    // If the player went through all three rows, goes to next step
+    if (j === 3) {
+      firstStep = false;
+      stepIsOver = true;
+      firstWin = true;
     }
-  }
-  //   for (let i = 0; i < targets.length; i++) {
-  //     for(let j = 0; j < 3; j++) {
-  //       if (targets[i].targetIdTrue === isTrue[j] && targetSum[j] < isOver[j]) {
-  //         if (targetSum[j] < isOver[j]) {
-  //             targetSum[j] ++;
-  //         }
-  //         targets[i].targetIdTrue = isFalse[j];
-  //         console.log("target sum 0 "+targetSum[j]);
-  //         //  console.log("small target true"+ targets[i].targetIdTrue);
-  //         if (targetSum[j] === isSumTrue[j] && hideRow[j] === false) {
-  //           showRow[j] = false;
-  //           if (!((j+1) === 3)) {
-  //               showRow[j+1] = true;
-  //           }
-  //           targetSum[j] = 0;
-  //           hideRow[j] = true;
-  //           console.log(targetSum[j] === isSumTrue[j]);
-  //         }
-  //       }
-  //       if (targets[i].targetId === isTrue[j] && showRow[j] === true) {
-  //         targets[i].display();
-  //       }
-  //     }
-  //   }
 }
 
 // play()
@@ -377,6 +306,7 @@ function play() {
   if (dist(mouseX, mouseY, gameStructure.playButton.x, gameStructure.playButton.y) < gameStructure.playButton.w) {
     firstStep = true;
     startScreen = false;
+    setUpGame();
   }
 }
 
@@ -407,6 +337,7 @@ function playAgain() {
     setUpGame();
   }
 }
+
 // restart()
 //
 // Restart the game()
@@ -428,7 +359,7 @@ function restart() {
 function mousePressed() {
   if (startScreen) {
     play();
-  } else if (firstStep) {
+  } else if (firstStep || secondStep) {
     ball.isJumping = true;
   } else if (stepIsOver) {
     if (firstWin) {

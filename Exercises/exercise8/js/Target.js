@@ -34,46 +34,27 @@ class Target {
 
   // goalAchieved()
   //
-  // Check whether ball overlapped the target of first row or second row or third row.
-  // If so, hide the target and turn it of so that it won't be counted again.
+  // Check whether ball overlapped the target of first row, second row or third row.
+  // If so, hide this target and assign the same id number to targetIdTrue that the target has
   goalAchieved(ball) {
    let d = dist(this.x, this.y, ball.x, ball.y);
    if (d < this.size + (ball.size / 2)) {
      if ( this.targetId === 1 && this.targetIdTrue===0) {
        this.fillColor = 0;
        this.targetIdTrue = 1;
+       console.log("test");
      }
-     else if (this.targetId === 3 && this.targetIdTrue2===0) {
+     else if (this.targetId === 3 && this.targetIdTrue===0) {
        this.fillColor = 0;
-       this.targetIdTrue2 = 3;
+       this.targetIdTrue = 3;
      }
-     else if (this.targetId === 5 && this.targetIdTrue3===0) {
+     else if (this.targetId === 5 && this.targetIdTrue===0) {
        this.fillColor = 0;
-       this.targetIdTrue3 = 5;
+       this.targetIdTrue = 5;
      }
    }
  }
 
-  // goalAchieved(ball) {
-  //   let d = dist(this.x, this.y, ball.x, ball.y);
-  //   if (d < this.size + (ball.size / 3)) {
-  //     if ( this.targetId === 1 && this.targetIdTrue===0) {
-  //       this.fillColor = 220;
-  //       this.targetIdTrue = 1;
-  //     }
-  //     else if (this.targetId === 3 && this.targetIdTrue === 0) {
-  //       this.fillColor = 0;
-  //       this.targetIdTrue = 3;
-  //     }
-  //     else if (this.targetId === 5 && this.targetIdTrue===0) {
-  //       this.fillColor = 0;
-  //       this.targetIdTrue = 5;
-  //     }
-  //   }
-  // }
-
-  // display()
-  //
   // Display target
   display() {
       push();

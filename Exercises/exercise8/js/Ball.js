@@ -20,17 +20,19 @@ class Ball {
 
   // Handles ball input
   handleInput() {
-    // jump when j is pressed
-    if (keyIsDown(SHIFT)) {
-      ball.maxJumpHeight += -2;
-      ball.ySpeed += 0.2;
-
-    } else if (keyIsDown(CONTROL)) {
-      ball.maxJumpHeight = -35;
-      ball.ySpeed = 1;
+    // jump when space is pressed
+    if (keyIsDown(32)) {
+      this.maxJumpHeight += -2;
+      this.ySpeed += 0.2;
+    }
+    // Reset jump height when Ctrl is pressed
+    else if (keyIsDown(CONTROL)) {
+      this.maxJumpHeight = -35;
+      this.ySpeed = 1;
     }
   }
 
+  // Display barrier
   display() {
     // A generic shape cannot be displayed
     // But it makes sense to tell anyone extending this class to include one!
