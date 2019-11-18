@@ -143,7 +143,8 @@ function setUpGame() {
 
   // Makes an array of barrier objects and assign random default values to objects (be used soon)
   for (let i = 0; i < MAX_BARRIERS; i++) {
-    barriers[i] = new BarrierStraight(i * 200.0, random(100, height - 100));
+    barrierY = [100, height / 2, 200, height / 3, 600, height - 100, 400, 200];
+    barriers[i] = new BarrierStraight(i * 200.0, barrierY[i]);
   }
   // Makes ball object and assign default values to
   ball = new BallStraight(width / 2 + 50, height - 140);
@@ -219,9 +220,11 @@ function draw() {
 
     // Displays barriers (be used soon)
     for (let i = 0; i < barriers.length; i++) {
+      barriers[i].updatePosition();
+    }
+    for (let i = 0; i < barriers.length; i++) {
       barriers[i].display();
     }
-
     // Handles ball input
     ball.handleInput();
     // Check if ball is jumping
