@@ -37,31 +37,29 @@ class Target {
   // Check whether ball overlapped the target of first row, second row or third row.
   // If so, hide this target and assign the same id number to targetIdTrue that the target has
   goalAchieved(ball) {
-   let d = dist(this.x, this.y, ball.x, ball.y);
-   if (d < this.size + (ball.size / 2)) {
-     if ( this.targetId === 1 && this.targetIdTrue===0) {
-       this.fillColor = 0;
-       this.targetIdTrue = 1;
-       console.log("test");
-     }
-     else if (this.targetId === 3 && this.targetIdTrue===0) {
-       this.fillColor = 0;
-       this.targetIdTrue = 3;
-     }
-     else if (this.targetId === 5 && this.targetIdTrue===0) {
-       this.fillColor = 0;
-       this.targetIdTrue = 5;
-     }
-   }
- }
+    let d = dist(this.x, this.y, ball.x, ball.y);
+    if (d < this.size + (ball.size / 2)) {
+      if (this.targetId === 1 && this.targetIdTrue === 0) {
+        this.fillColor = 0;
+        this.targetIdTrue = 1;
+        console.log("test");
+      } else if (this.targetId === 3 && this.targetIdTrue === 0) {
+        this.fillColor = 0;
+        this.targetIdTrue = 3;
+      } else if (this.targetId === 5 && this.targetIdTrue === 0) {
+        this.fillColor = 0;
+        this.targetIdTrue = 5;
+      }
+    }
+  }
 
   // Display target
   display() {
-      push();
-      noStroke();
-      fill(this.fillColor);
-      ellipseMode(CENTER);
-      ellipse(this.x, this.y, this.size, this.size);
+    push();
+    noStroke();
+    fill(this.fillColor);
+    ellipseMode(CENTER);
+    ellipse(this.x, this.y, this.size, this.size);
     pop();
   }
 }

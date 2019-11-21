@@ -26,8 +26,7 @@ class Ball {
       this.maxJumpHeight += -2;
       if (step) {
         this.ySpeed += 0.2;
-      }
-      else {
+      } else {
         this.ySpeed += 0.1;
       }
     }

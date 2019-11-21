@@ -50,13 +50,13 @@ class BallStraight extends Ball {
     this.x = paddleX;
   }
 
-  // Display percent of health
+  // Display percentage of health
   displayHealth() {
     let health = `Health: ${this.healthPercent}%`;
     push();
     fill(255);
     textSize(25);
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER, CENTER);
     text(health, width - 140, 50);
     text()
     pop();

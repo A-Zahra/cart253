@@ -12,7 +12,7 @@ class Barrier {
     this.y = y;
     this.w = 100;
     this.h = 40;
-    this.fillColor = color (255, 76, 39);
+    this.fillColor = color(255, 76, 39);
     this.id = 1;
   }
 
@@ -21,5 +21,4 @@ class Barrier {
     // A generic shape cannot be displayed
     // But it makes sense to tell anyone extending this class to include one!
   }
-
 }
