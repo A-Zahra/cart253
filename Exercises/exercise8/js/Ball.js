@@ -16,14 +16,20 @@ class Ball {
     this.ySpeed = 1;
     this.maxJumpHeight = -35;
     this.numTargetsAchieved = 0;
+    this.healthPercent = 100;
   }
 
   // Handles ball input
-  handleInput() {
+  handleInput(step) {
     // jump when space is pressed
     if (keyIsDown(32)) {
       this.maxJumpHeight += -2;
-      this.ySpeed += 0.2;
+      if (step) {
+        this.ySpeed += 0.2;
+      }
+      else {
+        this.ySpeed += 0.1;
+      }
     }
     // Reset jump height when Ctrl is pressed
     else if (keyIsDown(CONTROL)) {

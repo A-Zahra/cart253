@@ -47,7 +47,7 @@ let isSumTrue = [];
 // Declare barriers array
 let barriers = [];
 let barrierY = [];
-let MAX_BARRIERS = 15;
+let MAX_BARRIERS = 10;
 
 // preload()
 //
@@ -74,8 +74,8 @@ function setUpGame() {
   hideRow = [false, false, false];
   isTrue = [1, 3, 5];
   isFalse = [2, 4, 6];
-  isOver = [4, 3, 2];
-  isSumTrue = [3, 2, 1];
+  isOver = [8, 7, 6];
+  isSumTrue = [7, 6, 5];
 
   // Makes an object of gameStructure and assign default values to
   gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2.5);
@@ -109,8 +109,7 @@ function setUpGame() {
         id: 5,
         fillColor: color(49, 220, 136),
         proximity: 2
-      }
-    ];
+      }];
 
     // To check whether the two circles overlapped.
     let overlapping = false;
@@ -141,10 +140,17 @@ function setUpGame() {
     targets[i] = new Target(targetProperties[i]);
   }
 
-  // Makes an array of barrier objects and assign random default values to objects (be used soon)
+  // Makes an array of barrier objects and assign x and y values to objects
+  let j = 0;
   for (let i = 0; i < MAX_BARRIERS; i++) {
-    barrierY = [100, height / 2, 200, height / 3, 600, height - 100, 400, 200];
-    barriers[i] = new BarrierStraight(i * 200.0, barrierY[i]);
+      // Define barriers y position
+      barrierY = [height / 2 - 150, height / 2 - 200, height / 2 - 300, height / 3 - 100, height / 3 + 100];
+      barriers[i] = new BarrierStraight(i * 150.0, barrierY[j]);
+      j++;
+      // Reset y position
+      if (i === 4 || i === 9 || i === 14) {
+        j = 0;
+      }
   }
   // Makes ball object and assign default values to
   ball = new BallStraight(width / 2 + 50, height - 140);
@@ -176,7 +182,7 @@ function draw() {
     gameStructure.playArea();
 
     // Handles ball input
-    ball.handleInput();
+    ball.handleInput(firstStep);
     // Check if ball is jumping
     ball.handleJumping(paddle);
     // Updates ball position based on paddle position
@@ -186,6 +192,7 @@ function draw() {
     // If so hide the target and changes its id number so that it won't be counted again.
     for (let i = 0; i < targets.length; i++) {
       targets[i].goalAchieved(ball);
+
     }
 
     // Displays Ball and paddle
@@ -218,19 +225,30 @@ function draw() {
     paddle.x = mouseX;
     paddle.y = mouseY;
 
-    // Displays barriers (be used soon)
+    // Update barriers position. Make them loop
     for (let i = 0; i < barriers.length; i++) {
       barriers[i].updatePosition();
     }
+
+    // Displays barriers
     for (let i = 0; i < barriers.length; i++) {
       barriers[i].display();
     }
+
+    // Check if ball collided barriers.
+    // If so, decrease his health by 20%
+    for (let i = 0; i < barriers.length; i++) {
+      barriers[i].ballBarrierCollision(ball);
+    }
+
     // Handles ball input
-    ball.handleInput();
+    ball.handleInput(!firstStep);
     // Check if ball is jumping
     ball.handleJumping(paddle);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
+    // Display percent of health
+    ball.displayHealth();
     // Updates target health. reduces health based on a random speed.
     // I keep this code cause I might use it again
     // for (let i = 0; i < targets.length; i++) {
@@ -241,10 +259,10 @@ function draw() {
     paddle.display();
     ball.display();
 
-    // If ball goes off the bottom of screen or all targets disappeared, game is over.
-    if (ball.y > height) {
+    // If ball goes off the bottom of screen or player lost his whole life, game is over.
+    if (ball.y > height || ball.opacity <= 0) {
       gameOver = true;
-      firstStep = false;
+      secondStep = false;
     }
   }
   // Game over screen
@@ -290,6 +308,10 @@ function displayTargets() {
       if (targets[i].targetId === isTrue[j] && showRow[j] === true) {
         targets[i].display();
       }
+
+      // Show the number of targets achieved.
+      let numTarget = targetSum[j];
+      gameStructure.targetTracker(numTarget);
     }
     // If the player went through all three rows, goes to next step
     if (j === 3) {

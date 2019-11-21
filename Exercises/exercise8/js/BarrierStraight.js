@@ -11,24 +11,39 @@ class BarrierStraight extends Barrier {
     super(x, y);
     this.vx = 1;
   }
-
+  // Update barrier x position
   updatePosition() {
     this.handleWrapping();
       this.x += this.vx;
   }
 
+  // Make the barriers to wrap around the screen
   handleWrapping() {
-  // Check for collisions with top or bottom...
- if (this.x > width) {
-    // It hit so reverse velocity
-    this.x = 0;
-  }
-}
-  // Display barrier
-  display() {
-    fill(255, 76, 39);
-    rectMode(CORNER);
-    rect(this.x, this.y, this.plW, this.plH);
+    // Check if barrier went off screen
+    if (this.x > width) {
+      // If so set x position to zero
+      this.x = 0;
+    }
   }
 
+  // Check if ball collided barrier.
+  // if so, decrease player health by 30%.
+  ballBarrierCollision(ball) {
+    let d = dist(this.x, this.y, ball.x, ball.y);
+    let barrierSize = (this.h + this.w) * 2;
+    if (d < (ball.size + barrierSize) / 3.5 && this.id === 1) {
+      ball.opacity -= 51;
+      this.id = 2;
+      ball.healthPercent -= 20;
+    }
+  }
+
+  // Display barrier
+  display() {
+    push();
+    fill(this.fillColor);
+    rectMode(CORNER);
+    rect(this.x, this.y, this.w, this.h);
+    pop();
+  }
 }

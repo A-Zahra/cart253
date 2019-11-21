@@ -10,8 +10,10 @@ class Barrier {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.plW = 100;
-    this.plH = 40;
+    this.w = 100;
+    this.h = 40;
+    this.fillColor = color (255, 76, 39);
+    this.id = 1;
   }
 
   // Display barrier

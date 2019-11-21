@@ -72,6 +72,18 @@ class GameStructure {
     pop();
   }
 
+  // Track number of targets achieved
+  targetTracker(numTarget) {
+    push();
+    fill(255);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    let recorder = `Number of Target Acheived: ${numTarget}`;
+    text(recorder, 170, 50 );
+    console.log("came");
+    pop();
+  }
+
   // Display the screen that connects layers to each other.
   // This screen would either congradulates the player victory and send him to next step
   // or asks him to play again.

@@ -9,6 +9,7 @@ class BallStraight extends Ball {
   // Either sets default values or uses the arguments provided.
   constructor(x, y) {
     super(x, y);
+    this.opacity = 255;
   }
 
   // Handle jumping
@@ -35,7 +36,6 @@ class BallStraight extends Ball {
       this.y = paddle.y - 12;
     }
   }
-
   // Makes the ball jump
   goJump() {
     // Only jump when we are not in the middle of a jump
@@ -50,9 +50,24 @@ class BallStraight extends Ball {
     this.x = paddleX;
   }
 
+  // Display percent of health
+  displayHealth() {
+    let health = `Health: ${this.healthPercent}%`;
+    push();
+    fill(255);
+    textSize(25);
+    textAlign(CENTER,CENTER);
+    text(health, width - 140, 50);
+    text()
+    pop();
+  }
+
   // Display ball
   display() {
-    fill(255, 0, 0);
+    push();
+    noStroke();
+    fill(255, 0, 0, this.opacity);
     ellipse(this.x, this.y, this.size * 2, this.size * 2);
+    pop();
   }
 }
