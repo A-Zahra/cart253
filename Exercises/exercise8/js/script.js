@@ -31,14 +31,14 @@ let paddle;
 // Declare ball object
 let ball;
 
-// Declare objects and variables related to targets
+// Declare objects and variables related to first step targets
 let targets = [];
 let maxTarget = 100;
 let targetProperties = [];
 let numTarget;
-// Decides whether to show targets or not.
 let isTrue = [];
 let isFalse = [];
+// Decides whether to show targets or not.
 let showRow = [];
 let hideRow = [];
 let isOver = [];
@@ -50,8 +50,10 @@ let barriers = [];
 let barrierY = [];
 let MAX_BARRIERS = 11;
 
+// Second step target properties declaration
 let secondStepTarget = [];
 let targetPosition = [];
+let score;
 // preload()
 //
 // Insert all external files
@@ -72,16 +74,18 @@ function setup() {
 // Sets up all initial values in an independent function
 // so that it can be used in functions like restart function.
 function setUpGame() {
+  // First step target properties
   countTargets = 0;
   targetSum = [0, 0, 0];
   showRow = [true, false, false];
   hideRow = [false, false, false];
   isTrue = [1, 3, 5];
   isFalse = [2, 4, 6];
-  isOver = [4, 3, 2];
-  isSumTrue = [3, 2, 1];
-
+  isOver = [8, 7, 6];
+  isSumTrue = [7, 6, 5];
+  // Second step target properties
   targetPosition = [false, true, false, true, false, true];
+
   // Makes an object of gameStructure and assign default values to
   gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2.5);
 
@@ -114,8 +118,7 @@ function setUpGame() {
         id: 5,
         fillColor: color(49, 220, 136),
         proximity: 2
-      }
-    ];
+      }];
 
     // To check whether the two circles overlapped.
     let overlapping = false;
@@ -142,9 +145,8 @@ function setUpGame() {
   }
   // Makes new target objects and assign target properties to
   for (let i = 0; i < targetProperties.length; i++) {
-    targets[i] = new Target(targetProperties[i]);
+    targets[i] = new FirstStepTarget(targetProperties[i]);
   }
-
 
   // Makes ball object and assign default values to
   ball = new BallStraight(width / 2 + 50, height - 140);
@@ -154,10 +156,12 @@ function setUpGame() {
   // Makes an array of barrier and target objects and assign x and y values as well as random sizes to objects.
   // Because the number of y positions is less than the number of barriers, an external value should be used.
   // Thus, after every five time of code execution it would be restarted to use the same positions for the next five barriers.
+  // Score will keep track of targets score which get accumilated every time the player hits a target.
+  score = 0;
   let j = 0;
   for (let i = 0; i < MAX_BARRIERS; i++) {
     // Define barriers y position
-    barrierY = [height / 2 - 150, height / 2 - 200, height / 2 - 290, height / 3 - 100, height / 3 + 50 ,height / 3 + 150];
+    barrierY = [height / 2 - 150, height / 2 - 200, height / 2 - 290, height / 3 - 100, height / 3 + 50, height / 3 + 150];
     // Add barriers to the array
     barriers[i] = new BarrierStraight(i * 150.0, barrierY[j]);
 
@@ -167,10 +171,14 @@ function setUpGame() {
       let r = random(30, 60);
       // Add targets to the array
       // Targets y positions are in accordance with barriers y positions
-      secondStepTarget[i] = new SecondStepTarget ((i * 150.0), barrierY[j] + 65, r);
-    }
-    else {
-      secondStepTarget[i] = new SecondStepTarget (0, 0, 0);
+      let secondTarget = {
+        x: (i * 150.0),
+        y: barrierY[j] + 65,
+        size: r
+      };
+      secondStepTarget[i] = new SecondStepTarget(secondTarget);
+    } else {
+      secondStepTarget[i] = new SecondStepTarget(0, 0, 0);
     }
     j++;
     // Restart to use y position
@@ -178,17 +186,15 @@ function setUpGame() {
       j = 0;
       // Give random y position
       for (let i = 0; i < 6; i++) {
-        let r = floor(random(1, 3));
-        if (r === 2) {
+        let r = random(1, 3);
+        if (r < 2) {
           targetPosition[i] = true;
-        }
-        else {
+        } else if (r > 2){
           targetPosition[i] = false;
         }
       }
     }
   }
-
 }
 
 // draw()
@@ -261,19 +267,20 @@ function draw() {
       barriers[i].display();
       barriers[i].updatePosition();
     }
-    // Displays barriers
-    // for (let i = 0; i < barriers.length; i++) {
-    //
-    // }
     // Check if ball collided barriers.
     // If so, decrease his health by 20%
     for (let i = 0; i < barriers.length; i++) {
       barriers[i].ballBarrierCollision(ball);
     }
 
+    // Draw second step targets
+    // Update target x postion if it went off screen
+    // Check if ball collided with second step target
+    // if so add to player score
     for (let i = 0; i < secondStepTarget.length; i++) {
       secondStepTarget[i].display();
       secondStepTarget[i].updatePosition();
+      ball.targetCollision(secondStepTarget[i]);
     }
 
     // Handles ball input
@@ -282,8 +289,9 @@ function draw() {
     ball.handleJumping(paddle);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
-    // Display percent of health
+    // Display percent of health + Display player score
     ball.displayHealth();
+    ball.displayScore();
     // Updates target health. reduces health based on a random speed.
     // I keep this code cause I might use it again
     // for (let i = 0; i < targets.length; i++) {
@@ -426,10 +434,9 @@ function mousePressed() {
     play();
   } else if (firstStep) {
     ball.isJumping = true;
-  } else if (secondStep){
+  } else if (secondStep) {
     ball.isJumping = true;
-  }
-  else if (stepIsOver) {
+  } else if (stepIsOver) {
     if (firstWin) {
       next();
     } else if (!firstFailure) {

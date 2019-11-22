@@ -50,15 +50,43 @@ class BallStraight extends Ball {
     this.x = paddleX;
   }
 
+  // this code is not complete yet.
+  // Second step target ball collision checking
+  targetCollision(target, score) {
+    let d = dist(target.x, target.y, this.x, this.y);
+    if (d < (target.size + this.size) / 2) {
+      // If target size is between 40 and 50 add 5 points to score
+      if (target.size > 40 && target.size < 50) {
+        target.fillColor = color(255, 148, 1);
+        this.score += 5;
+      }
+      // If target size is more than or equal to 50 add 10 points to score
+      else if (target.size >= 50) {
+        target.fillColor = color(26, 255, 194);
+        this.score += 10;
+      }
+    }
+  }
+
+  // Display player score
+  displayScore() {
+    let showScore = `The extent of target's worthiness: ${this.score}`;
+    push();
+    fill(255);
+    textSize(22);
+    textAlign(CENTER, CENTER);
+    text(showScore, 220, 50);
+    pop();
+  }
+
   // Display percentage of health
   displayHealth() {
     let health = `Health: ${this.healthPercent}%`;
     push();
     fill(255);
-    textSize(25);
+    textSize(22);
     textAlign(CENTER, CENTER);
     text(health, width - 140, 50);
-    text()
     pop();
   }
 

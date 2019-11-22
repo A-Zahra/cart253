@@ -17,12 +17,14 @@ class Ball {
     this.maxJumpHeight = -35;
     this.numTargetsAchieved = 0;
     this.healthPercent = 100;
+    this.fillColor = color(255, 0, 0);
+    this.score = 0;
   }
 
   // Handles ball input
   handleInput(step) {
     // jump when space is pressed
-    if (keyIsDown(32)) {
+    if (keyIsDown(32) && this.maxJumpHeight > - 62) {
       this.maxJumpHeight += -2;
       if (step) {
         this.ySpeed += 0.2;

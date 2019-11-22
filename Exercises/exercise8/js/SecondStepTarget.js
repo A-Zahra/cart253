@@ -1,16 +1,16 @@
 // SecondStepTarget
 //
 // A class that represents second step targets
-class SecondStepTarget {
+class SecondStepTarget extends Target{
   // Constructor
   //
   // Sets the initial values for the target's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y, size) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
+  constructor(target) {
+    super(target);
+    this.size = target.size;
     this.vx = 1;
+    this.fillColor = color(170, 47, 213);
   }
 
   // Update target x position
@@ -18,7 +18,6 @@ class SecondStepTarget {
     this.handleWrapping();
     this.x += this.vx;
   }
-
 
   // Make the target to wrap around the screen
   handleWrapping() {
@@ -32,7 +31,7 @@ class SecondStepTarget {
   // Display target
   display() {
     push();
-    fill(130, 47, 213);
+    fill(this.fillColor);
     ellipseMode(CENTER);
     ellipse(this.x, this.y, this.size, this.size);
     pop();

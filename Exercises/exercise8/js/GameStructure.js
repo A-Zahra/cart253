@@ -19,6 +19,13 @@ class GameStructure {
     this.fillColor = color(0, 0, 0);
     this.winned = 0;
     this.failed = 0;
+
+    // This instruction was added only for the prototype purpose and
+    // will be replaced with the original instruction once game programming is finished.
+    this.startInstuction = "1. Hit 7 of first row targets, 6 of second row and 5 of third row\n" +
+                          "2. Click to make the ball jump. Press SPACE key to jump higher and CTRL key to reset jump height";
+    this.noteForProf = "Hit the targets and barriers to see the interaction between them and the ball. Not all targets \n" +
+                      "interact with the ball and score tracker is not showing the correct score because the code is not complete yet.";
   }
 
   // Displays start screen
@@ -26,8 +33,11 @@ class GameStructure {
     push();
     let title = this.gameName;
     fill(this.fillColor);
-    textSize(70);
+    textSize(20);
     textAlign(CENTER, CENTER);
+    textLeading(35);
+    text(this.startInstuction, this.startTitleX , this.startTitleY - 100);
+    textSize(70);
     text(title, this.startTitleX, this.startTitleY);
     pop();
     this.play();
@@ -92,8 +102,12 @@ class GameStructure {
     let title = message;
     fill(this.fillColor);
     textSize(70);
+
     textAlign(CENTER, CENTER);
     text(title, this.startTitleX, this.startTitleY);
+    textSize(20);
+    textLeading(32);
+    text(this.noteForProf, this.startTitleX, this.startTitleY + 85);
     pop();
     // If player won
     if (result) {
