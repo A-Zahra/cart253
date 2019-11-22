@@ -15,6 +15,7 @@
 // --** Audios **--
 //
 /****************************************************************************/
+// All hardcoded numbers will be replaced by variables once the game programming is close to get finished.
 let countTargets;
 let startBackground;
 // Decides when to show start screen, game screen, end screen
