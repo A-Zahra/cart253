@@ -22,10 +22,13 @@ let startBackground;
 let startScreen = true;
 let firstStep = false;
 let secondStep = false;
+let thirdStep = false;
 let gameOver = false;
 let stepIsOver = false;
 let firstWin = false;
+let secondWin = false;
 let firstFailure = true;
+let secondFailure = true;
 
 // Declare paddle object
 let paddle;
@@ -82,8 +85,8 @@ function setUpGame() {
   hideRow = [false, false, false];
   isTrue = [1, 3, 5];
   isFalse = [2, 4, 6];
-  isOver = [8, 7, 6];
-  isSumTrue = [7, 6, 5];
+  isOver = [4, 3, 2];
+  isSumTrue = [3, 2, 1];
   // Second step target properties
   targetPosition = [false, true, false, true, false, true];
 
@@ -247,12 +250,15 @@ function draw() {
   }
   // Transition screen
   else if (stepIsOver) {
+    background(255);
     if (firstWin) {
-      background(255);
       gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin);
     } else if (!firstFailure) {
-      background(255);
       gameStructure.TransitionScreenDisplay("Oops you've got too ambitous!", firstFailure);
+    } else if (secondWin) {
+      gameStructure.TransitionScreenDisplay("Good job buddy, Ready for next step!", secondWin);
+    } else if (!secondFailure) {
+      gameStructure.TransitionScreenDisplay("Oops, did you misuse your will!", secondFailure);
     }
   }
   // Game second step
@@ -276,10 +282,12 @@ function draw() {
 
     // Draw second step targets
     // Update target x postion if it went off screen
-    // Check if ball collided with second step target
-    // if so add to player score
+    // Check if ball collided with second step target. If so add to player score
     for (let i = 0; i < secondStepTarget.length; i++) {
-      secondStepTarget[i].display();
+      // Check the target point is counted only once
+      if (secondStepTarget[i].id === 1) {
+        secondStepTarget[i].display();
+      }
       secondStepTarget[i].updatePosition();
       ball.targetCollision(secondStepTarget[i]);
     }
@@ -303,11 +311,32 @@ function draw() {
     paddle.display();
     ball.display();
 
+    // If the player score reached to 100, second step ends +
+    // show transition screen to go to next step
+    if (ball.score === 100) {
+      stepIsOver = true;
+      secondWin = true;
+      secondStep = false;
+      console.log("ball score"+ball.score);
+    }
     // If ball goes off the bottom of screen or player lost his whole life, game is over.
-    if (ball.y > height || ball.opacity <= 0) {
-      gameOver = true;
+    else if (ball.y > height || ball.opacity <= 0) {
+      stepIsOver = true;
+      secondFailure = false;
       secondStep = false;
     }
+  }
+  // Game third step
+  else if (thirdStep) {
+    background(0);
+
+    // Resets paddle position
+    paddle.x = mouseX;
+    paddle.y = mouseY;
+
+    // Displays Ball and paddle
+    paddle.display();
+    ball.display();
   }
   // Game over screen
   else if (gameOver) {
@@ -386,10 +415,20 @@ function next() {
   // If the distance between mouse position and
   // the start button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.nextButton.x, gameStructure.nextButton.y) < gameStructure.nextButton.w) {
-    firstStep = false;
-    stepIsOver = false;
-    secondStep = true;
-    firstWin = false;
+    // If player won first step, reset the following values
+    if (firstWin) {
+      firstStep = false;
+      stepIsOver = false;
+      secondStep = true;
+      firstWin = false;
+    } // If player won sceond step, reset the following values
+    else if (secondWin) {
+      secondStep = false;
+      stepIsOver = false;
+      thirdStep = true;
+      secondWin = false;
+      console.log("came in");
+    }
     setUpGame();
   }
 }
@@ -401,9 +440,20 @@ function playAgain() {
   // If the distance between mouse position and
   // the start button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.nextButton.x, gameStructure.nextButton.y) < gameStructure.nextButton.w) {
-    firstStep = true;
-    stepIsOver = false;
-    firstFailure = true;
+    // If player lost first layer, reset the following values
+    // so that he can play the same step again
+    if (!firstFailure) {
+      firstStep = true;
+      stepIsOver = false;
+      firstFailure = true;
+    }
+    // If player lost second layer, reset the following values
+    // so that he can play the same step again
+    else if (!secondFailure) {
+      secondStep = true;
+      stepIsOver = false;
+      secondFailure = true;
+    }
     setUpGame();
   }
 }
@@ -441,6 +491,10 @@ function mousePressed() {
     if (firstWin) {
       next();
     } else if (!firstFailure) {
+      playAgain();
+    } else if (secondWin) {
+      next();
+    } else if (!secondFailure) {
       playAgain();
     }
   } else if (gameOver) {

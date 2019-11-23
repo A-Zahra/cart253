@@ -54,16 +54,18 @@ class BallStraight extends Ball {
   // Second step target ball collision checking
   targetCollision(target, score) {
     let d = dist(target.x, target.y, this.x, this.y);
-    if (d < (target.size + this.size) / 2) {
+    if (d < (target.size + this.size) / 2 && target.id === 1) {
       // If target size is between 40 and 50 add 5 points to score
       if (target.size > 40 && target.size < 50) {
-        target.fillColor = color(255, 148, 1);
+        //target.fillColor = color(255, 148, 1);
         this.score += 5;
+        target.id = 0;
       }
       // If target size is more than or equal to 50 add 10 points to score
       else if (target.size >= 50) {
-        target.fillColor = color(26, 255, 194);
+      //  target.fillColor = color(26, 255, 194);
         this.score += 10;
+        target.id = 0;
       }
     }
   }

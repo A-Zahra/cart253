@@ -90,7 +90,7 @@ class GameStructure {
     textAlign(CENTER, CENTER);
     let recorder = `Number of Target Acheived: ${numTarget}`;
     text(recorder, 170, 50);
-    console.log("came");
+  //  console.log("came");
     pop();
   }
 

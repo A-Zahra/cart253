@@ -21,8 +21,9 @@ class BarrierStraight extends Barrier {
   handleWrapping() {
     // Check if barrier went off screen
     if (this.x > width + 50) {
-      // If so set x position to zero
+      // If so, set x position to -50 and id to 1 so that it would be shown and could be counted again.
       this.x = -50;
+      this.id = 1;
     }
   }
 

@@ -11,6 +11,7 @@ class SecondStepTarget extends Target{
     this.size = target.size;
     this.vx = 1;
     this.fillColor = color(170, 47, 213);
+    this.id = 1;
   }
 
   // Update target x position
@@ -23,8 +24,9 @@ class SecondStepTarget extends Target{
   handleWrapping() {
     // Check if target went off screen
     if (this.x > width + 50) {
-      // If so set x position to zero
+      // If so, set x position to -50 and id to 1 so that it would be shown and could be counted again.
       this.x = -50;
+      this.id = 1;
     }
   }
 
