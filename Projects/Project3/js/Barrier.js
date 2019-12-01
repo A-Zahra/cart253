@@ -7,9 +7,9 @@ class Barrier {
   //
   // Sets the initial values for the barrier's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
+  constructor(barrier) {
+    this.x = barrier.x;
+    this.y = barrier.y;
     this.w = 100;
     this.h = 40;
     this.fillColor = color(255, 76, 39);

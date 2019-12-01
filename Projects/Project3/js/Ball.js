@@ -15,6 +15,7 @@ class Ball {
     this.isFalling = false;
     this.ySpeed = 1;
     this.maxJumpHeight = -35;
+      this.maxJumpHeight2 = -25;
     this.numTargetsAchieved = 0;
     this.healthPercent = 100;
     this.fillColor = color(255, 0, 0);
@@ -22,10 +23,15 @@ class Ball {
   }
 
   // Handles ball input
-  handleInput(step) {
+  handleInput(step, ballHeight) {
     // jump when space is pressed
-    if (keyIsDown(32) && this.maxJumpHeight > - 62) {
-      this.maxJumpHeight += -2;
+    if (keyIsDown(32) && this.maxJumpHeight > - 62 || keyIsDown(32) && this.maxJumpHeight > - 62) {
+      if (ballHeight === 1) {
+        this.maxJumpHeight += -2;
+      }
+      else if (ballHeight === 2){
+        this.maxJumpHeight2 += -1.5;
+      }
       if (step) {
         this.ySpeed += 0.2;
       } else {
@@ -35,6 +41,7 @@ class Ball {
     // Reset jump height when Ctrl is pressed
     else if (keyIsDown(CONTROL)) {
       this.maxJumpHeight = -35;
+      this.maxJumpHeight2 = -25;
       this.ySpeed = 1;
     }
   }

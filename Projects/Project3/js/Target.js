@@ -11,6 +11,7 @@ class Target {
     this.x = target.x;
     this.y = target.y;
     this.fillColor = target.fillColor;
+    this.size = target.radius;
     this.score = 0;
   }
 

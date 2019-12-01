@@ -13,7 +13,7 @@ class BallStraight extends Ball {
   }
 
   // Handle jumping
-  handleJumping(paddle) {
+  handleJumping(paddle, ballHeight) {
     // Check if ball is jumping
     if (this.isJumping === true) {
       // it is not falling
@@ -30,18 +30,23 @@ class BallStraight extends Ball {
         this.isJumping = false;
         this.isFalling = false;
         // Ball jumps
-        this.goJump();
+        this.goJump(ballHeight);
       }
     } else {
       this.y = paddle.y - 12;
     }
   }
   // Makes the ball jump
-  goJump() {
+  goJump(ballHeight) {
     // Only jump when we are not in the middle of a jump
     if (this.isJumping === false && this.isFalling === false) {
       this.isJumping = true;
-      this.ySpeed = this.maxJumpHeight;
+      if (ballHeight === 1) {
+        this.ySpeed = this.maxJumpHeight;
+      }
+      else if (ballHeight === 2 ) {
+        this.ySpeed = this.maxJumpHeight2;
+      }
     }
   }
 
@@ -52,7 +57,7 @@ class BallStraight extends Ball {
 
   // this code is not complete yet.
   // Second step target ball collision checking
-  targetCollision(target, score) {
+  targetCollision(target) {
     let d = dist(target.x, target.y, this.x, this.y);
     if (d < (target.size + this.size) / 2 && target.id === 1) {
       // If target size is between 40 and 50 add 5 points to score
@@ -62,9 +67,16 @@ class BallStraight extends Ball {
         target.id = 0;
       }
       // If target size is more than or equal to 50 add 10 points to score
-      else if (target.size >= 50) {
+      else if (target.size >= 50 && target.size < 60) {
       //  target.fillColor = color(26, 255, 194);
         this.score += 10;
+        target.id = 0;
+      }
+      else if (target.size >= 60) {
+        this.opacity +=51;
+        if (this.healthPercent < 101) {
+            this.healthPercent += 20;
+        }
         target.id = 0;
       }
     }

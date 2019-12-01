@@ -8,8 +8,6 @@ class FirstStepTarget extends Target {
 // Either sets default values or uses the arguments provided.
 constructor(target) {
   super(target);
-  this.fillColor = target.fillColor;
-  this.size = target.radius;
   this.maxHealth = 255;
   this.targetId = target.id;
   this.targetIdTrue = 0;

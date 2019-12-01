@@ -23,12 +23,15 @@ let startScreen = true;
 let firstStep = false;
 let secondStep = false;
 let thirdStep = false;
+let victoryScreen = false;
 let gameOver = false;
 let stepIsOver = false;
 let firstWin = false;
 let secondWin = false;
 let firstFailure = true;
 let secondFailure = true;
+let ballHeight1 = 1;
+let ballHeight2 = 2;
 
 // Declare paddle object
 let paddle;
@@ -54,14 +57,18 @@ let barriers = [];
 let barrierY = [];
 let MAX_BARRIERS = 11;
 let secondBarriers = [];
-let MAX_SECONDBARRIERS = 50;
+let secBarrierProp = [];
+let MAX_SECONDBARRIERS = 10;
 
 // Second step target properties declaration
 let secondStepTarget = [];
 let targetPosition = [];
+let tPos = [];
+let otherPos = [];
 let score;
 
 let thirdStepTarget = [];
+let thirdTargetProp = [];
 // preload()
 //
 // Insert all external files
@@ -165,76 +172,106 @@ function setUpGame() {
   // Score will keep track of targets score which get accumilated every time the player hits a target.
   score = 0;
   let j = 0;
+  let numHiddenTargets = 0;
+  // Puts target under random barriers
+  for (let k = 0; k < 10; k++) {
+    let r = floor(random(1, 3));
+    if (r > 2 && numHiddenTargets < 4) {
+      numHiddenTargets++;
+      targetPosition[k] = false;
+    } else if (r < 2) {
+      targetPosition[k] = true;
+    }
+  }
   for (let i = 0; i < MAX_BARRIERS; i++) {
     // Define barriers y position
     barrierY = [height / 2 - 150, height / 2 - 200, height / 2 - 290, height / 3 - 100, height / 3 + 50, height / 3 + 130];
+    barrierProperties = {
+      y: barrierY[j],
+      x: i * 150
+    };
     // Add barriers to the array
-    barriers[i] = new BarrierStraight(i * 150.0, barrierY[j]);
+    barriers[i] = new BarrierStraight(barrierProperties);
     // Use targetPosition to place targets in random positions.
+    // If target position was false, do not assign it to the array
     if (targetPosition[j] === true) {
       // Generate random sizes for the targets
       let r = random(30, 60);
+      console.log("secondsteptargets");
       // Add targets to the array
       // Targets y positions are in accordance with barriers y positions
       let secondTarget = {
         x: (i * 150.0),
         y: barrierY[j] + 65,
-        size: r
+        fillColor: color(212, 30, 157),
+        radius: r
       };
       secondStepTarget[i] = new SecondStepTarget(secondTarget);
     } else {
-      secondStepTarget[i] = new SecondStepTarget(0, 0, 0);
+      secondStepTarget[i] = 0;
     }
     j++;
     // Restart to use y position
     if (i === 5 || i === 10) {
       j = 0;
-      // Give random y position
-      for (let i = 0; i < 6; i++) {
-        let r = random(1, 3);
-        if (r < 2) {
-          targetPosition[i] = true;
-        } else if (r > 2) {
-          targetPosition[i] = false;
-        }
-      }
     }
   }
 
   // Assign third step barriers properties to barriers objects
-  let yPosition = 0;
-  let otherYPosition;
-  let xPosition = 0;
-  let otherXPosition;
-  let inOneLine = false;
-  let size = 40;
-  for (let i = 0; i < MAX_SECONDBARRIERS; i++) {
-    otherYPosition = yPosition;
-    otherXPosition = xPosition;
-    yPosition = abs(random(0, (height - 250)));
-    xPosition = i * 150.0;
-    // Target position and size
-    let thirdTarget = {
-      x: xPosition,
-      y: yPosition + 60,
-      size: 50
+  let limit = 0;
+  let t =0;
+  let y;
+  while (secondBarriers.length < MAX_SECONDBARRIERS) {
+    y = floor(random(10, (height - 100)));
+    // Declare and assign targets properties
+    let secBar = {
+      x: t * 145,
+      y: y,
+      radius: 40,
+      proximity: 1.2
     };
-    // If the next barrier y position is in the same row as the previous barrier upper half is placed
-    // set inOneLine to true (That is don't add it to array of barriers objects)
-    if (yPosition < otherYPosition && yPosition > otherYPosition - size) {
-      inOneLine = true;
+    let thirdTarget = {
+      x: t * 145,
+      y: y + 60,
+      radius: random(40, 80),
+      proximity: 1.2,
+      fillColor: color(29, 227, 252)
     }
-    // If the next barrier y position is in the same row as the previous barrier lower half is placed
-    // set inOneLine to true (That is don't add it to array of barriers objects)
-    else if (yPosition > otherYPosition && yPosition < otherYPosition + size) {
-      inOneLine = true;
-    }
-    // Add the new barrier if is not in the same line as the previous barrier is
-    if (!inOneLine) {
-      // Add barriers objects to the array + Add targets object to the array
-      secondBarriers[i] = new BarrierStraight(xPosition, yPosition);
-      thirdStepTarget[i] = new SecondStepTarget(thirdTarget);
-    }
+    // To check whether the two circles overlapped.
+    let inOneLine = false;
+    // Check the distance between the new circle and all the old ones. If the distance between
+    // the two is less than sum of both radius, don't add the new circle to the array.
+      for (let i = 0; i < secBarrierProp.length; i++) {
+        let otherBarrier = secBarrierProp[i];
+        let d = dist(secBar.x, secBar.y, otherBarrier.x, otherBarrier.y);
+        if (d < (secBar.radius + otherBarrier.radius) / secBar.proximity) {
+          inOneLine = true;
+          break;
+        }
+        else if (secBar.y < otherBarrier.y && secBar.y > otherBarrier.y - otherBarrier.radius) {
+              inOneLine = true;
+              break;
+            }
+        else if (secBar.y > otherBarrier.y && secBar.y < otherBarrier.y + otherBarrier.radius){
+            inOneLine = true;
+            break;
+          }
+      }
+      // If is not overlapping add to the array
+      if (!inOneLine) {
+        secBarrierProp.push(secBar);
+        thirdTargetProp.push(thirdTarget);
+        t++;
+        limit++;
+      }
+      if (limit > 10) {
+      break;
+      }
+  }
+  // Makes new target objects and assign target properties to
+  for (let i = 0; i < secBarrierProp.length; i++) {
+    secondBarriers[i] = new BarrierStraight(secBarrierProp[i]);
+    thirdStepTarget[i] = new SecondStepTarget(thirdTargetProp[i]);
   }
 }
 
@@ -262,9 +299,9 @@ function draw() {
     gameStructure.playArea();
 
     // Handles ball input
-    ball.handleInput(firstStep);
+    ball.handleInput(firstStep, ballHeight1);
     // Check if ball is jumping
-    ball.handleJumping(paddle);
+    ball.handleJumping(paddle, ballHeight1);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
 
@@ -322,17 +359,17 @@ function draw() {
     // Check if ball collided with second step target. If so add to player score
     for (let i = 0; i < secondStepTarget.length; i++) {
       // Check the target point is counted only once
-      if (secondStepTarget[i].id === 1) {
+      if (secondStepTarget[i].id === 1 && secondStepTarget !== 0) {
         secondStepTarget[i].display();
+        secondStepTarget[i].updatePosition();
+        ball.targetCollision(secondStepTarget[i]);
       }
-      secondStepTarget[i].updatePosition();
-      ball.targetCollision(secondStepTarget[i]);
     }
 
     // Handles ball input
-    ball.handleInput(!firstStep);
+    ball.handleInput(!firstStep, ballHeight1);
     // Check if ball is jumping
-    ball.handleJumping(paddle);
+    ball.handleJumping(paddle, ballHeight1);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
     // Display percent of health + Display player score
@@ -372,25 +409,26 @@ function draw() {
 
     // Update barriers position. Display barriers and Make them loop
     // Update targets position. Display targets and Make them loop
-    for (let i = 0; i < barriers.length; i++) {
+    for (let i = 0; i < secondBarriers.length; i++) {
       secondBarriers[i].display();
       secondBarriers[i].updatePosition();
-      thirdStepTarget[i].display();
-      thirdStepTarget[i].updatePosition();
-    }
-    // Check if ball collided barriers.
-    // If so, decrease his health by 20%
-    for (let i = 0; i < barriers.length; i++) {
       secondBarriers[i].ballBarrierCollision(ball);
+    }
+    for (let i = 0; i < thirdStepTarget.length; i++) {
+      if (thirdStepTarget[i].id === 1) {
+        thirdStepTarget[i].display();
+        thirdStepTarget[i].updatePosition();
+        ball.targetCollision(thirdStepTarget[i]);
+      }
     }
 
     // Display percent of health + Display player score
     ball.displayHealth();
     ball.displayScore();
     // Handles ball input
-    ball.handleInput(thirdStep);
+    ball.handleInput(thirdStep, ballHeight2);
     // Check if ball is jumping
-    ball.handleJumping(paddle);
+    ball.handleJumping(paddle, ballHeight2);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
 
@@ -398,7 +436,12 @@ function draw() {
     paddle.display();
     ball.display();
 
+    if (ball.score > 50) {
+      thirdStep = false;
+      victoryScreen = true;
+    }
     if (ball.y > height) {
+      thirdStep = false;
       gameOver = true;
     }
   }
@@ -490,7 +533,6 @@ function next() {
       stepIsOver = false;
       thirdStep = true;
       secondWin = false;
-      console.log("came in");
     }
     setUpGame();
   }

@@ -8,9 +8,8 @@ class SecondStepTarget extends Target{
   // Either sets default values or uses the arguments provided.
   constructor(target) {
     super(target);
-    this.size = target.size;
-    this.vx = 1;
-    this.fillColor = color(170, 47, 213);
+    this.vx = 2;
+    // this.fillColor = color(170, 47, 213);
     this.id = 1;
   }
 

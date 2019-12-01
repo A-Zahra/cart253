@@ -125,15 +125,15 @@ class GameStructure {
   next() {
     // next button properties
     this.nextButton = {
-      x: width / 2,
-      y: height / 2 + 100,
-      w: 210,
-      h: 80,
+      x: 200,
+      y: height - 100,
+      w: 200,
+      h: 70,
       tl: 15,
       tr: 15,
       bl: 15,
       br: 15,
-      textSize: 35,
+      textSize: 27,
       fillColor: color(255, 64, 99)
     }
     push();
@@ -171,15 +171,15 @@ class GameStructure {
   restart() {
     // Restart button properties
     this.restartButton = {
-      x: width / 2,
-      y: height / 2 + 50,
+      x: 200,
+      y: height - 100,
       w: 200,
-      h: 100,
+      h: 75,
       tl: 15,
       tr: 15,
       bl: 15,
       br: 15,
-      textSize: 35,
+      textSize: 27,
       fillColor: color(255, 64, 99)
     }
     push();

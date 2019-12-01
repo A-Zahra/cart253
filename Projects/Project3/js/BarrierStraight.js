@@ -7,9 +7,9 @@ class BarrierStraight extends Barrier {
   //
   // Sets the initial values for the barrier's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y) {
-    super(x, y);
-    this.vx = 1;
+  constructor(barrier) {
+    super(barrier);
+    this.vx = 2;
   }
   // Update barrier x position
   updatePosition() {
@@ -24,6 +24,7 @@ class BarrierStraight extends Barrier {
       // If so, set x position to -50 and id to 1 so that it would be shown and could be counted again.
       this.x = -50;
       this.id = 1;
+      this.fillColor = color(255, 76, 39);
     }
   }
 
@@ -31,8 +32,8 @@ class BarrierStraight extends Barrier {
   // if so, decrease player health by 30%.
   ballBarrierCollision(ball) {
     let d = dist(this.x, this.y, ball.x, ball.y);
-    let barrierSize = ((this.h + this.w) * 2);
-    if (d < (ball.size + barrierSize) / 6 && this.id === 1) {
+    let barrierSize = (this.h + this.w) * 2;
+    if (d < ((ball.size + barrierSize) / 5) && this.id === 1) {
       ball.opacity -= 51;
       this.id = 2;
       this.fillColor = 255;
