@@ -436,7 +436,7 @@ function draw() {
     paddle.display();
     ball.display();
 
-    if (ball.score > 50) {
+    if (ball.score > 10) {
       thirdStep = false;
       victoryScreen = true;
     }
@@ -444,6 +444,10 @@ function draw() {
       thirdStep = false;
       gameOver = true;
     }
+  }
+  else if (victoryScreen) {
+    background(0);
+    gameStructure.victoryDisplay();
   }
   // Game over screen
   else if (gameOver) {
@@ -578,6 +582,7 @@ function restart() {
     firstWin = false;
     firstFailure = true;
     gameOver = false;
+    victoryScreen = false;
     setUpGame();
   }
 }
@@ -604,7 +609,10 @@ function mousePressed() {
     } else if (!secondFailure) {
       playAgain();
     }
-  } else if (gameOver) {
+  } else if (victoryScreen) {
+    restart();
+  }
+  else if (gameOver) {
     restart();
   }
 }

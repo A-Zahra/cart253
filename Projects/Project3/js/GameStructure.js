@@ -14,6 +14,7 @@ class GameStructure {
     this.endTitleY = endTitleY;
     this.gameName = "Game of life!";
     this.gameOver = "Game Over!";
+    this.victory = "HOHO, YOU DID IT BUDDY!";
     this.playButton = 0;
     this.restartButton = 0;
     this.fillColor = color(0, 0, 0);
@@ -152,6 +153,18 @@ class GameStructure {
     }
     text(message, this.nextButton.x, this.nextButton.y + 10);
     pop();
+  }
+
+  // Displays game over screen
+  victoryDisplay() {
+    push();
+    let title = this.victory;
+    fill(255);
+    textSize(70);
+    textAlign(CENTER, CENTER);
+    text(title, this.endTitleX, this.endTitleY);
+    pop();
+    this.restart();
   }
 
   // Displays game over screen
