@@ -17,6 +17,9 @@ class Paddle {
 
   // Display paddle
   display() {
+      fill(255);
+      rectMode(CORNER);
+      rect(this.x, this.y, this.paddleW, this.paddleH);
     // A generic shape cannot be displayed
     // But it makes sense to tell anyone extending this class to include one!
   }

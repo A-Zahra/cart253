@@ -22,10 +22,10 @@ class PaddleStraight extends Paddle {
     return false;
   }
 
-  // Displays paddle
-  display() {
-    fill(255);
-    rectMode(CORNER);
-    rect(this.x, this.y, this.paddleW, this.paddleH);
-  }
+  // // Displays paddle
+  // display() {
+  //   fill(255);
+  //   rectMode(CORNER);
+  //   rect(this.x, this.y, this.paddleW, this.paddleH);
+  // }
 }

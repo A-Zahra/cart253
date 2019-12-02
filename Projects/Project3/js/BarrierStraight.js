@@ -29,12 +29,12 @@ class BarrierStraight extends Barrier {
   }
 
   // Check if ball collided barrier.
-  // if so, decrease player health by 30%.
   ballBarrierCollision(ball) {
     let d = dist(this.x, this.y, ball.x, ball.y);
     let barrierSize = (this.h + this.w) * 2;
     if (d < ((ball.size + barrierSize) / 5) && this.id === 1) {
-      if (this.behaviour === 2) {
+      // If ball overlapped first type of barriers, decrease health by 20 percent
+      if (this.behaviour === 1) {
         ball.opacity -= 51;
         this.id = 2;
         this.fillColor = 255;
@@ -42,10 +42,12 @@ class BarrierStraight extends Barrier {
       }
     }
   }
+
+  // If ball overlapped the second type of barriers sends true
   warning (ball) {
     let d = dist(this.x, this.y, ball.x, ball.y);
     let barrierSize = (this.h + this.w) * 2;
-    if (d < ((ball.size + barrierSize) / 5) && this.id === 1 && this.behaviour) {
+    if (d < ((ball.size + barrierSize) / 5) && this.id === 1 && this.behaviour === 2) {
       this.fillColor = color(200,100,200);
       return true;
     }
@@ -54,11 +56,16 @@ class BarrierStraight extends Barrier {
       }
   }
   // Display barrier
-  display() {
+  display(positioning) {
     push();
     fill(this.fillColor);
     rectMode(CENTER);
-    rect(this.x, this.y, this.w, this.h);
+    if (positioning === 1) {
+      rect(this.x, this.y, this.w, this.h);
+    }else if (positioning === 2) {
+      rect(this.x, this.y + 130, this.w, this.h);
+    }
+
     pop();
   }
 }

@@ -158,6 +158,8 @@ class GameStructure {
     pop();
   }
 
+  // The screen which is displayed between the two screens of rotated and not rotated
+  // and warns the player about what awaits them.
   displayWarningScreen() {
     background(0);
     let warningMessage = "You might choose the wrong way to achieve your goal\n But no worries! Although your point of view has changed,\n don't lose your hope, you can still do it";
@@ -167,6 +169,7 @@ class GameStructure {
     textAlign(CENTER,CENTER);
     text(warningMessage, width / 2, height / 2 - 100);
     pop();
+    // Show timer
     push();
     fill(100, 255, 140);
     rectMode(CENTER);
@@ -174,15 +177,20 @@ class GameStructure {
     fill(250, 100, 255);
     rect(this.timeLimitX, this.timeLimitY, 50, 50);
     pop();
-    this.timeCubeX+= 2;
+    // Add to x position
+    this.timeCubeX+= 3;
   }
+
+  // To specify a certain amount of time for the player to read the message
   timeToRead(warning, rotated) {
+    // If time is over, shows next screen
     if (dist(this.timeCubeX, this.timeCubeY, this.timeLimitX, this.timeLimitY) < 100) {
       warning = false;
       rotated = true;
     }
   }
-  // Displays game over screen
+
+  // Displays victory screen
   victoryDisplay() {
     push();
     let title = this.victory;

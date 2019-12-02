@@ -26,15 +26,21 @@ class SecondStepTarget extends Target{
       // If so, set x position to -50 and id to 1 so that it would be shown and could be counted again.
       this.x = -50;
       this.id = 1;
+      console.log("came in");
     }
   }
 
   // Display target
-  display() {
+  display(positioning) {
     push();
     fill(this.fillColor);
     ellipseMode(CENTER);
-    ellipse(this.x, this.y, this.size, this.size);
+    if (positioning === 1) {
+      ellipse(this.x, this.y, this.size, this.size);
+    }
+    else if (positioning === 2) {
+      ellipse(this.x, this.y - 5, this.size, this.size);
+    }
     pop();
   }
 }

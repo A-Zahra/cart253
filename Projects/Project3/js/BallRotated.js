@@ -48,12 +48,12 @@ class BallRotated extends Ball {
     this.x = paddleX;
   }
 
-  // Display ball
-  display() {
-    push();
-    noStroke();
-    fill(255, 0, 0, this.opacity);
-    ellipse(this.x, this.y, this.size * 2, this.size * 2);
-    pop();
-  }
+//   // Display ball
+//   display() {
+//     push();
+//     noStroke();
+//     fill(255, 0, 0, this.opacity);
+//     ellipse(this.x, this.y, this.size * 2, this.size * 2);
+//     pop();
+//   }
 }

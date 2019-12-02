@@ -35,6 +35,8 @@ let rotated = false;
 let notRotated = true;
 let ballHeight1 = 1;
 let ballHeight2 = 2;
+let positionBeforeRotation = 1;
+let positionAfterRotation = 2;
 
 // Declare paddle object
 let paddle;
@@ -65,20 +67,15 @@ let secondBarriers = [];
 let secBarrierProp = [];
 let MAX_SECONDBARRIERS = 10;
 
-// Second step target properties declaration
+// Second step target array of objects and properties declaration
 let secondStepTarget = [];
 let targetPosition = [];
-let tPos = [];
-let otherPos = [];
 let score;
 
+// Third step target array of objects and properties declaration
 let thirdStepTarget = [];
 let thirdTargetProp = [];
 
-let timeCubeX;
-let timeCubeY;
-let timeLimitX;
-let timeLimitY;
 // preload()
 //
 // Insert all external files
@@ -172,14 +169,14 @@ function setUpGame() {
   }
 
   // Makes ball object and assign default values to
-  ball = new BallStraight(width / 2 + 50, height - 140);
+  ball = new BallStraight(width / 2 + 50, height - 120);
   // Makes paddle object and assign default values to
-  paddle = new PaddleStraight(width / 2, height - 120);
+  paddle = new PaddleStraight(width / 2, height - 100);
 
   // Makes ball object and assign default values to
-  ballRotated = new BallRotated(width - 100, 150);
+  ballRotated = new BallRotated(width / 2 + 50, 150);
   // Makes paddle object and assign default values to
-  paddleRotated = new PaddleRotated(width - 150, 130);
+  paddleRotated = new PaddleRotated(width / 2, 130);
 
   // Makes an array of barrier and target objects and assign x and y values as well as random sizes to objects.
   // Because the number of y positions is less than the number of barriers, an external value should be used.
@@ -188,7 +185,9 @@ function setUpGame() {
   score = 0;
   let j = 0;
   let numHiddenTargets = 0;
+
   // Puts target under random barriers
+  // Set
   for (let k = 0; k < 10; k++) {
     let r = floor(random(1, 3));
     if (r > 2 && numHiddenTargets < 4) {
@@ -203,7 +202,8 @@ function setUpGame() {
     barrierY = [height / 2 - 150, height / 2 - 200, height / 2 - 290, height / 3 - 100, height / 3 + 50, height / 3 + 130];
     barrierProperties = {
       y: barrierY[j],
-      x: i * 150
+      x: i * 150,
+      behaviour: 1
     };
     // Add barriers to the array
     barriers[i] = new BarrierStraight(barrierProperties);
@@ -237,7 +237,7 @@ function setUpGame() {
   let t =0;
   let y;
   while (secondBarriers.length < MAX_SECONDBARRIERS) {
-    y = floor(random(10, (height - 100)));
+    y = floor(random(10, (height - 150)));
     // Declare and assign targets properties
     let secBar = {
       x: t * 145,
@@ -358,17 +358,17 @@ function draw() {
     background(0);
 
     // Resets paddle position
-    paddle.x = mouseX;
-    paddle.y = mouseY;
+    if (ball.isJumping) {
+      paddle.x = mouseX;
+      paddle.y = mouseY;
+    }
 
     // Update barriers position. Make them loop
-    for (let i = 0; i < barriers.length; i++) {
-      barriers[i].display();
-      barriers[i].updatePosition();
-    }
     // Check if ball collided barriers.
     // If so, decrease his health by 20%
     for (let i = 0; i < barriers.length; i++) {
+      barriers[i].display(positionBeforeRotation);
+      barriers[i].updatePosition();
       barriers[i].ballBarrierCollision(ball);
     }
 
@@ -377,10 +377,13 @@ function draw() {
     // Check if ball collided with second step target. If so add to player score
     for (let i = 0; i < secondStepTarget.length; i++) {
       // Check the target point is counted only once
-      if (secondStepTarget[i].id === 1 && secondStepTarget !== 0) {
-        secondStepTarget[i].display();
-        secondStepTarget[i].updatePosition();
-        ball.targetCollision(secondStepTarget[i]);
+      if (secondStepTarget[i] !== 0) {
+        if (secondStepTarget[i].id === 1) {
+          secondStepTarget[i].display(positionBeforeRotation);
+          }
+          secondStepTarget[i].updatePosition();
+          ball.targetCollision(secondStepTarget[i]);
+
       }
     }
 
@@ -423,13 +426,15 @@ function draw() {
         background(0);
 
         // Resets paddle position
-        paddle.x = mouseX;
-        paddle.y = mouseY;
+        if (ball.isJumping) {
+          paddle.x = mouseX;
+          paddle.y = mouseY;
+        }
 
         // Update barriers position. Display barriers and Make them loop
         // Update targets position. Display targets and Make them loop
         for (let i = 0; i < secondBarriers.length; i++) {
-          secondBarriers[i].display();
+          secondBarriers[i].display(positionBeforeRotation);
           secondBarriers[i].updatePosition();
           secondBarriers[i].ballBarrierCollision(ball);
           if (secondBarriers[i].warning(ball)) {
@@ -439,10 +444,11 @@ function draw() {
         }
         for (let i = 0; i < thirdStepTarget.length; i++) {
           if (thirdStepTarget[i].id === 1) {
-            thirdStepTarget[i].display();
+            thirdStepTarget[i].display(positionBeforeRotation);
+            }
             thirdStepTarget[i].updatePosition();
             ball.targetCollision(thirdStepTarget[i]);
-          }
+
         }
 
         // Display percent of health + Display player score
@@ -459,10 +465,10 @@ function draw() {
         paddle.display();
         ball.display();
 
-        if (ball.score > 10) {
-          notRotated = false;
-          warning = true;
-        }
+        // if (ball.score > 10) {
+        //   notRotated = false;
+        //   warning = true;
+        // }
         if (ball.y > height) {
           thirdStep = false;
           gameOver = true;
@@ -473,14 +479,39 @@ function draw() {
         if (dist(gameStructure.timeCubeX, gameStructure.timeCubeY, gameStructure.timeLimitX, gameStructure.timeLimitY) < 50) {
           warning = false;
           rotated = true;
+        //  ball.isJumping = false;
         }
       }
         else if (rotated) {
           background(0);
 
-          // Resets paddle position and define play area
-          paddleRotated.x = mouseX;
-          paddleRotated.y = mouseY;
+          if (ballRotated.isJumping) {
+            // Resets paddle position and define play area
+            paddleRotated.x = mouseX;
+            paddleRotated.y = mouseY;
+          }
+
+
+          // Update barriers position. Display barriers and Make them loop
+          // Update targets position. Display targets and Make them loop
+          for (let i = 0; i < secondBarriers.length; i++) {
+            secondBarriers[i].display(positionAfterRotation);
+            secondBarriers[i].updatePosition();
+            // secondBarriers[i].ballBarrierCollision(ball);
+            // if (secondBarriers[i].warning(ball)) {
+            //   warning = true;
+            //   rotated = false;
+            //   notRotated = true;
+            // }
+          }
+          for (let i = 0; i < thirdStepTarget.length; i++) {
+            if (thirdStepTarget[i].id === 1) {
+              thirdStepTarget[i].display(positionAfterRotation);
+              }
+              thirdStepTarget[i].updatePosition();
+              ballRotated.targetCollision(thirdStepTarget[i]);
+
+          }
 
           // Handles ball input
           //ball.handleInput(rotated, ballHeight2);

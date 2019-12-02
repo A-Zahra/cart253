@@ -1,6 +1,6 @@
 // Paddle Straight
 //
-// A class that represents paddle in it's normal mode
+// A class that represents paddle in it's rotated mode
 // Has methods which control ball movement, and
 // collision with other elements.
 class PaddleRotated extends Paddle {
@@ -22,9 +22,9 @@ class PaddleRotated extends Paddle {
   }
 
   // Displays paddle
-  display() {
-    fill(255);
-    rectMode(CORNER);
-    rect(this.x, this.y, this.paddleW, this.paddleH);
-  }
+  // display() {
+  //   fill(255);
+  //   rectMode(CORNER);
+  //   rect(this.x, this.y, this.paddleW, this.paddleH);
+  // }
 }
