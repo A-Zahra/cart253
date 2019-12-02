@@ -13,9 +13,12 @@ class Ball {
     this.size = 25;
     this.isJumping = false;
     this.isFalling = false;
+    this.warning = false;
     this.ySpeed = 1;
+    this.ySpeedRotated = -1;
     this.maxJumpHeight = -35;
-      this.maxJumpHeight2 = -25;
+    this.maxJumpHeightRotated = 35;
+    this.maxJumpHeight2 = -25;
     this.numTargetsAchieved = 0;
     this.healthPercent = 100;
     this.fillColor = color(255, 0, 0);
@@ -27,7 +30,7 @@ class Ball {
     // jump when space is pressed
     if (keyIsDown(32) && this.maxJumpHeight > - 62 || keyIsDown(32) && this.maxJumpHeight > - 62) {
       if (ballHeight === 1) {
-        this.maxJumpHeight += -2;
+        this.maxJumpHeight += -1.8;
       }
       else if (ballHeight === 2){
         this.maxJumpHeight2 += -1.5;

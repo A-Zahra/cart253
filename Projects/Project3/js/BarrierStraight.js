@@ -34,13 +34,25 @@ class BarrierStraight extends Barrier {
     let d = dist(this.x, this.y, ball.x, ball.y);
     let barrierSize = (this.h + this.w) * 2;
     if (d < ((ball.size + barrierSize) / 5) && this.id === 1) {
-      ball.opacity -= 51;
-      this.id = 2;
-      this.fillColor = 255;
-      ball.healthPercent -= 20;
+      if (this.behaviour === 2) {
+        ball.opacity -= 51;
+        this.id = 2;
+        this.fillColor = 255;
+        ball.healthPercent -= 20;
+      }
     }
   }
-
+  warning (ball) {
+    let d = dist(this.x, this.y, ball.x, ball.y);
+    let barrierSize = (this.h + this.w) * 2;
+    if (d < ((ball.size + barrierSize) / 5) && this.id === 1 && this.behaviour) {
+      this.fillColor = color(200,100,200);
+      return true;
+    }
+      else {
+        return false;
+      }
+  }
   // Display barrier
   display() {
     push();

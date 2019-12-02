@@ -20,7 +20,10 @@ class GameStructure {
     this.fillColor = color(0, 0, 0);
     this.winned = 0;
     this.failed = 0;
-
+    this.timeCubeX = (width / 2) - 300;
+    this.timeCubeY = (height / 2) + 100;
+    this.timeLimitX = width / 2 + 300;
+    this.timeLimitY = (height / 2) + 100;
     // This instruction was added only for the prototype purpose and
     // will be replaced with the original instruction once game programming is finished.
     this.startInstuction = "1. Hit 7 of first row targets, 6 of second row and 5 of third row\n" +
@@ -155,6 +158,30 @@ class GameStructure {
     pop();
   }
 
+  displayWarningScreen() {
+    background(0);
+    let warningMessage = "You might choose the wrong way to achieve your goal\n But no worries! Although your point of view has changed,\n don't lose your hope, you can still do it";
+    push();
+    fill(255);
+    textSize(20);
+    textAlign(CENTER,CENTER);
+    text(warningMessage, width / 2, height / 2 - 100);
+    pop();
+    push();
+    fill(100, 255, 140);
+    rectMode(CENTER);
+    rect(this.timeCubeX, this.timeCubeY, 50, 50);
+    fill(250, 100, 255);
+    rect(this.timeLimitX, this.timeLimitY, 50, 50);
+    pop();
+    this.timeCubeX+= 2;
+  }
+  timeToRead(warning, rotated) {
+    if (dist(this.timeCubeX, this.timeCubeY, this.timeLimitX, this.timeLimitY) < 100) {
+      warning = false;
+      rotated = true;
+    }
+  }
   // Displays game over screen
   victoryDisplay() {
     push();

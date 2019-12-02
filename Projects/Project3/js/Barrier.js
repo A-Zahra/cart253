@@ -14,6 +14,7 @@ class Barrier {
     this.h = 40;
     this.fillColor = color(255, 76, 39);
     this.id = 1;
+    this.behaviour = barrier.behaviour;
   }
 
   // Display barrier
