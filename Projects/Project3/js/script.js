@@ -270,10 +270,9 @@ function setUpGame() {
   let limit = 0;
   // The variable that is multiplied with a certain amount to specify the distance between objects
   let t = 0;
-  // Y position
-  let y;
+
   while (secondBarriers.length < MAX_SECONDBARRIERS) {
-    y = floor(random(30, (height - 150)));
+    let y = floor(random(10, (height - 150)));
     // Declare and assign barriers properties
     let secBar = {
       x: t * 145,
@@ -415,14 +414,14 @@ function draw() {
     // Update target x postion if it went off screen
     // Check if ball collided with second step target. If so add to player score
     for (let i = 0; i < secondStepTarget.length; i++) {
-      // Check the target point is counted only once
+      // Insure if the target exists
+      // Insure the target point is counted only once
       if (secondStepTarget[i] !== 0) {
         if (secondStepTarget[i].id === 1) {
-          secondStepTarget[i].display(positionBeforeRotation);
+          secondStepTarget[i].display();
         }
         secondStepTarget[i].updatePosition();
         ball.targetCollision(secondStepTarget[i], gameStructure);
-
       }
     }
 
@@ -432,49 +431,44 @@ function draw() {
     ball.handleJumping(paddle, ballHeight1);
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
-    // Display percent of health + Display player score
+    // Display percentage of health + Display player score
     ball.displayHealth(gameStructure);
     ball.displayScore(gameStructure);
-    // Updates target health. reduces health based on a random speed.
-    // I keep this code cause I might use it again
-    // for (let i = 0; i < targets.length; i++) {
-    //   targets[i].updateHealth();
-    // }
 
     // Displays Ball and paddle
     paddle.display();
     ball.display(gameStructure);
 
-    // If the player score reached to 100, second step ends +
+    // If the player score reached to the specified amount, second step ends +
     // show transition screen to go to next step
     if (gameStructure.score > 10) {
       stepIsOver = true;
       secondWin = true;
       secondStep = false;
     }
-    // If ball goes off the bottom of screen or player lost his whole life, game is over.
+    // If ball goes off the bottom of screen or player lost his whole health, game is over.
     else if (ball.y > height || gameStructure.ballOpacity <= 0) {
       stepIsOver = true;
       secondFailure = false;
       secondStep = false;
     }
   }
+
   // Game third step
   else if (thirdStep) {
-    // for (let i = 0; i < thirdStepTarget.length; i++) {
-    console.log("player score" + gameStructure.score);
-    // }
     if (notRotated) {
       background(0);
 
-      // Resets paddle position
+      // Resets paddle position if ball.isJumping is true
       if (ball.isJumping) {
         paddle.x = mouseX;
         paddle.y = mouseY;
       }
 
-      // Update barriers position. Display barriers and Make them loop
-      // Update targets position. Display targets and Make them loop
+      // Display barriers
+      // Update barriers position. Make them loop
+      // Check if ball collided barrier.
+      // If so, ethier decreases player health by 20% or rotates screen 360 degrees
       for (let i = 0; i < secondBarriers.length; i++) {
         secondBarriers[i].display(positionBeforeRotation);
         secondBarriers[i].updatePosition();
@@ -486,9 +480,14 @@ function draw() {
           turnTracker = true;
         }
       }
+
+      // Display targets
+      // Update targets position. Make them loop
+      // Check if ball collided target.
+      // If so, either add to player score or player health
       for (let i = 0; i < thirdStepTarget.length; i++) {
         if (thirdStepTarget[i].id === 1) {
-          thirdStepTarget[i].display(positionBeforeRotation);
+          thirdStepTarget[i].display();
         }
         thirdStepTarget[i].updatePosition();
         ball.targetCollision(thirdStepTarget[i], gameStructure);
@@ -508,10 +507,13 @@ function draw() {
       paddle.display();
       ball.display(gameStructure);
 
+      // If player score reached to the specified amount, show victory screen
       if (gameStructure.score > 20) {
         thirdStep = false;
         victoryScreen = true;
       }
+      // If ball went off the upper edge of screen or player lost his whole health
+      // shows replay screen
       if (ball.y > height) {
         thirdStep = false;
         stepIsOver = true;
@@ -522,7 +524,9 @@ function draw() {
         thirdFailure = false;
       }
     } else if (warning) {
+      // Display warning message
       gameStructure.displayWarningScreen();
+      // When time is over, reset time, reset paddle and ball properties, rotate screen
       if (dist(gameStructure.timeCubeX, gameStructure.timeCubeY, gameStructure.timeLimitX, gameStructure.timeLimitY) < 50) {
         gameStructure.timeCubeX = (width / 2) - 300;
         gameStructure.timeCubeY = (height / 2) + 100;
@@ -535,40 +539,42 @@ function draw() {
         } else if (!rotated && !turnTracker) {
           notRotated = true;
         }
-        //  ball.isJumping = false;
       }
     } else if (rotated) {
       background(0);
 
+      // Resets paddle position if isJumping is true
       if (ballRotated.isJumping) {
-        // Resets paddle position and define play area
         paddleRotated.x = mouseX;
         paddleRotated.y = mouseY;
       }
 
-
-      // Update barriers position. Display barriers and Make them loop
-      // Update targets position. Display targets and Make them loop
+      // Display barriers and Make them loop
+      // Update barriers position.
+      // Check ball barrier collision. If collided, either decrease player health by 20% or rotates screen
       for (let i = 0; i < secondBarriers.length; i++) {
         secondBarriers[i].display(positionAfterRotation);
         secondBarriers[i].updatePosition();
         secondBarriers[i].ballBarrierCollision(ballRotated, positionAfterRotation, gameStructure);
-        // if (secondBarriers[i].warning(ballRotated, positionAfterRotation)) {
-        //   rotated = false;
-        //   ballRotated.isJumping = false;
-        //   warning = true;
-        //   turnTracker = false;
-        //
-        // }
+        if (secondBarriers[i].warning(ballRotated, positionAfterRotation)) {
+          rotated = false;
+          ballRotated.isJumping = false;
+          warning = true;
+          turnTracker = false;
+        }
       }
+
+      // Display targets and Make them loop
+      // Update targets position.
+      // Check ball target collision. If collided either add to player score or his health
       for (let i = 0; i < thirdStepTarget.length; i++) {
         if (thirdStepTarget[i].id === 1) {
-          thirdStepTarget[i].display(positionAfterRotation);
+          thirdStepTarget[i].display();
         }
         thirdStepTarget[i].updatePosition();
         ballRotated.targetCollision(thirdStepTarget[i], gameStructure);
       }
-      //  console.log("player score" + playerScore);
+
       // Display percent of health + Display player score
       ballRotated.displayHealth(gameStructure);
       ballRotated.displayScore(gameStructure);
@@ -579,13 +585,17 @@ function draw() {
       // Updates ball position based on paddle position
       ballRotated.updatePosition(paddleRotated.x + 50);
 
+      // Display paddle and ball
       paddleRotated.display();
       ballRotated.display(gameStructure);
+
+      // If player score is more than the specified amount, shows victory screen
       if (gameStructure.score > 20) {
         rotated = false;
         thirdStep = false;
         victoryScreen = true;
       }
+      // If player went off the upper edge of screen or lost his whole health, shows the replay screen
       if (ballRotated.y < 0) {
         thirdStep = false;
         stepIsOver = true;
@@ -596,9 +606,16 @@ function draw() {
         thirdFailure = false;
       }
     }
-  } else if (victoryScreen) {
+  }
+  // Victory screen
+  else if (victoryScreen) {
     background(0);
     gameStructure.victoryDisplay();
+    // Updates target health. reduces health based on a random speed.
+    // I keep this code cause I might use it again
+    // for (let i = 0; i < targets.length; i++) {
+    //   targets[i].updateHealth();
+    // }
   }
   // Game over screen
   else if (gameOver) {
@@ -632,7 +649,7 @@ function displayTargets() {
         }
         // Reset sum of targets
         targetSum[countTargets] = 0;
-        // Make this conditional statement totally out of access
+        // Make this conditional statement for this row totally out of access
         // so that it won't be used in next round.
         hideRow[countTargets] = true;
         // Go to the next row
@@ -643,8 +660,9 @@ function displayTargets() {
     if (targets[i].targetId === isTrue[countTargets] && showRow[countTargets] === true) {
       targets[i].display();
     }
-    // Show the number of targets achieved.
+
     let numTarget = targetSum[countTargets];
+    // Show the number of targets achieved.
     gameStructure.targetTracker(numTarget);
   }
   // If the player went through all three rows, goes to next step

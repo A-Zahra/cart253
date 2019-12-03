@@ -36,31 +36,27 @@ class BallStraight extends Ball {
       this.y = paddle.y - 12;
     }
   }
+  
   // Makes the ball jump
   goJump(ballHeight) {
     // Only jump when we are not in the middle of a jump
     if (this.isJumping === false && this.isFalling === false) {
       this.isJumping = true;
+      // Differs the maximum height the ball can have based on the game step
       if (ballHeight === 1) {
         this.ySpeed = this.maxJumpHeight;
-      }
-      else if (ballHeight === 2 ) {
+      } else if (ballHeight === 2) {
         this.ySpeed = this.maxJumpHeight2;
       }
     }
   }
 
-  // Updates ball x position based on paddle x position
-  updatePosition(paddleX) {
-    this.x = paddleX;
-  }
-
   // Display ball
-//   display() {
-//     push();
-//     noStroke();
-//     fill(255, 0, 0, this.opacity);
-//     ellipse(this.x, this.y, this.size * 2, this.size * 2);
-//     pop();
-//   }
- }
+  //   display() {
+  //     push();
+  //     noStroke();
+  //     fill(255, 0, 0, this.opacity);
+  //     ellipse(this.x, this.y, this.size * 2, this.size * 2);
+  //     pop();
+  //   }
+}

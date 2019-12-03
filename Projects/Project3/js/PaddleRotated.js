@@ -1,8 +1,7 @@
 // Paddle Straight
 //
 // A class that represents paddle in it's rotated mode
-// Has methods which control ball movement, and
-// collision with other elements.
+// Has a methods which chechs paddle collision with ball.
 class PaddleRotated extends Paddle {
 
   // Constructor
@@ -12,6 +11,7 @@ class PaddleRotated extends Paddle {
   constructor(x, y) {
     super(x, y);
   }
+  
   // Methode to check if player collides with paddle.
   collidesWithBall(ball) {
     if (ball.x > this.x && ball.x < this.x + this.paddleW &&

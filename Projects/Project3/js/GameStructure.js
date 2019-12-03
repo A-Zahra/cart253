@@ -30,9 +30,9 @@ class GameStructure {
     // This instruction was added only for the prototype purpose and
     // will be replaced with the original instruction once game programming is finished.
     this.startInstuction = "1. Hit 7 of first row targets, 6 of second row and 5 of third row\n" +
-                          "2. Click to make the ball jump. Press SPACE key to jump higher and CTRL key to reset jump height";
+      "2. Click to make the ball jump. Press SPACE key to jump higher and CTRL key to reset jump height";
     this.noteForProf = "Hit the targets and barriers to see the interaction between them and the ball. Not all targets \n" +
-                      "interact with the ball and score tracker is not showing the correct score because the code is not complete yet.";
+      "interact with the ball and score tracker is not showing the correct score because the code is not complete yet.";
   }
 
   // Displays start screen
@@ -43,7 +43,7 @@ class GameStructure {
     textSize(20);
     textAlign(CENTER, CENTER);
     textLeading(35);
-    text(this.startInstuction, this.startTitleX , this.startTitleY - 100);
+    text(this.startInstuction, this.startTitleX, this.startTitleY - 100);
     textSize(70);
     text(title, this.startTitleX, this.startTitleY);
     pop();
@@ -97,7 +97,7 @@ class GameStructure {
     textAlign(CENTER, CENTER);
     let recorder = `Number of Target Acheived: ${numTarget}`;
     text(recorder, 170, 50);
-  //  console.log("came");
+    //  console.log("came");
     pop();
   }
 
@@ -169,7 +169,7 @@ class GameStructure {
     push();
     fill(255);
     textSize(20);
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER, CENTER);
     text(warningMessage, width / 2, height / 2 - 100);
     pop();
     // Show timer
@@ -181,7 +181,7 @@ class GameStructure {
     rect(this.timeLimitX, this.timeLimitY, 50, 50);
     pop();
     // Add to x position
-    this.timeCubeX+= 3;
+    this.timeCubeX += 3;
   }
 
   // To specify a certain amount of time for the player to read the message
@@ -204,6 +204,18 @@ class GameStructure {
     pop();
     this.restart();
   }
+
+  //updateHealth
+  //
+  //Updates target health
+  // I keep this code cause I might want to use it again.
+  // updateHealth() {
+  //   // Reduce player health
+  //   this.health = this.health - this.r;
+  //   // Constrain the result to a sensible range
+  //   this.health = constrain(this.health, 0, this.maxHealth);
+  // }
+
 
   // Displays game over screen
   gameOverDisplay() {

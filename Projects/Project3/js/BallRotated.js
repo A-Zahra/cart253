@@ -2,6 +2,7 @@
 //
 // A class that represents ball in it's rotated mode.
 class BallRotated extends Ball {
+
   // Constructor
   //
   // Sets the initial values for the ball's properties
@@ -10,6 +11,7 @@ class BallRotated extends Ball {
     super(x, y);
     this.opacity = 255;
   }
+
   // Handle jumping
   handleJumping(paddle) {
     // Check if ball is jumping
@@ -34,6 +36,7 @@ class BallRotated extends Ball {
       this.y = paddle.y + 12;
     }
   }
+
   // Makes the ball jump
   goJump() {
     // Only jump when we are not in the middle of a jump
@@ -43,17 +46,12 @@ class BallRotated extends Ball {
     }
   }
 
-  // Updates ball x position based on paddle x position
-  updatePosition(paddleX) {
-    this.x = paddleX;
-  }
-
-//   // Display ball
-//   display() {
-//     push();
-//     noStroke();
-//     fill(255, 0, 0, this.opacity);
-//     ellipse(this.x, this.y, this.size * 2, this.size * 2);
-//     pop();
-//   }
+  //   // Display ball
+  //   display() {
+  //     push();
+  //     noStroke();
+  //     fill(255, 0, 0, this.opacity);
+  //     ellipse(this.x, this.y, this.size * 2, this.size * 2);
+  //     pop();
+  //   }
 }

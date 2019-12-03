@@ -1,15 +1,17 @@
 // SecondStepTarget
 //
-// A class that represents second step targets
-class SecondStepTarget extends Target{
+// A class that represents second and third step targets
+class SecondStepTarget {
   // Constructor
   //
   // Sets the initial values for the target's properties
   // Either sets default values or uses the arguments provided.
   constructor(target) {
-    super(target);
+    this.x = target.x;
+    this.y = target.y;
+    this.fillColor = target.fillColor;
+    this.size = target.radius;
     this.vx = 2;
-    // this.fillColor = color(170, 47, 213);
     this.id = 1;
   }
 
@@ -26,21 +28,15 @@ class SecondStepTarget extends Target{
       // If so, set x position to -50 and id to 1 so that it would be shown and could be counted again.
       this.x = -50;
       this.id = 1;
-      console.log("came in");
     }
   }
 
   // Display target
-  display(positioning) {
+  display() {
     push();
     fill(this.fillColor);
     ellipseMode(CENTER);
-    if (positioning === 1) {
-      ellipse(this.x, this.y, this.size, this.size);
-    }
-    else if (positioning === 2) {
-      ellipse(this.x, this.y - 5, this.size, this.size);
-    }
+    ellipse(this.x, this.y, this.size, this.size);
     pop();
   }
 }
