@@ -43,7 +43,7 @@ class BarrierStraight extends Barrier {
       if (this.behaviour === 1) {
         player.ballOpacity -= 51;
         this.id = 2;
-        this.fillColor = 255;
+      //  this.fillColor = 255;
         player.healthPercent -= 20;
       }
     }
@@ -58,8 +58,8 @@ class BarrierStraight extends Barrier {
       d = dist(this.x, this.y + 130, ball.x, ball.y);
     }
     let barrierSize = (this.h + this.w) * 2;
-    if (d < ((ball.size + barrierSize) / 5) && this.id === 1 && this.behaviour === 2) {
-      this.fillColor = color(200,100,200);
+    if (d < ((ball.size + barrierSize) / 5.5) && this.id === 1 && this.behaviour === 2) {
+      //this.fillColor = color(200,100,200);
       return true;
     }
       else {

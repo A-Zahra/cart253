@@ -31,20 +31,21 @@ let secondWin = false;
 let warning = false;
 let firstFailure = true;
 let secondFailure = true;
+let thirdFailure = true;
 // Variables which decide whether to show rotated or not rotated screen
 let rotated;
 let notRotated;
 let turnTracker;
 let ballHeight1;
 let ballHeight2;
-// Variables which decides where the elements to be positioned after or before rotation
+// Variables which decide where the elements to be positioned after or before rotation
 let positionBeforeRotation;
 let positionAfterRotation;
 
-// Declare paddle object
+// Declare paddle objects
 let paddle;
 let paddleRotated;
-// Declare ball object
+// Declare ball objects
 let ball;
 let ballRotated;
 
@@ -70,15 +71,13 @@ let secondBarriers = [];
 let secBarrierProp = [];
 let MAX_SECONDBARRIERS = 10;
 
-// Second step target array of objects and properties declaration
+// Second step targets array of objects and properties declaration
 let secondStepTarget = [];
 let targetPosition = [];
-let score;
 
-// Third step target array of objects and properties declaration
+// Third step targets array of objects and properties declaration
 let thirdStepTarget = [];
 let thirdTargetProp = [];
-let playerScore;
 
 // preload()
 //
@@ -96,10 +95,10 @@ function setup() {
   setUpGame();
 }
 
-// setUpGame
-//
 // Sets up all initial values in an independent function
 // so that it can be used in functions like restart function.
+// setupPlayer()
+//
 // Sets up paddle and ball initial values
 function setupPlayer() {
   // Makes ball object and assign default values to
@@ -112,15 +111,23 @@ function setupPlayer() {
   // Makes paddle object and assign default values to
   paddleRotated = new PaddleRotated(width / 2, 130);
 }
+
+// setUpGame()
+//
 // Sets up all initial values other than paddle and ball
 function setUpGame() {
+  // Ball jump height differs depending on which step is being displayed
   ballHeight1 = 1;
   ballHeight2 = 2;
+  // Screen elements positions differs depending on which step is being displayed
   positionBeforeRotation = 1;
   positionAfterRotation = 2;
+  // Decides whether rotated or not rotated screen to be shown
   rotated = false;
   notRotated = true;
+  // Decides whether it's rotated screen's turn or not-rotated screen's turn to be displayed
   turnTracker = true;
+
   // First step target properties
   countTargets = 0;
   targetSum = [0, 0, 0];
@@ -130,7 +137,8 @@ function setUpGame() {
   isFalse = [2, 4, 6];
   isOver = [4, 3, 2];
   isSumTrue = [3, 2, 1];
-  // Second step target properties
+  // Second step target property
+  // Using this array, everytime targets are placed under a random number of barriers
   targetPosition = [false, true, false, true, false, true];
 
   // Makes an object of gameStructure and assign default values to
@@ -193,17 +201,18 @@ function setUpGame() {
     targets[i] = new FirstStepTarget(targetProperties[i]);
   }
 
-  // Makes an array of barrier and target objects and assign x and y values as well as random sizes to objects.
+  // Makes an array of barriers and targets objects and assign position, behaviour id, color and random sizes to objects.
   // Because the number of y positions is less than the number of barriers, an external value should be used.
-  // Thus, after every five time of code execution it would be restarted to use the same positions for the next five barriers.
-  // Score will keep track of targets score which get accumilated every time the player hits a target.
-  score = 0;
-  let j = 0;
+  // Thus, after every five time of code execution, it would reuse the same positions for the next five barriers.
+  let numBarriers = 0;
+  // If 4 out of 10 targets got hidden, show the rest
   let numHiddenTargets = 0;
 
-  // Puts target under random barriers
-  // Set
+  // Puts targets under random barriers
+  // Number of targets should be less than 10
+  // Choose randomly which targets to be shown(thus, most likely, by everytime code execution, they are placed under a new barrier)
   for (let k = 0; k < 10; k++) {
+    // Set targetPosition randomly to false and true values
     let r = floor(random(1, 3));
     if (r > 2 && numHiddenTargets < 4) {
       numHiddenTargets++;
@@ -212,48 +221,60 @@ function setUpGame() {
       targetPosition[k] = true;
     }
   }
+  // Assign values to the variables, objects and arrays of second step elements
   for (let i = 0; i < MAX_BARRIERS; i++) {
     // Define barriers y position
     barrierY = [height / 2 - 150, height / 2 - 200, height / 2 - 290, height / 3 - 100, height / 3 + 50, height / 3 + 130];
+    // Assign barriers properties to the relevent object
+    // Behaviour is used to make decision for the third step elements
+    // (How elements behave before and after rotation)
     barrierProperties = {
-      y: barrierY[j],
+      y: barrierY[numBarriers],
       x: i * 150,
       behaviour: 1
     };
+
     // Add barriers to the array
     barriers[i] = new BarrierStraight(barrierProperties);
+
     // Use targetPosition to place targets in random positions.
     // If target position was false, do not assign it to the array
-    if (targetPosition[j] === true) {
+    if (targetPosition[numBarriers] === true) {
       // Generate random sizes for the targets
       let r = random(30, 60);
-      console.log("secondsteptargets");
-      // Add targets to the array
-      // Targets y positions are in accordance with barriers y positions
+      // Assign targets properties to the relevent object
+      // Targets x and y positions are in accordance with barriers y positions
       let secondTarget = {
         x: (i * 150.0),
-        y: barrierY[j] + 65,
+        y: barrierY[numBarriers] + 65,
         fillColor: color(212, 30, 157),
         radius: r
       };
+      // Add new target to the array
       secondStepTarget[i] = new SecondStepTarget(secondTarget);
-    } else {
+    }
+    // If targetPosition is false assign zero to the array index
+    else {
       secondStepTarget[i] = 0;
     }
-    j++;
-    // Restart to use y position
+    numBarriers++;
+    // Restart to use same y positions
     if (i === 5 || i === 10) {
-      j = 0;
+      numBarriers = 0;
     }
   }
 
-  // Assign third step barriers properties to barriers objects
+  // Assign third step barriers properties to barriers objects and the objects to the declared array
+  // Assign third step targets properties to targets objects and the objects to the declared array
+  // Specify limit of targets and barriers that should be generated
   let limit = 0;
+  // The variable that is multiplied with a certain amount to specify the distance between objects
   let t = 0;
+  // Y position
   let y;
   while (secondBarriers.length < MAX_SECONDBARRIERS) {
     y = floor(random(30, (height - 150)));
-    // Declare and assign targets properties
+    // Declare and assign barriers properties
     let secBar = {
       x: t * 145,
       y: y,
@@ -261,6 +282,7 @@ function setUpGame() {
       proximity: 1.2,
       behaviour: floor(random(1, 3))
     };
+    // Declare and assign targets properties
     let thirdTarget = {
       x: t * 145,
       y: y + 60,
@@ -268,10 +290,12 @@ function setUpGame() {
       proximity: 1.2,
       fillColor: color(29, 227, 252)
     }
-    // To check whether the two circles overlapped.
+    // To check whether the two objects overlapped.
     let inOneLine = false;
-    // Check the distance between the new circle and all the old ones. If the distance between
-    // the two is less than sum of both radius, don't add the new circle to the array.
+    // Check the distance between the new barrier and all the old ones. If the distance between
+    // the two is less than sum of both radius, don't add the new one to the array.
+    // If the new barrier y position was in the upper half of the previous barrier or
+    // if it was in the lower half of the previous one, don't add it to the array and break
     for (let i = 0; i < secBarrierProp.length; i++) {
       let otherBarrier = secBarrierProp[i];
       let d = dist(secBar.x, secBar.y, otherBarrier.x, otherBarrier.y);
@@ -286,24 +310,23 @@ function setUpGame() {
         break;
       }
     }
-    // If is not overlapping add to the array
+    // If is not overlapping add to the array of properties
     if (!inOneLine) {
       secBarrierProp.push(secBar);
       thirdTargetProp.push(thirdTarget);
       t++;
       limit++;
     }
+    // If the number of barriers reached to 10 stop the process of new objects assignment to the arrays
     if (limit > 10) {
       break;
     }
   }
-  // Makes new target objects and assign target properties to
+  // Makes new target and barrier objects and assign their properties to
   for (let i = 0; i < secBarrierProp.length; i++) {
     secondBarriers[i] = new BarrierStraight(secBarrierProp[i]);
     thirdStepTarget[i] = new SecondStepTarget(thirdTargetProp[i]);
   }
-
-  playerScore = 0;
 }
 
 // draw()
@@ -323,9 +346,9 @@ function draw() {
       paddle.x = mouseX;
       paddle.y = mouseY;
     }
-
     // Display targets
     displayTargets();
+
     // Displays play area
     gameStructure.playArea();
 
@@ -346,7 +369,7 @@ function draw() {
     paddle.display();
     ball.display(gameStructure);
 
-    // If ball goes off the bottom of screen or all targets disappeared, game is over.
+    // If ball goes off the bottom of screen, Show replay screen.
     if (ball.y > height) {
       firstFailure = false;
       stepIsOver = true;
@@ -356,6 +379,7 @@ function draw() {
   // Transition screen
   else if (stepIsOver) {
     background(255);
+    // Screens which are shown, when the player wins a step or loses.
     if (firstWin) {
       gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin);
     } else if (!firstFailure) {
@@ -364,18 +388,20 @@ function draw() {
       gameStructure.TransitionScreenDisplay("Good job buddy, Ready for next step!", secondWin);
     } else if (!secondFailure) {
       gameStructure.TransitionScreenDisplay("Oops, did you misuse your will!", secondFailure);
+    } else if (!thirdFailure) {
+      gameStructure.TransitionScreenDisplay("Oops, So close, you just need a little bit of more effort!", thirdFailure);
     }
   }
   // Game second step
   else if (secondStep) {
     background(0);
-
-    // Resets paddle position
+    // Resets paddle position once ball jumping is true
     if (ball.isJumping) {
       paddle.x = mouseX;
       paddle.y = mouseY;
     }
 
+    // Display barriers
     // Update barriers position. Make them loop
     // Check if ball collided barriers.
     // If so, decrease his health by 20%
@@ -488,7 +514,12 @@ function draw() {
       }
       if (ball.y > height) {
         thirdStep = false;
-        gameOver = true;
+        stepIsOver = true;
+        thirdFailure = false;
+      } else if (gameStructure.ballOpacity <= 0) {
+        thirdStep = false;
+        stepIsOver = true;
+        thirdFailure = false;
       }
     } else if (warning) {
       gameStructure.displayWarningScreen();
@@ -522,13 +553,13 @@ function draw() {
         secondBarriers[i].display(positionAfterRotation);
         secondBarriers[i].updatePosition();
         secondBarriers[i].ballBarrierCollision(ballRotated, positionAfterRotation, gameStructure);
-        if (secondBarriers[i].warning(ballRotated, positionAfterRotation)) {
-          rotated = false;
-          ballRotated.isJumping = false;
-          warning = true;
-          turnTracker = false;
-
-        }
+        // if (secondBarriers[i].warning(ballRotated, positionAfterRotation)) {
+        //   rotated = false;
+        //   ballRotated.isJumping = false;
+        //   warning = true;
+        //   turnTracker = false;
+        //
+        // }
       }
       for (let i = 0; i < thirdStepTarget.length; i++) {
         if (thirdStepTarget[i].id === 1) {
@@ -557,7 +588,12 @@ function draw() {
       }
       if (ballRotated.y < 0) {
         thirdStep = false;
-        gameOver = true;
+        stepIsOver = true;
+        thirdFailure = false;
+      } else if (gameStructure.ballOpacity <= 0) {
+        thirdStep = false;
+        stepIsOver = true;
+        thirdFailure = false;
       }
     }
   } else if (victoryScreen) {
@@ -680,6 +716,11 @@ function playAgain() {
       stepIsOver = false;
       secondFailure = true;
     }
+    else if (!thirdFailure) {
+      thirdStep = true;
+      stepIsOver = false;
+      thirdFailure = true;
+    }
     setupPlayer();
     setUpGame();
   }
@@ -730,6 +771,8 @@ function mousePressed() {
     } else if (secondWin) {
       next();
     } else if (!secondFailure) {
+      playAgain();
+    } else if (!thirdFailure) {
       playAgain();
     }
   } else if (victoryScreen) {
