@@ -23,7 +23,7 @@ class BallRotated extends Ball {
 
       // Check if is jumping and collided with paddle - then stop jumping.
       if (paddle.collidesWithBall(this)) {
-        this.y = paddle.y + 15;
+        this.y = paddle.y + 12;
         this.ySpeedRotated = 0;
         this.isJumping = false;
         this.isFalling = false;
@@ -31,7 +31,7 @@ class BallRotated extends Ball {
         this.goJump();
       }
     } else {
-      this.y = paddle.y + 15;
+      this.y = paddle.y + 12;
     }
   }
   // Makes the ball jump

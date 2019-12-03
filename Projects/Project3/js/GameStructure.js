@@ -24,6 +24,9 @@ class GameStructure {
     this.timeCubeY = (height / 2) + 100;
     this.timeLimitX = width / 2 + 300;
     this.timeLimitY = (height / 2) + 100;
+    this.score = 0;
+    this.healthPercent = 100;
+    this.ballOpacity = 255;
     // This instruction was added only for the prototype purpose and
     // will be replaced with the original instruction once game programming is finished.
     this.startInstuction = "1. Hit 7 of first row targets, 6 of second row and 5 of third row\n" +

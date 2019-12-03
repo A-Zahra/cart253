@@ -18,7 +18,7 @@
 // All hardcoded numbers will be replaced by variables once the game programming is close to get finished.
 let countTargets;
 let startBackground;
-// Decides when to show start screen, game screen, end screen
+// Decides when to show start screen, game steps screens, transition screens and end screen
 let startScreen = true;
 let firstStep = false;
 let secondStep = false;
@@ -31,12 +31,15 @@ let secondWin = false;
 let warning = false;
 let firstFailure = true;
 let secondFailure = true;
-let rotated = false;
-let notRotated = true;
-let ballHeight1 = 1;
-let ballHeight2 = 2;
-let positionBeforeRotation = 1;
-let positionAfterRotation = 2;
+// Variables which decide whether to show rotated or not rotated screen
+let rotated;
+let notRotated;
+let turnTracker;
+let ballHeight1;
+let ballHeight2;
+// Variables which decides where the elements to be positioned after or before rotation
+let positionBeforeRotation;
+let positionAfterRotation;
 
 // Declare paddle object
 let paddle;
@@ -75,6 +78,7 @@ let score;
 // Third step target array of objects and properties declaration
 let thirdStepTarget = [];
 let thirdTargetProp = [];
+let playerScore;
 
 // preload()
 //
@@ -88,6 +92,7 @@ function preload() {
 // Sets up all intial values
 function setup() {
   createCanvas(windowWidth, windowHeight - 5);
+  setupPlayer();
   setUpGame();
 }
 
@@ -95,7 +100,27 @@ function setup() {
 //
 // Sets up all initial values in an independent function
 // so that it can be used in functions like restart function.
+// Sets up paddle and ball initial values
+function setupPlayer() {
+  // Makes ball object and assign default values to
+  ball = new BallStraight(width / 2 + 50, height - 120);
+  // Makes paddle object and assign default values to
+  paddle = new PaddleStraight(width / 2, height - 100);
+
+  // Makes ball object and assign default values to
+  ballRotated = new BallRotated(width / 2 + 50, 150);
+  // Makes paddle object and assign default values to
+  paddleRotated = new PaddleRotated(width / 2, 130);
+}
+// Sets up all initial values other than paddle and ball
 function setUpGame() {
+  ballHeight1 = 1;
+  ballHeight2 = 2;
+  positionBeforeRotation = 1;
+  positionAfterRotation = 2;
+  rotated = false;
+  notRotated = true;
+  turnTracker = true;
   // First step target properties
   countTargets = 0;
   targetSum = [0, 0, 0];
@@ -168,16 +193,6 @@ function setUpGame() {
     targets[i] = new FirstStepTarget(targetProperties[i]);
   }
 
-  // Makes ball object and assign default values to
-  ball = new BallStraight(width / 2 + 50, height - 120);
-  // Makes paddle object and assign default values to
-  paddle = new PaddleStraight(width / 2, height - 100);
-
-  // Makes ball object and assign default values to
-  ballRotated = new BallRotated(width / 2 + 50, 150);
-  // Makes paddle object and assign default values to
-  paddleRotated = new PaddleRotated(width / 2, 130);
-
   // Makes an array of barrier and target objects and assign x and y values as well as random sizes to objects.
   // Because the number of y positions is less than the number of barriers, an external value should be used.
   // Thus, after every five time of code execution it would be restarted to use the same positions for the next five barriers.
@@ -234,17 +249,17 @@ function setUpGame() {
 
   // Assign third step barriers properties to barriers objects
   let limit = 0;
-  let t =0;
+  let t = 0;
   let y;
   while (secondBarriers.length < MAX_SECONDBARRIERS) {
-    y = floor(random(10, (height - 150)));
+    y = floor(random(30, (height - 150)));
     // Declare and assign targets properties
     let secBar = {
       x: t * 145,
       y: y,
       radius: 40,
       proximity: 1.2,
-      behaviour: floor(random(1,3))
+      behaviour: floor(random(1, 3))
     };
     let thirdTarget = {
       x: t * 145,
@@ -257,32 +272,30 @@ function setUpGame() {
     let inOneLine = false;
     // Check the distance between the new circle and all the old ones. If the distance between
     // the two is less than sum of both radius, don't add the new circle to the array.
-      for (let i = 0; i < secBarrierProp.length; i++) {
-        let otherBarrier = secBarrierProp[i];
-        let d = dist(secBar.x, secBar.y, otherBarrier.x, otherBarrier.y);
-        if (d < (secBar.radius + otherBarrier.radius) / secBar.proximity) {
-          inOneLine = true;
-          break;
-        }
-        else if (secBar.y < otherBarrier.y && secBar.y > otherBarrier.y - otherBarrier.radius) {
-              inOneLine = true;
-              break;
-            }
-        else if (secBar.y > otherBarrier.y && secBar.y < otherBarrier.y + otherBarrier.radius){
-            inOneLine = true;
-            break;
-          }
+    for (let i = 0; i < secBarrierProp.length; i++) {
+      let otherBarrier = secBarrierProp[i];
+      let d = dist(secBar.x, secBar.y, otherBarrier.x, otherBarrier.y);
+      if (d < (secBar.radius + otherBarrier.radius) / secBar.proximity) {
+        inOneLine = true;
+        break;
+      } else if (secBar.y < otherBarrier.y && secBar.y > otherBarrier.y - otherBarrier.radius) {
+        inOneLine = true;
+        break;
+      } else if (secBar.y > otherBarrier.y && secBar.y < otherBarrier.y + otherBarrier.radius) {
+        inOneLine = true;
+        break;
       }
-      // If is not overlapping add to the array
-      if (!inOneLine) {
-        secBarrierProp.push(secBar);
-        thirdTargetProp.push(thirdTarget);
-        t++;
-        limit++;
-      }
-      if (limit > 10) {
+    }
+    // If is not overlapping add to the array
+    if (!inOneLine) {
+      secBarrierProp.push(secBar);
+      thirdTargetProp.push(thirdTarget);
+      t++;
+      limit++;
+    }
+    if (limit > 10) {
       break;
-      }
+    }
   }
   // Makes new target objects and assign target properties to
   for (let i = 0; i < secBarrierProp.length; i++) {
@@ -290,7 +303,7 @@ function setUpGame() {
     thirdStepTarget[i] = new SecondStepTarget(thirdTargetProp[i]);
   }
 
-
+  playerScore = 0;
 }
 
 // draw()
@@ -331,7 +344,7 @@ function draw() {
 
     // Displays Ball and paddle
     paddle.display();
-    ball.display();
+    ball.display(gameStructure);
 
     // If ball goes off the bottom of screen or all targets disappeared, game is over.
     if (ball.y > height) {
@@ -369,7 +382,7 @@ function draw() {
     for (let i = 0; i < barriers.length; i++) {
       barriers[i].display(positionBeforeRotation);
       barriers[i].updatePosition();
-      barriers[i].ballBarrierCollision(ball);
+      barriers[i].ballBarrierCollision(ball, positionBeforeRotation, gameStructure);
     }
 
     // Draw second step targets
@@ -380,9 +393,9 @@ function draw() {
       if (secondStepTarget[i] !== 0) {
         if (secondStepTarget[i].id === 1) {
           secondStepTarget[i].display(positionBeforeRotation);
-          }
-          secondStepTarget[i].updatePosition();
-          ball.targetCollision(secondStepTarget[i]);
+        }
+        secondStepTarget[i].updatePosition();
+        ball.targetCollision(secondStepTarget[i], gameStructure);
 
       }
     }
@@ -394,8 +407,8 @@ function draw() {
     // Updates ball position based on paddle position
     ball.updatePosition(paddle.x + 50);
     // Display percent of health + Display player score
-    ball.displayHealth();
-    ball.displayScore();
+    ball.displayHealth(gameStructure);
+    ball.displayScore(gameStructure);
     // Updates target health. reduces health based on a random speed.
     // I keep this code cause I might use it again
     // for (let i = 0; i < targets.length; i++) {
@@ -404,17 +417,17 @@ function draw() {
 
     // Displays Ball and paddle
     paddle.display();
-    ball.display();
+    ball.display(gameStructure);
 
     // If the player score reached to 100, second step ends +
     // show transition screen to go to next step
-    if (ball.score > 10) {
+    if (gameStructure.score > 10) {
       stepIsOver = true;
       secondWin = true;
       secondStep = false;
     }
     // If ball goes off the bottom of screen or player lost his whole life, game is over.
-    else if (ball.y > height || ball.opacity <= 0) {
+    else if (ball.y > height || gameStructure.ballOpacity <= 0) {
       stepIsOver = true;
       secondFailure = false;
       secondStep = false;
@@ -422,109 +435,132 @@ function draw() {
   }
   // Game third step
   else if (thirdStep) {
+    // for (let i = 0; i < thirdStepTarget.length; i++) {
+    console.log("player score" + gameStructure.score);
+    // }
     if (notRotated) {
-        background(0);
+      background(0);
 
-        // Resets paddle position
-        if (ball.isJumping) {
-          paddle.x = mouseX;
-          paddle.y = mouseY;
-        }
+      // Resets paddle position
+      if (ball.isJumping) {
+        paddle.x = mouseX;
+        paddle.y = mouseY;
+      }
 
-        // Update barriers position. Display barriers and Make them loop
-        // Update targets position. Display targets and Make them loop
-        for (let i = 0; i < secondBarriers.length; i++) {
-          secondBarriers[i].display(positionBeforeRotation);
-          secondBarriers[i].updatePosition();
-          secondBarriers[i].ballBarrierCollision(ball);
-          if (secondBarriers[i].warning(ball)) {
-            warning = true;
-            notRotated = false;
-          }
-        }
-        for (let i = 0; i < thirdStepTarget.length; i++) {
-          if (thirdStepTarget[i].id === 1) {
-            thirdStepTarget[i].display(positionBeforeRotation);
-            }
-            thirdStepTarget[i].updatePosition();
-            ball.targetCollision(thirdStepTarget[i]);
-
-        }
-
-        // Display percent of health + Display player score
-        ball.displayHealth();
-        ball.displayScore();
-        // Handles ball input
-        ball.handleInput(thirdStep, ballHeight2);
-        // Check if ball is jumping
-        ball.handleJumping(paddle, ballHeight2);
-        // Updates ball position based on paddle position
-        ball.updatePosition(paddle.x + 50);
-
-        // Displays Ball and paddle
-        paddle.display();
-        ball.display();
-
-        // if (ball.score > 10) {
-        //   notRotated = false;
-        //   warning = true;
-        // }
-        if (ball.y > height) {
-          thirdStep = false;
-          gameOver = true;
+      // Update barriers position. Display barriers and Make them loop
+      // Update targets position. Display targets and Make them loop
+      for (let i = 0; i < secondBarriers.length; i++) {
+        secondBarriers[i].display(positionBeforeRotation);
+        secondBarriers[i].updatePosition();
+        secondBarriers[i].ballBarrierCollision(ball, positionBeforeRotation, gameStructure);
+        if (secondBarriers[i].warning(ball, positionBeforeRotation)) {
+          notRotated = false;
+          ball.isJumping = false;
+          warning = true;
+          turnTracker = true;
         }
       }
-      else if (warning) {
-        gameStructure.displayWarningScreen();
-        if (dist(gameStructure.timeCubeX, gameStructure.timeCubeY, gameStructure.timeLimitX, gameStructure.timeLimitY) < 50) {
-          warning = false;
+      for (let i = 0; i < thirdStepTarget.length; i++) {
+        if (thirdStepTarget[i].id === 1) {
+          thirdStepTarget[i].display(positionBeforeRotation);
+        }
+        thirdStepTarget[i].updatePosition();
+        ball.targetCollision(thirdStepTarget[i], gameStructure);
+      }
+
+      // Display percent of health + Display player score
+      ball.displayHealth(gameStructure);
+      ball.displayScore(gameStructure);
+      // Handles ball input
+      ball.handleInput(thirdStep, ballHeight2);
+      // Check if ball is jumping
+      ball.handleJumping(paddle, ballHeight2);
+      // Updates ball position based on paddle position
+      ball.updatePosition(paddle.x + 50);
+
+      // Displays Ball and paddle
+      paddle.display();
+      ball.display(gameStructure);
+
+      if (gameStructure.score > 20) {
+        thirdStep = false;
+        victoryScreen = true;
+      }
+      if (ball.y > height) {
+        thirdStep = false;
+        gameOver = true;
+      }
+    } else if (warning) {
+      gameStructure.displayWarningScreen();
+      if (dist(gameStructure.timeCubeX, gameStructure.timeCubeY, gameStructure.timeLimitX, gameStructure.timeLimitY) < 50) {
+        gameStructure.timeCubeX = (width / 2) - 300;
+        gameStructure.timeCubeY = (height / 2) + 100;
+        gameStructure.timeLimitX = width / 2 + 300;
+        gameStructure.timeLimitY = (height / 2) + 100;
+        warning = false;
+        setupPlayer();
+        if (!notRotated && turnTracker) {
           rotated = true;
+        } else if (!rotated && !turnTracker) {
+          notRotated = true;
+        }
         //  ball.isJumping = false;
+      }
+    } else if (rotated) {
+      background(0);
+
+      if (ballRotated.isJumping) {
+        // Resets paddle position and define play area
+        paddleRotated.x = mouseX;
+        paddleRotated.y = mouseY;
+      }
+
+
+      // Update barriers position. Display barriers and Make them loop
+      // Update targets position. Display targets and Make them loop
+      for (let i = 0; i < secondBarriers.length; i++) {
+        secondBarriers[i].display(positionAfterRotation);
+        secondBarriers[i].updatePosition();
+        secondBarriers[i].ballBarrierCollision(ballRotated, positionAfterRotation, gameStructure);
+        if (secondBarriers[i].warning(ballRotated, positionAfterRotation)) {
+          rotated = false;
+          ballRotated.isJumping = false;
+          warning = true;
+          turnTracker = false;
+
         }
       }
-        else if (rotated) {
-          background(0);
-
-          if (ballRotated.isJumping) {
-            // Resets paddle position and define play area
-            paddleRotated.x = mouseX;
-            paddleRotated.y = mouseY;
-          }
-
-
-          // Update barriers position. Display barriers and Make them loop
-          // Update targets position. Display targets and Make them loop
-          for (let i = 0; i < secondBarriers.length; i++) {
-            secondBarriers[i].display(positionAfterRotation);
-            secondBarriers[i].updatePosition();
-            // secondBarriers[i].ballBarrierCollision(ball);
-            // if (secondBarriers[i].warning(ball)) {
-            //   warning = true;
-            //   rotated = false;
-            //   notRotated = true;
-            // }
-          }
-          for (let i = 0; i < thirdStepTarget.length; i++) {
-            if (thirdStepTarget[i].id === 1) {
-              thirdStepTarget[i].display(positionAfterRotation);
-              }
-              thirdStepTarget[i].updatePosition();
-              ballRotated.targetCollision(thirdStepTarget[i]);
-
-          }
-
-          // Handles ball input
-          //ball.handleInput(rotated, ballHeight2);
-          // Check if ball is jumping
-          ballRotated.handleJumping(paddleRotated);
-          // Updates ball position based on paddle position
-          ballRotated.updatePosition(paddleRotated.x + 50);
-
-          paddleRotated.display();
-          ballRotated.display();
+      for (let i = 0; i < thirdStepTarget.length; i++) {
+        if (thirdStepTarget[i].id === 1) {
+          thirdStepTarget[i].display(positionAfterRotation);
         }
+        thirdStepTarget[i].updatePosition();
+        ballRotated.targetCollision(thirdStepTarget[i], gameStructure);
+      }
+      //  console.log("player score" + playerScore);
+      // Display percent of health + Display player score
+      ballRotated.displayHealth(gameStructure);
+      ballRotated.displayScore(gameStructure);
+      // Handles ball input
+      ballRotated.handleInput(thirdStep, ballHeight2);
+      // Check if ball is jumping
+      ballRotated.handleJumping(paddleRotated);
+      // Updates ball position based on paddle position
+      ballRotated.updatePosition(paddleRotated.x + 50);
+
+      paddleRotated.display();
+      ballRotated.display(gameStructure);
+      if (gameStructure.score > 20) {
+        rotated = false;
+        thirdStep = false;
+        victoryScreen = true;
+      }
+      if (ballRotated.y < 0) {
+        thirdStep = false;
+        gameOver = true;
+      }
     }
-  else if (victoryScreen) {
+  } else if (victoryScreen) {
     background(0);
     gameStructure.victoryDisplay();
   }
@@ -593,6 +629,7 @@ function play() {
   if (dist(mouseX, mouseY, gameStructure.playButton.x, gameStructure.playButton.y) < gameStructure.playButton.w) {
     firstStep = true;
     startScreen = false;
+    setupPlayer();
     setUpGame();
   }
 }
@@ -617,6 +654,7 @@ function next() {
       thirdStep = true;
       secondWin = false;
     }
+    setupPlayer();
     setUpGame();
   }
 }
@@ -642,6 +680,7 @@ function playAgain() {
       stepIsOver = false;
       secondFailure = true;
     }
+    setupPlayer();
     setUpGame();
   }
 }
@@ -662,6 +701,7 @@ function restart() {
     firstFailure = true;
     gameOver = false;
     victoryScreen = false;
+    setupPlayer();
     setUpGame();
   }
 }
@@ -679,8 +719,7 @@ function mousePressed() {
   } else if (thirdStep) {
     if (notRotated) {
       ball.isJumping = true;
-    }
-    else if (rotated) {
+    } else if (rotated) {
       ballRotated.isJumping = true;
     }
   } else if (stepIsOver) {
@@ -695,8 +734,7 @@ function mousePressed() {
     }
   } else if (victoryScreen) {
     restart();
-  }
-  else if (gameOver) {
+  } else if (gameOver) {
     restart();
   }
 }

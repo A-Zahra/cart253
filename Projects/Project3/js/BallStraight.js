@@ -55,28 +55,6 @@ class BallStraight extends Ball {
     this.x = paddleX;
   }
 
-  // Display player score
-  displayScore() {
-    let showScore = `The extent of target's worthiness: ${this.score}`;
-    push();
-    fill(255);
-    textSize(22);
-    textAlign(CENTER, CENTER);
-    text(showScore, 220, 50);
-    pop();
-  }
-
-  // Display percentage of health
-  displayHealth() {
-    let health = `Health: ${this.healthPercent}%`;
-    push();
-    fill(255);
-    textSize(22);
-    textAlign(CENTER, CENTER);
-    text(health, width - 140, 50);
-    pop();
-  }
-
   // Display ball
 //   display() {
 //     push();
