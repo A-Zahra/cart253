@@ -7,8 +7,8 @@ class BallStraight extends Ball {
   //
   // Sets the initial values for the ball's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y) {
-    super(x, y);
+  constructor(x, y, stone) {
+    super(x, y, stone);
     this.opacity = 255;
   }
 
@@ -36,7 +36,7 @@ class BallStraight extends Ball {
       this.y = paddle.y - 12;
     }
   }
-  
+
   // Makes the ball jump
   goJump(ballHeight) {
     // Only jump when we are not in the middle of a jump

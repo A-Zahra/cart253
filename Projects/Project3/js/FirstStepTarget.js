@@ -18,6 +18,7 @@ class FirstStepTarget {
     this.targetIdTrue3 = 0;
     this.health = this.maxHealth;
     this.r = random(0.04, 1.5);
+    this.image = target.image;
   }
 
   // goalAchieved()
@@ -27,15 +28,12 @@ class FirstStepTarget {
   // And then hide it
   goalAchieved(ball) {
     let d = dist(this.x, this.y, ball.x, ball.y);
-    if (d < this.size + (ball.size / 2)) {
+    if (d < this.size / 2) {
       if (this.targetId === 1 && this.targetIdTrue === 0) {
-        this.fillColor = 0;
         this.targetIdTrue = 1;
       } else if (this.targetId === 3 && this.targetIdTrue === 0) {
-        this.fillColor = 0;
         this.targetIdTrue = 3;
       } else if (this.targetId === 5 && this.targetIdTrue === 0) {
-        this.fillColor = 0;
         this.targetIdTrue = 5;
       }
     }
@@ -43,11 +41,13 @@ class FirstStepTarget {
 
   // Display target
   display() {
-    push();
-    noStroke();
-    fill(this.fillColor);
-    ellipseMode(CENTER);
-    ellipse(this.x, this.y, this.size, this.size);
-    pop();
+    if (this.targetIdTrue === 0) {
+      push();
+      noStroke();
+      fill(this.fillColor);
+      imageMode(CENTER);
+      image(this.image, this.x, this.y, this.size, this.size);
+      pop();
+    }
   }
 }

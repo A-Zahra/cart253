@@ -8,8 +8,8 @@ class PaddleStraight extends Paddle {
   //
   // Sets the initial values for the paddle's properties
   // Either sets default values or uses the arguments provided.
-  constructor(x, y) {
-    super(x, y);
+  constructor(x, y, bow) {
+    super(x, y, bow);
   }
 
   // Methode to check if player collides with paddle.

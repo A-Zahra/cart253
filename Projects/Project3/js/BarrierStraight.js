@@ -16,6 +16,11 @@ class BarrierStraight {
     this.id = 1;
     this.behaviour = barrier.behaviour;
     this.vx = 2;
+    this.image = barrier.image;
+    this.image2 = barrier.image2;
+    this.imageReturned = barrier.image;
+    this.secondBarrier = barrier.secondBarrier;
+    this.imageReturne2 = barrier.secondBarrier;
   }
 
   // Update barrier x position
@@ -32,6 +37,8 @@ class BarrierStraight {
       this.x = -50;
       this.id = 1;
       this.fillColor = color(255, 76, 39);
+      this.image = this.imageReturned;
+      this.imageReturne2 = this.secondBarrier;
     }
   }
 
@@ -44,12 +51,13 @@ class BarrierStraight {
       d = dist(this.x, this.y + 130, ball.x, ball.y);
     }
     let barrierSize = (this.h + this.w) * 2;
-    if (d < ((ball.size + barrierSize) / 5) && this.id === 1) {
+    if (d < ((ball.size + barrierSize) / 6.2) && this.id === 1) {
       // If ball overlapped first type of barriers, decrease health by 20 percent
       if (this.behaviour === 1) {
         player.ballOpacity -= 51;
         this.id = 2;
         player.healthPercent -= 20;
+        this.image = this.image2;
       }
     }
   }
@@ -64,23 +72,38 @@ class BarrierStraight {
     }
     let barrierSize = (this.h + this.w) * 2;
     if (d < ((ball.size + barrierSize) / 5.5) && this.id === 1 && this.behaviour === 2) {
+  //    this.image = this.image2;
       return true;
     } else {
       return false;
     }
   }
 
+  displaySecond() {
+    push();
+    imageMode(CENTER);
+      image(this.image, this.x, this.y, this.w, this.h);
+    pop();
+  }
   // Display barrier
   display(positioning) {
     push();
-    fill(this.fillColor);
-    rectMode(CENTER);
+    imageMode(CENTER);
     // Differs barrier position based on game step
     if (positioning === 1) {
-      rect(this.x, this.y, this.w, this.h);
+      if (this.behaviour === 1) {
+        image(this.image, this.x, this.y, this.w, this.h);
+      } else if (this.behaviour === 2) {
+        image(this.secondBarrier, this.x, this.y, this.w, this.h);
+      }
     } else if (positioning === 2) {
-      rect(this.x, this.y + 130, this.w, this.h);
+      if (this.behaviour === 1) {
+        image(this.image, this.x, this.y + 130, this.w, this.h);
+      } else if (this.behaviour === 2) {
+        image(this.secondBarrier, this.x, this.y + 130, this.w, this.h);
+      }
     }
+
     pop();
   }
 }

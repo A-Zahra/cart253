@@ -13,6 +13,9 @@ class SecondStepTarget {
     this.size = target.radius;
     this.vx = 2;
     this.id = 1;
+    this.workImage = target.workImage;
+    this.educationImage = target.educationImage;
+    this.imageId = target.imageId;
   }
 
   // Update target x position
@@ -34,9 +37,13 @@ class SecondStepTarget {
   // Display target
   display() {
     push();
-    fill(this.fillColor);
-    ellipseMode(CENTER);
-    ellipse(this.x, this.y, this.size, this.size);
+//    fill(this.fillColor);
+    imageMode(CENTER);
+    if (this.imageId === 1) {
+      image(this.workImage, this.x, this.y, this.size, this.size);
+    } else if (this.imageId === 2) {
+      image(this.educationImage, this.x, this.y, this.size, this.size);
+    }
     pop();
   }
 }

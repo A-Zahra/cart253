@@ -18,8 +18,11 @@
 // All hardcoded numbers will be replaced by variables once the game programming is close to get finished.
 let countTargets;
 let startBackground;
+let firstStepBackground;
+let secondStepBackground;
 // Decides when to show start screen, game steps screens, transition screens and end screen
 let startScreen = true;
+let instructionScreen = false;
 let firstStep = false;
 let secondStep = false;
 let thirdStep = false;
@@ -79,11 +82,70 @@ let targetPosition = [];
 let thirdStepTarget = [];
 let thirdTargetProp = [];
 
+let slingShot;
+let slingShotRotated;
+let stone;
+let stoneRotated;
+
+let barrier1;
+let barrierTouched;
+
+let firstStepImagesRow1 = [];
+let firstStepImagesRow2 = [];
+let firstStepImagesRow3 = [];
+
+let achievement;
+let art;
+let calculation;
+let chemistry;
+let computation;
+let education;
+let experiments;
+let geography;
+let graduation;
+let mapReading;
+let mathemathics;
+let science;
+let sport;
+let timeManagement;
+
+let continueEducation;
+let work;
 // preload()
 //
 // Insert all external files
 function preload() {
   startBackground = loadImage("assets/images/cityBackground.jpg");
+  firstStepBackground = loadImage("assets/images/classroom.jpg");
+  secondStepBackground = loadImage("assets/images/secondStepBackground2.png");
+  thirdStepBackground = loadImage("assets/images/office.jpg");
+
+  slingShot = loadImage("assets/images/slingShot.png");
+  slingShotRotated = loadImage("assets/images/slingShotRotated.png");
+  stone = loadImage("assets/images/stone.png");
+  stoneRotated = loadImage("assets/images/stoneRotated.png");
+
+  barrier1 = loadImage("assets/images/barrier1.png");
+  barrier2 = loadImage("assets/images/barrier2.png");
+  barrierTouched = loadImage("assets/images/barrierTouched.png");
+
+  achievement = loadImage("assets/images/achievement.png");
+  art = loadImage("assets/images/art.png");
+  calculation = loadImage("assets/images/calculation.png");
+  chemistry = loadImage("assets/images/chemistry.png");
+  computation = loadImage("assets/images/computation.png");
+  education = loadImage("assets/images/education.png");
+  experiments = loadImage("assets/images/experiments.png");
+  geography = loadImage("assets/images/geography.png");
+  graduation = loadImage("assets/images/graduation.png");
+  mapReading = loadImage("assets/images/mapReading.png");
+  mathemathics = loadImage("assets/images/mathematics.png");
+  science = loadImage("assets/images/science.png");
+  sport = loadImage("assets/images/sport.png");
+  timeManagement = loadImage("assets/images/timeManagement.png");
+
+  continueEducation = loadImage("assets/images/ContinueEducation.png");
+  work = loadImage("assets/images/work.png");
 }
 
 // setup()
@@ -102,14 +164,14 @@ function setup() {
 // Sets up paddle and ball initial values
 function setupPlayer() {
   // Makes ball object and assign default values to
-  ball = new BallStraight(width / 2 + 50, height - 120);
+  ball = new BallStraight(width / 2, height - 120, stone);
   // Makes paddle object and assign default values to
-  paddle = new PaddleStraight(width / 2, height - 100);
+  paddle = new PaddleStraight(width / 2, height - 100, slingShot);
 
   // Makes ball object and assign default values to
-  ballRotated = new BallRotated(width / 2 + 50, 150);
+  ballRotated = new BallRotated(width / 2, 150, stoneRotated);
   // Makes paddle object and assign default values to
-  paddleRotated = new PaddleRotated(width / 2, 130);
+  paddleRotated = new PaddleRotated(width / 2, 130, slingShotRotated);
 }
 
 // setUpGame()
@@ -137,6 +199,13 @@ function setUpGame() {
   isFalse = [2, 4, 6];
   isOver = [4, 3, 2];
   isSumTrue = [3, 2, 1];
+  firstStepImagesRow1 = [geography, sport, timeManagement, education, mathemathics, calculation];
+  firstStepImagesRow2 = [mapReading, art, chemistry, computation, experiments];
+  firstStepImagesRow3 = [achievement, graduation, science,];
+
+  //let secondStepTargetImg = [work, continueEducation];
+
+  let secondStepImgTurn = [1, 2];
   // Second step target property
   // Using this array, everytime targets are placed under a random number of barriers
   targetPosition = [false, true, false, true, false, true];
@@ -150,27 +219,33 @@ function setUpGame() {
   let protection = 0;
   while (targets.length < maxTarget) {
     // Declare and assign targets properties
+    let randomImages1 = floor(random(0,6));
+    let randomImages2 = floor(random(0, 5));
+    let randomImages3 = floor(random(0, 3));
     let target = [{
       x: random(100, width - 100),
       y: random(370, (height / 2) + 50),
-      radius: 25,
+      radius: 65,
       id: 1,
       fillColor: color(74, 136, 47),
-      proximity: 1
+      proximity: 1.8,
+      image: firstStepImagesRow1[randomImages1]
     }, {
       x: random(100, width - 100),
       y: random(220, (height / 2) - 100),
-      radius: 40,
+      radius: 65,
       id: 3,
       fillColor: color(206, 42, 100),
-      proximity: 1.5
+      proximity: 2,
+      image: firstStepImagesRow2[randomImages2]
     }, {
-      x: random(150, width - 100),
+      x: random(100, width - 100),
       y: random(80, (height / 2) - 250),
-      radius: 60,
+      radius: 67,
       id: 5,
       fillColor: color(49, 220, 136),
-      proximity: 2
+      proximity: 2.5,
+      image: firstStepImagesRow3[randomImages3]
     }];
 
     // To check whether the two circles overlapped.
@@ -231,7 +306,9 @@ function setUpGame() {
     barrierProperties = {
       y: barrierY[numBarriers],
       x: i * 150,
-      behaviour: 1
+      behaviour: 1,
+      image: barrier1,
+      image2: barrierTouched
     };
 
     // Add barriers to the array
@@ -240,15 +317,18 @@ function setUpGame() {
     // Use targetPosition to place targets in random positions.
     // If target position was false, do not assign it to the array
     if (targetPosition[numBarriers] === true) {
-      // Generate random sizes for the targets
-      let r = random(30, 60);
+      // Assign number 1 or 2 randomly in order to have random images
+      let r = floor(random(0, 2));
       // Assign targets properties to the relevent object
       // Targets x and y positions are in accordance with barriers y positions
       let secondTarget = {
         x: (i * 150.0),
         y: barrierY[numBarriers] + 65,
         fillColor: color(212, 30, 157),
-        radius: r
+        radius: 70,
+        imageId: secondStepImgTurn[r],
+        workImage: work,
+        educationImage: continueEducation
       };
       // Add new target to the array
       secondStepTarget[i] = new SecondStepTarget(secondTarget);
@@ -279,7 +359,10 @@ function setUpGame() {
       y: y,
       radius: 40,
       proximity: 1.2,
-      behaviour: floor(random(1, 3))
+      behaviour: floor(random(1, 3)),
+      image: barrier1,
+      image2: barrierTouched,
+      secondBarrier: barrier2
     };
     // Declare and assign targets properties
     let thirdTarget = {
@@ -337,11 +420,15 @@ function draw() {
     background(startBackground);
     gameStructure.startScreenDisplay();
   }
+  else if (instructionScreen) {
+    background(250, 242, 158);
+    gameStructure.displayInstruction();
+  }
   // Game first step
   else if (firstStep) {
-    background(0);
+    background(firstStepBackground);
     // Resets paddle position and define play area
-    if (mouseY > (height / 2 + 200) && mouseY < (height)) {
+    if (mouseY > (height / 2 + 200) && mouseY < (height) && ball.isJumping) {
       paddle.x = mouseX;
       paddle.y = mouseY;
     }
@@ -377,7 +464,7 @@ function draw() {
   }
   // Transition screen
   else if (stepIsOver) {
-    background(255);
+    background(250, 242, 158);
     // Screens which are shown, when the player wins a step or loses.
     if (firstWin) {
       gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin);
@@ -393,7 +480,7 @@ function draw() {
   }
   // Game second step
   else if (secondStep) {
-    background(0);
+    background(secondStepBackground);
     // Resets paddle position once ball jumping is true
     if (ball.isJumping) {
       paddle.x = mouseX;
@@ -405,7 +492,7 @@ function draw() {
     // Check if ball collided barriers.
     // If so, decrease his health by 20%
     for (let i = 0; i < barriers.length; i++) {
-      barriers[i].display(positionBeforeRotation);
+      barriers[i].displaySecond();
       barriers[i].updatePosition();
       barriers[i].ballBarrierCollision(ball, positionBeforeRotation, gameStructure);
     }
@@ -430,7 +517,7 @@ function draw() {
     // Check if ball is jumping
     ball.handleJumping(paddle, ballHeight1);
     // Updates ball position based on paddle position
-    ball.updatePosition(paddle.x + 50);
+    ball.updatePosition(paddle.x + 40);
     // Display percentage of health + Display player score
     ball.displayHealth(gameStructure);
     ball.displayScore(gameStructure);
@@ -457,7 +544,7 @@ function draw() {
   // Game third step
   else if (thirdStep) {
     if (notRotated) {
-      background(0);
+      background(thirdStepBackground);
 
       // Resets paddle position if ball.isJumping is true
       if (ball.isJumping) {
@@ -501,7 +588,7 @@ function draw() {
       // Check if ball is jumping
       ball.handleJumping(paddle, ballHeight2);
       // Updates ball position based on paddle position
-      ball.updatePosition(paddle.x + 50);
+      ball.updatePosition(paddle.x + 40);
 
       // Displays Ball and paddle
       paddle.display();
@@ -541,7 +628,7 @@ function draw() {
         }
       }
     } else if (rotated) {
-      background(0);
+      background(thirdStepBackground);
 
       // Resets paddle position if isJumping is true
       if (ballRotated.isJumping) {
@@ -583,7 +670,7 @@ function draw() {
       // Check if ball is jumping
       ballRotated.handleJumping(paddleRotated);
       // Updates ball position based on paddle position
-      ballRotated.updatePosition(paddleRotated.x + 50);
+      ballRotated.updatePosition(paddleRotated.x + 40);
 
       // Display paddle and ball
       paddleRotated.display();
@@ -681,8 +768,9 @@ function play() {
   // If the distance between mouse position and
   // the start button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.playButton.x, gameStructure.playButton.y) < gameStructure.playButton.w) {
-    firstStep = true;
+    // firstStep = true;
     startScreen = false;
+    instructionScreen = true;
     setupPlayer();
     setUpGame();
   }
@@ -693,8 +781,22 @@ function play() {
 // Go to next level
 function next() {
   // If the distance between mouse position and
-  // the start button is less than the button size reset the following values.
+  // the next button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.nextButton.x, gameStructure.nextButton.y) < gameStructure.nextButton.w) {
+      instructionScreen = false;
+      firstStep = true;
+      setupPlayer();
+      setUpGame();
+  }
+}
+
+// continue()
+//
+// Go to next level
+function continueIt() {
+  // If the distance between mouse position and
+  // the continue button is less than the button size reset the following values.
+  if (dist(mouseX, mouseY, gameStructure.continueButton.x, gameStructure.continueButton.y) < gameStructure.continueButton.w) {
     // If player won first step, reset the following values
     if (firstWin) {
       firstStep = false;
@@ -719,7 +821,7 @@ function next() {
 function playAgain() {
   // If the distance between mouse position and
   // the start button is less than the button size reset the following values.
-  if (dist(mouseX, mouseY, gameStructure.nextButton.x, gameStructure.nextButton.y) < gameStructure.nextButton.w) {
+  if (dist(mouseX, mouseY, gameStructure.continueButton.x, gameStructure.continueButton.y) < gameStructure.continueButton.w) {
     // If player lost first layer, reset the following values
     // so that he can play the same step again
     if (!firstFailure) {
@@ -771,6 +873,8 @@ function restart() {
 function mousePressed() {
   if (startScreen) {
     play();
+  } else if (instructionScreen) {
+    next();
   } else if (firstStep) {
     ball.isJumping = true;
   } else if (secondStep) {
@@ -783,11 +887,11 @@ function mousePressed() {
     }
   } else if (stepIsOver) {
     if (firstWin) {
-      next();
+      continueIt();
     } else if (!firstFailure) {
       playAgain();
     } else if (secondWin) {
-      next();
+      continueIt();
     } else if (!secondFailure) {
       playAgain();
     } else if (!thirdFailure) {
