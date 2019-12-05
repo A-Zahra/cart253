@@ -110,7 +110,19 @@ let sport;
 let timeManagement;
 
 let continueEducation;
+let friendship;
+let camera;
+let bicycle;
 let work;
+
+let baby;
+let car;
+let careerAdvancement;
+let home;
+let pet;
+let marriage;
+let tourism;
+let family;
 // preload()
 //
 // Insert all external files
@@ -145,7 +157,20 @@ function preload() {
   timeManagement = loadImage("assets/images/timeManagement.png");
 
   continueEducation = loadImage("assets/images/ContinueEducation.png");
+  friendship = loadImage("assets/images/friendship.png");
+  camera = loadImage("assets/images/camera.png");
+  bicycle = loadImage("assets/images/bicycle.png");
   work = loadImage("assets/images/work.png");
+
+  baby = loadImage("assets/images/baby.png");
+  family = loadImage("assets/images/family.png");
+  car = loadImage("assets/images/car.png");
+  careerAdvancement = loadImage("assets/images/careerAdvancement.png");
+  home = loadImage("assets/images/home.png");
+  marriage = loadImage("assets/images/marriage.png");
+  pet = loadImage("assets/images/pet.png");
+  tourism = loadImage("assets/images/tourism.png");
+
 }
 
 // setup()
@@ -203,7 +228,12 @@ function setUpGame() {
   firstStepImagesRow2 = [mapReading, art, chemistry, computation, experiments];
   firstStepImagesRow3 = [achievement, graduation, science,];
 
-  //let secondStepTargetImg = [work, continueEducation];
+  let secondStepLessValuabeTargetImg = [camera, bicycle];
+  let secondStepMoreValuabeTargetImg = [work, continueEducation, friendship];
+
+  let thirdStepLessValuableTargetImg = [home, car, tourism, pet];
+  let thirdStepMoreValuableTargetImg = [marriage, baby, careerAdvancement];
+
 
   let secondStepImgTurn = [1, 2];
   // Second step target property
@@ -319,6 +349,8 @@ function setUpGame() {
     if (targetPosition[numBarriers] === true) {
       // Assign number 1 or 2 randomly in order to have random images
       let r = floor(random(0, 2));
+      let randomImg1 = floor(random(0, 2));
+      let randomImg2 = floor(random(0, 3));
       // Assign targets properties to the relevent object
       // Targets x and y positions are in accordance with barriers y positions
       let secondTarget = {
@@ -327,8 +359,8 @@ function setUpGame() {
         fillColor: color(212, 30, 157),
         radius: 70,
         imageId: secondStepImgTurn[r],
-        workImage: work,
-        educationImage: continueEducation
+        image1: secondStepLessValuabeTargetImg[randomImg1],
+        image2: secondStepMoreValuabeTargetImg[randomImg2]
       };
       // Add new target to the array
       secondStepTarget[i] = new SecondStepTarget(secondTarget);
@@ -364,13 +396,22 @@ function setUpGame() {
       image2: barrierTouched,
       secondBarrier: barrier2
     };
+
+    let thirdStepImgTurn = [1, 2, 3];
+    let randomSelection = floor(random(0, 3));
+    let randomImgSelection1 = floor(random(0, 4));
+    let randomImgSelection2 = floor(random(0, 3));
     // Declare and assign targets properties
     let thirdTarget = {
       x: t * 145,
       y: y + 60,
-      radius: random(40, 80),
+      radius: 75,
       proximity: 1.2,
-      fillColor: color(29, 227, 252)
+      fillColor: color(29, 227, 252),
+      imageId: thirdStepImgTurn[randomSelection],
+      image1: thirdStepLessValuableTargetImg[randomImgSelection1],
+      image2: thirdStepMoreValuableTargetImg[randomImgSelection2],
+      support: family
     }
     // To check whether the two objects overlapped.
     let inOneLine = false;

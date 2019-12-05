@@ -72,7 +72,7 @@ class Ball {
         target.id = 0;
       }
       // If target size is more than or equal to 60 increase health by 20%
-      else if (target.size >= 60) {
+      else if (target.imageId === 3) {
         player.ballOpacity += 51;
         // Increase health as long as it is less than 100
         if (player.healthPercent < 100) {

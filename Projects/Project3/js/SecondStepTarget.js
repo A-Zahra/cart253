@@ -13,9 +13,10 @@ class SecondStepTarget {
     this.size = target.radius;
     this.vx = 2;
     this.id = 1;
-    this.workImage = target.workImage;
-    this.educationImage = target.educationImage;
+    this.moreValuable = target.image2;
+    this.lessValuable = target.image1;
     this.imageId = target.imageId;
+    this.support = target.support;
   }
 
   // Update target x position
@@ -40,9 +41,11 @@ class SecondStepTarget {
 //    fill(this.fillColor);
     imageMode(CENTER);
     if (this.imageId === 1) {
-      image(this.workImage, this.x, this.y, this.size, this.size);
+      image(this.lessValuable, this.x, this.y, this.size, this.size);
     } else if (this.imageId === 2) {
-      image(this.educationImage, this.x, this.y, this.size, this.size);
+      image(this.moreValuable, this.x, this.y, this.size, this.size);
+    } else if (this.imageId === 3) {
+      image(this.support, this.x, this.y, this.size, this.size);
     }
     pop();
   }
