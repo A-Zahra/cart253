@@ -17,6 +17,7 @@ class SecondStepTarget {
     this.lessValuable = target.image1;
     this.imageId = target.imageId;
     this.support = target.support;
+    this.sound = target.sound;
   }
 
   // Update target x position

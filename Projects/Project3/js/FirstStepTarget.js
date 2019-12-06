@@ -19,6 +19,7 @@ class FirstStepTarget {
     this.health = this.maxHealth;
     this.r = random(0.04, 1.5);
     this.image = target.image;
+    this.sound = target.sound;
   }
 
   // goalAchieved()
@@ -30,10 +31,16 @@ class FirstStepTarget {
     let d = dist(this.x, this.y, ball.x, ball.y);
     if (d < this.size / 2) {
       if (this.targetId === 1 && this.targetIdTrue === 0) {
+        this.sound.setVolume(0.05);
+        this.sound.play();
         this.targetIdTrue = 1;
       } else if (this.targetId === 3 && this.targetIdTrue === 0) {
+        this.sound.setVolume(0.05);
+        this.sound.play();
         this.targetIdTrue = 3;
       } else if (this.targetId === 5 && this.targetIdTrue === 0) {
+        this.sound.setVolume(0.05);
+        this.sound.play();
         this.targetIdTrue = 5;
       }
     }

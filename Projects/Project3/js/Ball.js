@@ -17,7 +17,7 @@ class Ball {
     this.ySpeedRotated = -1;
     this.maxJumpHeight = -35;
     this.maxJumpHeight2 = -25;
-    this.maxJumpHeightRotated = 30;
+    this.maxJumpHeightRotated = 25;
     this.numTargetsAchieved = 0;
     this.healthPercent = 100;
     this.fillColor = color(255, 0, 0);
@@ -45,7 +45,7 @@ class Ball {
     else if (keyIsDown(CONTROL)) {
       this.maxJumpHeight = -35;
       this.maxJumpHeight2 = -25;
-      this.maxJumpHeightRotated = 30;
+      this.maxJumpHeightRotated = 25;
       this.ySpeed = 1;
       this.ySpeedRotated = -1;
     }
@@ -65,14 +65,20 @@ class Ball {
       if (target.imageId === 1) {
         player.score += 5;
         target.id = 0;
+        target.sound.setVolume(0.05);
+        target.sound.play();
       }
       // If target size is more than or equal to 50 and less than 60 add 10 points to score
       else if (target.imageId === 2) {
         player.score += 10;
         target.id = 0;
+        target.sound.setVolume(0.05);
+        target.sound.play();
       }
       // If target size is more than or equal to 60 increase health by 20%
       else if (target.imageId === 3) {
+        target.sound.setVolume(0.05);
+        target.sound.play();
         player.ballOpacity += 51;
         // Increase health as long as it is less than 100
         if (player.healthPercent < 100) {

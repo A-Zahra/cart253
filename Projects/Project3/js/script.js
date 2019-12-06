@@ -132,6 +132,12 @@ let family;
 let plug;
 let outlet;
 
+let backgroundSound;
+let backgroundSound2;
+let backgroundSound3;
+let victorySound;
+let stepsVictory;
+let targetSound;
 // preload()
 //
 // Insert all external files
@@ -140,6 +146,8 @@ function preload() {
   firstStepBackground = loadImage("assets/images/classroom.jpg");
   secondStepBackground = loadImage("assets/images/secondStepBackground2.png");
   thirdStepBackground = loadImage("assets/images/office.jpg");
+  thirdStepBackgroundRotated =loadImage("assets/images/officeRotated.jpg");
+
   mouse = loadImage("assets/images/mouse.png");
   controlKey = loadImage("assets/images/ctrlKey.png");
   spaceKey = loadImage("assets/images/spaceKey.png");
@@ -149,8 +157,8 @@ function preload() {
   stone = loadImage("assets/images/stone.png");
   stoneRotated = loadImage("assets/images/stoneRotated.png");
 
-  barrier1 = loadImage("assets/images/barrier1.png");
-  barrier2 = loadImage("assets/images/barrier2.png");
+  barrier1 = loadImage("assets/images/Barrier1.png");
+  barrier2 = loadImage("assets/images/Barrier2.png");
   barrierTouched = loadImage("assets/images/barrierTouched.png");
 
   achievement = loadImage("assets/images/achievement.png");
@@ -186,6 +194,13 @@ function preload() {
   plug = loadImage("assets/images/plug.png");
   outlet= loadImage("assets/images/outlet.png");
 
+  soundFormats('mp3', 'ogg');
+  backgroundSound = loadSound('assets/sounds/backgroundSound.mp3');
+  backgroundSound2 = loadSound('assets/sounds/backgroundSound2.mp3');
+  backgroundSound3 = loadSound('assets/sounds/backgroundSound3.mp3');
+  victorySound = loadSound('assets/sounds/victorySound.mp3');
+  stepsVictory = loadSound('assets/sounds/Victory.wav');
+  targetSound = loadSound('assets/sounds/hitTarget.wav');
 }
 
 // setup()
@@ -286,7 +301,8 @@ function setUpGame() {
       id: 1,
       fillColor: color(74, 136, 47),
       proximity: 1.8,
-      image: firstStepImagesRow1[randomImages1]
+      image: firstStepImagesRow1[randomImages1],
+      sound: targetSound
     }, {
       x: random(100, width - 100),
       y: random(220, (height / 2) - 100),
@@ -294,7 +310,8 @@ function setUpGame() {
       id: 3,
       fillColor: color(206, 42, 100),
       proximity: 2,
-      image: firstStepImagesRow2[randomImages2]
+      image: firstStepImagesRow2[randomImages2],
+      sound: targetSound
     }, {
       x: random(100, width - 100),
       y: random(80, (height / 2) - 250),
@@ -302,7 +319,8 @@ function setUpGame() {
       id: 5,
       fillColor: color(49, 220, 136),
       proximity: 2.5,
-      image: firstStepImagesRow3[randomImages3]
+      image: firstStepImagesRow3[randomImages3],
+      sound: targetSound
     }];
 
     // To check whether the two circles overlapped.
@@ -387,7 +405,8 @@ function setUpGame() {
         radius: 70,
         imageId: secondStepImgTurn[r],
         image1: secondStepLessValuabeTargetImg[randomImg1],
-        image2: secondStepMoreValuabeTargetImg[randomImg2]
+        image2: secondStepMoreValuabeTargetImg[randomImg2],
+        sound: targetSound
       };
       // Add new target to the array
       secondStepTarget[i] = new SecondStepTarget(secondTarget);
@@ -436,7 +455,8 @@ function setUpGame() {
       imageId: thirdStepImgTurn[t],
       image1: thirdStepLessValuableTargetImg[randomImgSelection1],
       image2: thirdStepMoreValuableTargetImg[randomImgSelection2],
-      support: family
+      support: family,
+      sound: targetSound
     }
     // To check whether the two objects overlapped.
     let inOneLine = false;
@@ -499,6 +519,7 @@ function draw() {
     background(firstStepBackground);
     // Resets paddle position and define play area
     if (mouseY > (height / 2 + 200) && mouseY < (height) && ball.isJumping) {
+
       paddle.x = mouseX;
       paddle.y = mouseY;
     }
@@ -530,6 +551,7 @@ function draw() {
       firstFailure = false;
       stepIsOver = true;
       firstStep = false;
+      backgroundSound.pause();
     }
   }
   // Transition screen
@@ -602,12 +624,16 @@ function draw() {
       stepIsOver = true;
       secondWin = true;
       secondStep = false;
+      backgroundSound2.pause();
+      stepsVictory.setVolume(0.1);
+      stepsVictory.play();
     }
     // If ball goes off the bottom of screen or player lost his whole health, game is over.
     else if (ball.y > height || gameStructure.ballOpacity <= 0) {
       stepIsOver = true;
       secondFailure = false;
       secondStep = false;
+      backgroundSound2.pause();
     }
   }
 
@@ -634,6 +660,7 @@ function draw() {
           ball.isJumping = false;
           warning = true;
           turnTracker = true;
+          backgroundSound3.pause();
         }
         secondBarriers[i].updatePosition();
       }
@@ -668,6 +695,9 @@ function draw() {
       if (gameStructure.score > 20) {
         thirdStep = false;
         victoryScreen = true;
+        backgroundSound3.pause();
+        victorySound.setVolume(0.1);
+        victorySound.play();
       }
       // If ball went off the upper edge of screen or player lost his whole health
       // shows replay screen
@@ -675,10 +705,12 @@ function draw() {
         thirdStep = false;
         stepIsOver = true;
         thirdFailure = false;
+        backgroundSound3.pause();
       } else if (gameStructure.ballOpacity <= 0) {
         thirdStep = false;
         stepIsOver = true;
         thirdFailure = false;
+        backgroundSound3.pause();
       }
     } else if (warning) {
       // Display warning message
@@ -690,6 +722,8 @@ function draw() {
         gameStructure.outletX = width / 2 + 300;
         gameStructure.outletY = (height / 2) + 100;
         warning = false;
+        backgroundSound3.setVolume(0.3);
+        backgroundSound3.play();
         setupPlayer();
         if (!notRotated && turnTracker) {
           rotated = true;
@@ -698,7 +732,7 @@ function draw() {
         }
       }
     } else if (rotated) {
-      background(thirdStepBackground);
+      background(thirdStepBackgroundRotated);
 
       // Resets paddle position if isJumping is true
       if (ballRotated.isJumping) {
@@ -717,6 +751,7 @@ function draw() {
           ballRotated.isJumping = false;
           warning = true;
           turnTracker = false;
+          backgroundSound3.pause();
         }
         secondBarriers[i].updatePosition();
       }
@@ -751,16 +786,21 @@ function draw() {
         rotated = false;
         thirdStep = false;
         victoryScreen = true;
+        backgroundSound3.pause();
+        victorySound.setVolume(0.1);
+        victorySound.play();
       }
       // If player went off the upper edge of screen or lost his whole health, shows the replay screen
       if (ballRotated.y < 0) {
         thirdStep = false;
         stepIsOver = true;
         thirdFailure = false;
+        backgroundSound3.pause();
       } else if (gameStructure.ballOpacity <= 0) {
         thirdStep = false;
         stepIsOver = true;
         thirdFailure = false;
+        backgroundSound3.pause();
       }
     }
   }
@@ -806,6 +846,16 @@ function displayTargets() {
         // Make this conditional statement for this row totally out of access
         // so that it won't be used in next round.
         hideRow[countTargets] = true;
+
+        // If the requested number of targets was achieved,
+        // sets targetIdtrue of all targets of the same row to the value that is given by
+        // the isFalse array, so that it won't keep checking whether the ball overlapped the target and
+        // therefore, won't play the sound
+        for (let i = 0; i < targets.length; i++) {
+          if (targets[i].targetId === isTrue[countTargets]){
+            targets[i].targetIdTrue = isFalse[countTargets];
+          }
+        }
         // Go to the next row
         countTargets++;
       }
@@ -824,6 +874,9 @@ function displayTargets() {
     firstStep = false;
     stepIsOver = true;
     firstWin = true;
+    backgroundSound.pause();
+    stepsVictory.setVolume(0.1);
+    stepsVictory.play();
   }
 }
 
@@ -891,6 +944,8 @@ function next() {
     else if (storyScreen) {
       storyScreen = false;
       firstStep = true;
+      backgroundSound.setVolume(0.3);
+      backgroundSound.loop();
     }
       setupPlayer();
       setUpGame();
@@ -910,12 +965,16 @@ function continueIt() {
       stepIsOver = false;
       secondStep = true;
       firstWin = false;
+      backgroundSound2.setVolume(0.3);
+      backgroundSound2.loop();
     } // If player won sceond step, reset the following values
     else if (secondWin) {
       secondStep = false;
       stepIsOver = false;
       thirdStep = true;
       secondWin = false;
+      backgroundSound3.setVolume(0.3);
+      backgroundSound3.loop();
     }
     setupPlayer();
     setUpGame();

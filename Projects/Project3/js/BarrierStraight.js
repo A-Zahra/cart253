@@ -63,7 +63,7 @@ class BarrierStraight {
       distance = dist(ball.x, ball.y - 15, this.x, this.y);
       console.log("came in");
     } else if (positioning === 2) {
-      distance = dist(ball.x, ball.y, this.x, this.y + 80);
+      distance = dist(ball.x, ball.y, this.x, this.y + 110);
     }
     let barrierSize = (this.h + this.w) * 2;
     if (distance < ((ball.size + this.h) / 1.7) && this.id === 1) {
@@ -83,10 +83,10 @@ class BarrierStraight {
     if (positioning === 1) {
       d = dist(this.x, this.y - 15, ball.x, ball.y);
     } else if (positioning === 2) {
-      d = dist(this.x, this.y + 80, ball.x, ball.y);
+      d = dist(this.x, this.y + 110, ball.x, ball.y);
     }
     let barrierSize = (this.h + this.w) * 2;
-    if (d < ((ball.size + this.h) / 1.05) && this.id === 1 && this.behaviour === 2) {
+    if (d < ((ball.size + this.h) / 1.2) && this.id === 1 && this.behaviour === 2) {
   //    this.image = this.image2;
       return true;
     } else {

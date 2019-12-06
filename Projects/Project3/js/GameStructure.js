@@ -352,7 +352,7 @@ class GameStructure {
   }
   updateVictoryTextSize() {
     if (this.victoryTextSize < 70) {
-      this.victoryTextSize++;
+      this.victoryTextSize += 1.5;
     }
   }
   // Displays game over screen
