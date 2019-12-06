@@ -87,10 +87,10 @@ class Ball {
   displayScore(player) {
     let showScore = `The extent of target's worthiness: ${player.score}`;
     push();
-    fill(255);
+    fill(0);
     textSize(22);
     textAlign(CENTER, CENTER);
-    text(showScore, 220, 50);
+    text(showScore, 240, 50);
     pop();
   }
 
@@ -98,7 +98,7 @@ class Ball {
   displayHealth(player) {
     let health = `Health: ${player.healthPercent}%`;
     push();
-    fill(255);
+    fill(0);
     textSize(22);
     textAlign(CENTER, CENTER);
     text(health, width - 140, 50);
@@ -106,12 +106,16 @@ class Ball {
   }
 
   // Display ball
-  display(player) {
+  display(positioning) {
     push();
     noStroke();
     //fill(255, 0, 0, player.ballOpacity);
-    imageMode(CORNER);
-    image(this.image, this.x, this.y, this.size * 2, this.size * 2);
+    imageMode(CENTER);
+    if (positioning === 1) {
+        image(this.image, this.x, this.y + 10, this.size * 2, this.size * 2);
+    } else if (positioning === 2) {
+        image(this.image, this.x, this.y + 30, this.size * 2, this.size * 2);
+    }
     pop();
   }
 }

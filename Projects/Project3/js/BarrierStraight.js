@@ -43,15 +43,30 @@ class BarrierStraight {
   }
 
   // Check if ball collided first type of barriers.
+  ballFirstBarrierCollision(ball, player) {
+    let distance = dist(ball.x, ball.y, this.x, this.y);
+    if (distance < ((ball.size + this.h) / 1.7) && this.id === 1) {
+      // If ball overlapped first type of barriers, decrease health by 20 percent
+      if (this.behaviour === 1) {
+        player.ballOpacity -= 51;
+        this.id = 2;
+        player.healthPercent -= 20;
+        this.image = this.image2;
+      }
+    }
+  }
+
+  // Check if ball collided first type of barriers.
   ballBarrierCollision(ball, positioning, player) {
-    let d;
+    let distance;
     if (positioning === 1) {
-      d = dist(this.x, this.y, ball.x, ball.y);
+      distance = dist(ball.x, ball.y - 15, this.x, this.y);
+      console.log("came in");
     } else if (positioning === 2) {
-      d = dist(this.x, this.y + 130, ball.x, ball.y);
+      distance = dist(ball.x, ball.y, this.x, this.y + 80);
     }
     let barrierSize = (this.h + this.w) * 2;
-    if (d < ((ball.size + barrierSize) / 6.2) && this.id === 1) {
+    if (distance < ((ball.size + this.h) / 1.7) && this.id === 1) {
       // If ball overlapped first type of barriers, decrease health by 20 percent
       if (this.behaviour === 1) {
         player.ballOpacity -= 51;
@@ -66,12 +81,12 @@ class BarrierStraight {
   warning(ball, positioning) {
     let d;
     if (positioning === 1) {
-      d = dist(this.x, this.y, ball.x, ball.y);
+      d = dist(this.x, this.y - 15, ball.x, ball.y);
     } else if (positioning === 2) {
-      d = dist(this.x, this.y + 130, ball.x, ball.y);
+      d = dist(this.x, this.y + 80, ball.x, ball.y);
     }
     let barrierSize = (this.h + this.w) * 2;
-    if (d < ((ball.size + barrierSize) / 5.5) && this.id === 1 && this.behaviour === 2) {
+    if (d < ((ball.size + this.h) / 1.05) && this.id === 1 && this.behaviour === 2) {
   //    this.image = this.image2;
       return true;
     } else {
@@ -85,6 +100,7 @@ class BarrierStraight {
       image(this.image, this.x, this.y, this.w, this.h);
     pop();
   }
+
   // Display barrier
   display(positioning) {
     push();
@@ -103,7 +119,6 @@ class BarrierStraight {
         image(this.secondBarrier, this.x, this.y + 130, this.w, this.h);
       }
     }
-
     pop();
   }
 }

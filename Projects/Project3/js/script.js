@@ -20,13 +20,18 @@ let countTargets;
 let startBackground;
 let firstStepBackground;
 let secondStepBackground;
+let mouse;
+let controlKey;
+let spaceKey;
 // Decides when to show start screen, game steps screens, transition screens and end screen
 let startScreen = true;
 let instructionScreen = false;
+let storyScreen = false;
 let firstStep = false;
 let secondStep = false;
 let thirdStep = false;
 let victoryScreen = false;
+let bubbles = [];
 let gameOver = false;
 let stepIsOver = false;
 let firstWin = false;
@@ -123,6 +128,10 @@ let pet;
 let marriage;
 let tourism;
 let family;
+
+let plug;
+let outlet;
+
 // preload()
 //
 // Insert all external files
@@ -131,6 +140,9 @@ function preload() {
   firstStepBackground = loadImage("assets/images/classroom.jpg");
   secondStepBackground = loadImage("assets/images/secondStepBackground2.png");
   thirdStepBackground = loadImage("assets/images/office.jpg");
+  mouse = loadImage("assets/images/mouse.png");
+  controlKey = loadImage("assets/images/ctrlKey.png");
+  spaceKey = loadImage("assets/images/spaceKey.png");
 
   slingShot = loadImage("assets/images/slingShot.png");
   slingShotRotated = loadImage("assets/images/slingShotRotated.png");
@@ -171,6 +183,9 @@ function preload() {
   pet = loadImage("assets/images/pet.png");
   tourism = loadImage("assets/images/tourism.png");
 
+  plug = loadImage("assets/images/plug.png");
+  outlet= loadImage("assets/images/outlet.png");
+
 }
 
 // setup()
@@ -180,6 +195,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight - 5);
   setupPlayer();
   setUpGame();
+  setUpVictory();
 }
 
 // Sets up all initial values in an independent function
@@ -189,7 +205,7 @@ function setup() {
 // Sets up paddle and ball initial values
 function setupPlayer() {
   // Makes ball object and assign default values to
-  ball = new BallStraight(width / 2, height - 120, stone);
+  ball = new BallStraight(width / 2, height - 100, stone);
   // Makes paddle object and assign default values to
   paddle = new PaddleStraight(width / 2, height - 100, slingShot);
 
@@ -198,7 +214,17 @@ function setupPlayer() {
   // Makes paddle object and assign default values to
   paddleRotated = new PaddleRotated(width / 2, 130, slingShotRotated);
 }
-
+ function setUpVictory() {
+   for (let s = 0; s < 500; s++) {
+     let bubbleProperties = {
+       y: random(10, height - 10),
+       x: random(10, width - 10),
+       radius: 8,
+       proximity: 2
+     }
+     bubbles.push(bubbleProperties);
+   }
+ }
 // setUpGame()
 //
 // Sets up all initial values other than paddle and ball
@@ -240,8 +266,9 @@ function setUpGame() {
   // Using this array, everytime targets are placed under a random number of barriers
   targetPosition = [false, true, false, true, false, true];
 
+
   // Makes an object of gameStructure and assign default values to
-  gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2.5);
+  gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2, slingShot, stone, barrier1, barrierTouched, barrier2, mouse, spaceKey, controlKey, plug, outlet);
 
   // Targets drawing code was borrowed from:
   // <Daniel Shiffman> (<15/March/2016>) <Random Circles with No Overlap> (https://www.youtube.com/watch?v=XATr_jdh-44).
@@ -355,7 +382,7 @@ function setUpGame() {
       // Targets x and y positions are in accordance with barriers y positions
       let secondTarget = {
         x: (i * 150.0),
-        y: barrierY[numBarriers] + 65,
+        y: barrierY[numBarriers] + 55,
         fillColor: color(212, 30, 157),
         radius: 70,
         imageId: secondStepImgTurn[r],
@@ -389,7 +416,6 @@ function setUpGame() {
     let secBar = {
       x: t * 145,
       y: y,
-      radius: 40,
       proximity: 1.2,
       behaviour: floor(random(1, 3)),
       image: barrier1,
@@ -397,18 +423,17 @@ function setUpGame() {
       secondBarrier: barrier2
     };
 
-    let thirdStepImgTurn = [1, 2, 3];
-    let randomSelection = floor(random(0, 3));
+    let thirdStepImgTurn = [1, 2, 3, 1, 2, 3, 1, 2, 2, 1];
     let randomImgSelection1 = floor(random(0, 4));
     let randomImgSelection2 = floor(random(0, 3));
     // Declare and assign targets properties
     let thirdTarget = {
       x: t * 145,
-      y: y + 60,
+      y: y + 57,
       radius: 75,
       proximity: 1.2,
       fillColor: color(29, 227, 252),
-      imageId: thirdStepImgTurn[randomSelection],
+      imageId: thirdStepImgTurn[t],
       image1: thirdStepLessValuableTargetImg[randomImgSelection1],
       image2: thirdStepMoreValuableTargetImg[randomImgSelection2],
       support: family
@@ -465,6 +490,10 @@ function draw() {
     background(250, 242, 158);
     gameStructure.displayInstruction();
   }
+  else if (storyScreen) {
+    background(250, 242, 158);
+    gameStructure.displayStory();
+  }
   // Game first step
   else if (firstStep) {
     background(firstStepBackground);
@@ -484,7 +513,7 @@ function draw() {
     // Check if ball is jumping
     ball.handleJumping(paddle, ballHeight1);
     // Updates ball position based on paddle position
-    ball.updatePosition(paddle.x + 50);
+    ball.updatePosition(paddle.x + 60);
 
     // Checks if ball collided with a target
     // If so hide the target and changes its id number so that it won't be counted again.
@@ -494,7 +523,7 @@ function draw() {
 
     // Displays Ball and paddle
     paddle.display();
-    ball.display(gameStructure);
+    ball.display(positionBeforeRotation);
 
     // If ball goes off the bottom of screen, Show replay screen.
     if (ball.y > height) {
@@ -508,15 +537,15 @@ function draw() {
     background(250, 242, 158);
     // Screens which are shown, when the player wins a step or loses.
     if (firstWin) {
-      gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin);
+      gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin, 1);
     } else if (!firstFailure) {
-      gameStructure.TransitionScreenDisplay("Oops you've got too ambitous!", firstFailure);
+      gameStructure.TransitionScreenDisplay("Oh, don't hurry! You need more patience to achieve some goals!", firstFailure, 1);
     } else if (secondWin) {
-      gameStructure.TransitionScreenDisplay("Good job buddy, Ready for next step!", secondWin);
+      gameStructure.TransitionScreenDisplay("Good job buddy, Ready for next step!", secondWin, 2);
     } else if (!secondFailure) {
-      gameStructure.TransitionScreenDisplay("Oops, did you misuse your will!", secondFailure);
+      gameStructure.TransitionScreenDisplay("Oh, don't hurry! You need more patience to achieve some goals!", secondFailure, 1);
     } else if (!thirdFailure) {
-      gameStructure.TransitionScreenDisplay("Oops, So close, you just need a little bit of more effort!", thirdFailure);
+      gameStructure.TransitionScreenDisplay("Oh, don't hurry! You need more patience to achieve some goals!", thirdFailure, 1);
     }
   }
   // Game second step
@@ -534,8 +563,8 @@ function draw() {
     // If so, decrease his health by 20%
     for (let i = 0; i < barriers.length; i++) {
       barriers[i].displaySecond();
+      barriers[i].ballFirstBarrierCollision(ball, gameStructure);
       barriers[i].updatePosition();
-      barriers[i].ballBarrierCollision(ball, positionBeforeRotation, gameStructure);
     }
 
     // Draw second step targets
@@ -548,8 +577,8 @@ function draw() {
         if (secondStepTarget[i].id === 1) {
           secondStepTarget[i].display();
         }
-        secondStepTarget[i].updatePosition();
         ball.targetCollision(secondStepTarget[i], gameStructure);
+        secondStepTarget[i].updatePosition();
       }
     }
 
@@ -558,14 +587,14 @@ function draw() {
     // Check if ball is jumping
     ball.handleJumping(paddle, ballHeight1);
     // Updates ball position based on paddle position
-    ball.updatePosition(paddle.x + 40);
+    ball.updatePosition(paddle.x + 60);
     // Display percentage of health + Display player score
     ball.displayHealth(gameStructure);
     ball.displayScore(gameStructure);
 
     // Displays Ball and paddle
     paddle.display();
-    ball.display(gameStructure);
+    ball.display(positionBeforeRotation);
 
     // If the player score reached to the specified amount, second step ends +
     // show transition screen to go to next step
@@ -599,7 +628,6 @@ function draw() {
       // If so, ethier decreases player health by 20% or rotates screen 360 degrees
       for (let i = 0; i < secondBarriers.length; i++) {
         secondBarriers[i].display(positionBeforeRotation);
-        secondBarriers[i].updatePosition();
         secondBarriers[i].ballBarrierCollision(ball, positionBeforeRotation, gameStructure);
         if (secondBarriers[i].warning(ball, positionBeforeRotation)) {
           notRotated = false;
@@ -607,6 +635,7 @@ function draw() {
           warning = true;
           turnTracker = true;
         }
+        secondBarriers[i].updatePosition();
       }
 
       // Display targets
@@ -617,8 +646,8 @@ function draw() {
         if (thirdStepTarget[i].id === 1) {
           thirdStepTarget[i].display();
         }
-        thirdStepTarget[i].updatePosition();
         ball.targetCollision(thirdStepTarget[i], gameStructure);
+        thirdStepTarget[i].updatePosition();
       }
 
       // Display percent of health + Display player score
@@ -629,11 +658,11 @@ function draw() {
       // Check if ball is jumping
       ball.handleJumping(paddle, ballHeight2);
       // Updates ball position based on paddle position
-      ball.updatePosition(paddle.x + 40);
+      ball.updatePosition(paddle.x + 60);
 
       // Displays Ball and paddle
       paddle.display();
-      ball.display(gameStructure);
+      ball.display(positionBeforeRotation);
 
       // If player score reached to the specified amount, show victory screen
       if (gameStructure.score > 20) {
@@ -655,11 +684,11 @@ function draw() {
       // Display warning message
       gameStructure.displayWarningScreen();
       // When time is over, reset time, reset paddle and ball properties, rotate screen
-      if (dist(gameStructure.timeCubeX, gameStructure.timeCubeY, gameStructure.timeLimitX, gameStructure.timeLimitY) < 50) {
-        gameStructure.timeCubeX = (width / 2) - 300;
-        gameStructure.timeCubeY = (height / 2) + 100;
-        gameStructure.timeLimitX = width / 2 + 300;
-        gameStructure.timeLimitY = (height / 2) + 100;
+      if (dist(gameStructure.plugX, gameStructure.plugY, gameStructure.outletX, gameStructure.outletY) < 50) {
+        gameStructure.plugX = (width / 2) - 300;
+        gameStructure.plugY = (height / 2) + 100;
+        gameStructure.outletX = width / 2 + 300;
+        gameStructure.outletY = (height / 2) + 100;
         warning = false;
         setupPlayer();
         if (!notRotated && turnTracker) {
@@ -682,7 +711,6 @@ function draw() {
       // Check ball barrier collision. If collided, either decrease player health by 20% or rotates screen
       for (let i = 0; i < secondBarriers.length; i++) {
         secondBarriers[i].display(positionAfterRotation);
-        secondBarriers[i].updatePosition();
         secondBarriers[i].ballBarrierCollision(ballRotated, positionAfterRotation, gameStructure);
         if (secondBarriers[i].warning(ballRotated, positionAfterRotation)) {
           rotated = false;
@@ -690,6 +718,7 @@ function draw() {
           warning = true;
           turnTracker = false;
         }
+        secondBarriers[i].updatePosition();
       }
 
       // Display targets and Make them loop
@@ -699,8 +728,8 @@ function draw() {
         if (thirdStepTarget[i].id === 1) {
           thirdStepTarget[i].display();
         }
-        thirdStepTarget[i].updatePosition();
         ballRotated.targetCollision(thirdStepTarget[i], gameStructure);
+        thirdStepTarget[i].updatePosition();
       }
 
       // Display percent of health + Display player score
@@ -711,11 +740,11 @@ function draw() {
       // Check if ball is jumping
       ballRotated.handleJumping(paddleRotated);
       // Updates ball position based on paddle position
-      ballRotated.updatePosition(paddleRotated.x + 40);
+      ballRotated.updatePosition(paddleRotated.x + 60);
 
       // Display paddle and ball
       paddleRotated.display();
-      ballRotated.display(gameStructure);
+      ballRotated.display(positionAfterRotation);
 
       // If player score is more than the specified amount, shows victory screen
       if (gameStructure.score > 20) {
@@ -738,12 +767,9 @@ function draw() {
   // Victory screen
   else if (victoryScreen) {
     background(0);
+    displayVictory();
     gameStructure.victoryDisplay();
-    // Updates target health. reduces health based on a random speed.
-    // I keep this code cause I might use it again
-    // for (let i = 0; i < targets.length; i++) {
-    //   targets[i].updateHealth();
-    // }
+    gameStructure.updateVictoryTextSize();
   }
   // Game over screen
   else if (gameOver) {
@@ -801,6 +827,40 @@ function displayTargets() {
   }
 }
 
+// displayVictory
+//
+// Display victory screen
+function displayVictory() {
+  let limitation = 0;
+  let r = random(0, 1);
+  console.log("came in");
+  for (let j = 0; j < bubbles.length; j++) {
+    // To check whether the two circles overlapped.
+    let overlapped = false;
+    // Check the distance between the new circle and all the old ones. If the distance between
+    // the two is less than sum of both radius, don't add the new circle to the array.
+      for (let i = 0; i < bubbles.length; i++) {
+        if (i !== j) {
+          let otherBubble = bubbles[i];
+          let d = dist(bubbles[j].x, bubbles[j].y, otherBubble.x, otherBubble.y);
+          if (d < (bubbles[j].radius + otherBubble.radius) / bubbles[j].proximity) {
+            overlapped = true;
+            break;
+          }
+        }
+      }
+      // If is not overlapping add to the array
+      if (!overlapped) {
+
+          push();
+          noStroke();
+          fill(random(0, 255), random(0, 255), random(0, 255), random(0, 255));
+          ellipse(CENTER, CENTER);
+          ellipse(bubbles[j].x, bubbles[j].y, bubbles[j].radius, bubbles[j].radius);
+          pop();
+      }
+  }
+}
 // play()
 //
 // play the game
@@ -824,8 +884,14 @@ function next() {
   // If the distance between mouse position and
   // the next button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.nextButton.x, gameStructure.nextButton.y) < gameStructure.nextButton.w) {
+    if (instructionScreen) {
       instructionScreen = false;
+      storyScreen = true;
+    }
+    else if (storyScreen) {
+      storyScreen = false;
       firstStep = true;
+    }
       setupPlayer();
       setUpGame();
   }
@@ -915,6 +981,8 @@ function mousePressed() {
   if (startScreen) {
     play();
   } else if (instructionScreen) {
+    next();
+  } else if (storyScreen) {
     next();
   } else if (firstStep) {
     ball.isJumping = true;
