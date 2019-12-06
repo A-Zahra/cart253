@@ -21,6 +21,7 @@ class BarrierStraight {
     this.imageReturned = barrier.image;
     this.secondBarrier = barrier.secondBarrier;
     this.imageReturne2 = barrier.secondBarrier;
+    this.sound = barrier.sound;
   }
 
   // Update barrier x position
@@ -52,6 +53,8 @@ class BarrierStraight {
         this.id = 2;
         player.healthPercent -= 20;
         this.image = this.image2;
+        this.sound.setVolume(0.05);
+        this.sound.play();
       }
     }
   }
@@ -73,6 +76,8 @@ class BarrierStraight {
         this.id = 2;
         player.healthPercent -= 20;
         this.image = this.image2;
+        this.sound.setVolume(0.05);
+        this.sound.play();
       }
     }
   }

@@ -15,15 +15,15 @@
 // --** Audios **--
 //
 /****************************************************************************/
-// All hardcoded numbers will be replaced by variables once the game programming is close to get finished.
-let countTargets;
+let countTargets;   // The variable that decides which row turn is to be displayed in first step
+// All three steps background images + mouse, ctrl and space key images
 let startBackground;
 let firstStepBackground;
 let secondStepBackground;
 let mouse;
 let controlKey;
 let spaceKey;
-// Decides when to show start screen, game steps screens, transition screens and end screen
+// Variables which decide when to show:
 let startScreen = true;
 let instructionScreen = false;
 let storyScreen = false;
@@ -31,15 +31,18 @@ let firstStep = false;
 let secondStep = false;
 let thirdStep = false;
 let victoryScreen = false;
-let bubbles = [];
+let bubbles = []; // Victory screen circles array
 let gameOver = false;
-let stepIsOver = false;
+let stepIsOver = false; // Screen which connects steps
+// screen which will be shown, if player wins the step
 let firstWin = false;
 let secondWin = false;
-let warning = false;
+// screen which will be shown, if player loses the step
 let firstFailure = true;
 let secondFailure = true;
 let thirdFailure = true;
+// The screen that will be shown, every time a screen rotation happens
+let warning = false;
 // Variables which decide whether to show rotated or not rotated screen
 let rotated;
 let notRotated;
@@ -64,41 +67,45 @@ let targetProperties = [];
 let numTarget;
 let isTrue = [];
 let isFalse = [];
-// Decides whether to show targets or not.
+// Decides whether to show row of targets or not.
 let showRow = [];
 let hideRow = [];
-let isOver = [];
-let targetSum = [];
-let isSumTrue = [];
+let isOver = []; // Check if the number of achieved targets reached to the number of requested ones
+let targetSum = []; // A variable which keeps track of achieved targets
+let isSumTrue = []; // Check if the number of achieved targets reached to the number of requested ones (is used for inner if statement)
 
 // Declare barriers arrays and their properties variables
 let barriers = [];
 let barrierY = [];
-let MAX_BARRIERS = 11;
+let MAX_BARRIERS = 11; // Maximum number of barriers
 let secondBarriers = [];
 let secBarrierProp = [];
-let MAX_SECONDBARRIERS = 10;
+let MAX_SECONDBARRIERS = 10; // Maximum number of barriers
 
 // Second step targets array of objects and properties declaration
 let secondStepTarget = [];
+// An array that is assigned random false and true values to position targets under random barriers
 let targetPosition = [];
 
 // Third step targets array of objects and properties declaration
 let thirdStepTarget = [];
 let thirdTargetProp = [];
 
+// Balls and paddles images
 let slingShot;
 let slingShotRotated;
 let stone;
 let stoneRotated;
 
+// Barriers images
 let barrier1;
+let barrier2;
 let barrierTouched;
 
+// First step targets images
 let firstStepImagesRow1 = [];
 let firstStepImagesRow2 = [];
 let firstStepImagesRow3 = [];
-
 let achievement;
 let art;
 let calculation;
@@ -114,12 +121,14 @@ let science;
 let sport;
 let timeManagement;
 
+// Second step targets images
 let continueEducation;
 let friendship;
 let camera;
 let bicycle;
 let work;
 
+// Third step target images
 let baby;
 let car;
 let careerAdvancement;
@@ -129,38 +138,42 @@ let marriage;
 let tourism;
 let family;
 
+// The images used to show time in connecting screen between rotated and not-rotated screen
 let plug;
 let outlet;
 
+// Sounds
 let backgroundSound;
 let backgroundSound2;
 let backgroundSound3;
 let victorySound;
 let stepsVictory;
 let targetSound;
+let barrierSound;
+
 // preload()
 //
 // Insert all external files
 function preload() {
+  // Images
   startBackground = loadImage("assets/images/cityBackground.jpg");
   firstStepBackground = loadImage("assets/images/classroom.jpg");
   secondStepBackground = loadImage("assets/images/secondStepBackground2.png");
   thirdStepBackground = loadImage("assets/images/office.jpg");
   thirdStepBackgroundRotated =loadImage("assets/images/officeRotated.jpg");
-
   mouse = loadImage("assets/images/mouse.png");
   controlKey = loadImage("assets/images/ctrlKey.png");
   spaceKey = loadImage("assets/images/spaceKey.png");
-
+  // Balls and paddles
   slingShot = loadImage("assets/images/slingShot.png");
   slingShotRotated = loadImage("assets/images/slingShotRotated.png");
   stone = loadImage("assets/images/stone.png");
   stoneRotated = loadImage("assets/images/stoneRotated.png");
-
+  // Barriers
   barrier1 = loadImage("assets/images/Barrier1.png");
   barrier2 = loadImage("assets/images/Barrier2.png");
   barrierTouched = loadImage("assets/images/barrierTouched.png");
-
+  // Step 1 targets
   achievement = loadImage("assets/images/achievement.png");
   art = loadImage("assets/images/art.png");
   calculation = loadImage("assets/images/calculation.png");
@@ -175,13 +188,13 @@ function preload() {
   science = loadImage("assets/images/science.png");
   sport = loadImage("assets/images/sport.png");
   timeManagement = loadImage("assets/images/timeManagement.png");
-
+  // Step 2 targets
   continueEducation = loadImage("assets/images/ContinueEducation.png");
   friendship = loadImage("assets/images/friendship.png");
   camera = loadImage("assets/images/camera.png");
   bicycle = loadImage("assets/images/bicycle.png");
   work = loadImage("assets/images/work.png");
-
+  // Step 3 targets
   baby = loadImage("assets/images/baby.png");
   family = loadImage("assets/images/family.png");
   car = loadImage("assets/images/car.png");
@@ -190,10 +203,10 @@ function preload() {
   marriage = loadImage("assets/images/marriage.png");
   pet = loadImage("assets/images/pet.png");
   tourism = loadImage("assets/images/tourism.png");
-
+  // Time
   plug = loadImage("assets/images/plug.png");
   outlet= loadImage("assets/images/outlet.png");
-
+  // Sounds
   soundFormats('mp3', 'ogg');
   backgroundSound = loadSound('assets/sounds/backgroundSound.mp3');
   backgroundSound2 = loadSound('assets/sounds/backgroundSound2.mp3');
@@ -201,6 +214,7 @@ function preload() {
   victorySound = loadSound('assets/sounds/victorySound.mp3');
   stepsVictory = loadSound('assets/sounds/Victory.wav');
   targetSound = loadSound('assets/sounds/hitTarget.wav');
+  barrierSound = loadSound('assets/sounds/hitBarrier.wav');
 }
 
 // setup()
@@ -383,7 +397,8 @@ function setUpGame() {
       x: i * 150,
       behaviour: 1,
       image: barrier1,
-      image2: barrierTouched
+      image2: barrierTouched,
+      sound: barrierSound
     };
 
     // Add barriers to the array
@@ -439,7 +454,8 @@ function setUpGame() {
       behaviour: floor(random(1, 3)),
       image: barrier1,
       image2: barrierTouched,
-      secondBarrier: barrier2
+      secondBarrier: barrier2,
+      sound: barrierSound
     };
 
     let thirdStepImgTurn = [1, 2, 3, 1, 2, 3, 1, 2, 2, 1];
@@ -994,6 +1010,8 @@ function playAgain() {
       firstStep = true;
       stepIsOver = false;
       firstFailure = true;
+      backgroundSound.setVolume(0.3);
+      backgroundSound.loop();
     }
     // If player lost second layer, reset the following values
     // so that he can play the same step again
@@ -1001,11 +1019,15 @@ function playAgain() {
       secondStep = true;
       stepIsOver = false;
       secondFailure = true;
+      backgroundSound2.setVolume(0.3);
+      backgroundSound2.loop();
     }
     else if (!thirdFailure) {
       thirdStep = true;
       stepIsOver = false;
       thirdFailure = true;
+      backgroundSound3.setVolume(0.3);
+      backgroundSound3.loop();
     }
     setupPlayer();
     setUpGame();
