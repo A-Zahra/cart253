@@ -1,6 +1,6 @@
 // Game structure
 //
-// A class that represents game start and end screen
+// A class that represents all screens excluding the steps
 class GameStructure {
 
   // Constructor
@@ -8,26 +8,56 @@ class GameStructure {
   // Sets the initial values for the game's start and end screen properties
   // Either sets default values or uses the arguments provided.
   constructor(startTitleX, startTitleY, endTitleX, endTitleY, paddleImg, ballImg, orangeBarrier, redBarrier, brownBarrier, mouse, spaceKey, controlKey, plug, outlet) {
+
+    // Sets positions and sizes
     this.startTitleX = startTitleX;
     this.startTitleY = startTitleY;
     this.instructionX = 100;
     this.instructionY = 100;
-    this.storyX = width/ 2;
+    this.hintX = (width / 2) + 150;
+    this.hintY = (height / 2) + 215;
+    this.storyX = width / 2;
     this.storyY = height / 4;
-    this.storyOtherPartX = width/ 2;
+    this.storyOtherPartX = width / 2;
     this.storyOtherPartY = height / 4;
     this.endTitleX = endTitleX;
     this.endTitleY = endTitleY;
+    this.victoryTextSize = 10;
+    this.textSizeLimit = 70;
+    this.playerImgY = 80;
+    this.playerImgX = (width - 150);
+    this.plugX = (width / 2) - 300;
+    this.plugY = (height / 2) + 100;
+    this.plugSize = 80;
+    this.outletX = (width / 2) + 300;
+    this.outletY = (height / 2) + 100;
+    this.outletSize = 80;
+
+    // Assigns game different screen names
     this.gameName = "GAME OF LIFE!";
     this.gameOver = "Game Over!";
     this.victory = "HOORAY, YOU DID IT BUDDY!";
-    this.victoryTextSize = 10;
     this.gameStory = "GAME STORY";
+
+    // Elements properties values
     this.playButton = 0;
     this.restartButton = 0;
+
+    // Checks if it has to display winning screen or failure screen
+    this.winned = 0;
+    this.failed = 0;
+
+    // Elements colors
     this.fillColor = color(0, 0, 0);
-    this.instFillColor = color(0,	0, 0);
-    this.transitionFillColor = color(0,	0, 0);
+    this.instFillColor = color(0, 0, 0);
+    this.transitionFillColor = color(0, 0, 0);
+
+    // Records player score + health percentage
+    this.score = 0;
+    this.healthPercent = 100;
+    this.ballOpacity = 255;
+
+    // Import images
     this.paddleImg = paddleImg;
     this.ballImg = ballImg;
     this.redBarrier = redBarrier;
@@ -38,55 +68,48 @@ class GameStructure {
     this.spaceKey = spaceKey;
     this.plug = plug;
     this.outlet = outlet;
-    this.playerImgY = 130;
-    this.playerImgX = (width / 2) + 350;
-    this.winned = 0;
-    this.failed = 0;
-    this.plugX = (width / 2) - 300;
-    this.plugY = (height / 2) + 100;
-    this.plugSize = 80;
-    this.outletX = (width / 2) + 300;
-    this.outletY = (height / 2) + 100;
-    this.outletSize = 80;
-    this.score = 0;
-    this.healthPercent = 100;
-    this.ballOpacity = 255;
 
-    // will be replaced with the original instruction once game programming is finished.
+    // Instruction
     this.startInstuction = "1. Everytime to start the game click on the paddle. Paddle moves with mouse\n" +
-    "2. Always keep your mouse over the paddle\n3. Press SPACE to make higher jumps\n" +
-    "4. Don't keep SPACE pressed (I am sure you won't like the result!)\n" + "4. Press Ctrl to reset jump height\n" +
-    "5. If you Keep Ctrl pressed, ball sticks to the paddle (Might be needed!)\n" + "6. Use the experience you gain in first and second step\n" +
-    "Otherwise you won't be able to win the game!\n" + "7. Use your jump power wisely, otherwise it hurts you more than helping you!";
+      "2. Always keep your mouse over the paddle\n3. Press SPACE to make higher jumps\n" +
+      "4. Don't keep SPACE pressed (I am sure you won't like the result!)\n" + "4. Press Ctrl to reset jump height\n" +
+      "5. If you Keep Ctrl pressed, ball sticks to the paddle (Might be needed!)\n" + "6. Use the experience you gain in first and second step\n" +
+      "Otherwise you won't be able to win the game!\n" + "7. Use your jump power wisely, otherwise it hurts you more than helping you!\n" +
+      "8. From the second step, the goals are divided into two groups:\n" + "Less valuable goals like Buying a bicycle or a house and\n" +
+      "More valuable goals like graduating or having baby\n" + "9. The first group of goals worth for 5 points and the second group for 10\n" +
+      "10. In third step you have the family as well. Every time\nthat the ball overlaps family your health is retrieved by 20%";
 
-      // "2. Click to make the ball jump. Press SPACE key to jump higher and CTRL key to reset jump height";
+    // Hints
     this.hint = "1. Be careful of the barriers. not all them act the same!\n" +
-                 "2. In first step stay away from the play area top border to not stick to it!\n" +
-                 "3. First step has been design for you to get trained and know \nhow to play the game. Make best use of it!";
+      "2. In first step stay away from the play area top border to not stick to it!\n" +
+      "3. First step has been design for you to get trained and \nknow how to play the game. Make best use of it!";
 
+    // Game story first part
     this.storyPart1 = "From childhood to death, the most important thing that we are all time trying to achieve is their goals.\n" +
-                      "The extent to which those goals are important to us changes as we grow up. The motive force of us in life\n" +
-                      "to achieve our goals is the extent of our will. However, the proper guidance and use of this force is a\n" +
-                      "prerequisite to achieve our goals. Most often, the best place, to learn how to control this power is school.\n" +
-                      "We learn how to prioritize our goals and learn the extent of effort we make to achieve them should differ\n" +
-                      "based on their importance.  That is, too much effort for small goals will result in exhaustion and too little\n" +
-                      "effort leads to failure.\n" +
-                      "By taking the first step, our goals become more realistic to us and we get one step closer to them!";
-
+      "The extent to which those goals are important to us changes as we grow up. The motive force of us in life\n" +
+      "to achieve our goals is the extent of our will. However, the proper guidance and use of this force is a\n" +
+      "prerequisite to achieve our goals. Most often, the best place, to learn how to control this power is school.\n" +
+      "We learn how to prioritize our goals and learn the extent of effort we make to achieve them should differ\n" +
+      "based on their importance.  That is, too much effort for small goals will result in exhaustion and too little\n" +
+      "effort leads to failure.\n" +
+      "By taking the first step, our goals become more realistic to us and we get one step closer to them!\n\n" +
+      "How to win this step: Gain 7 goals out of first row, 6 out of second row and five out of last row.";
+    // Game story second part
     this.storyPart2 = "As we grow up, our goals and their importance grow and become more serious.\n" +
-                      "Naturally, goals that are more valuable to us When we achieve them, we feel more satisfied\n " +
-                      "and successful than goals that are more material to us. At the same time, the goals we achieve\n" +
-                      "at this stage of our lives can serve as the basis for larger goals. Like education\n" +
-                      "that leads us to work in our field of interest. Meanwhile, As goals grow more, the path to achieve\n" +
-                      "them become harder and more complex. We always have to be aware of barriers that are in our way.\n" +
-                      "They may exhaust us to the extent that we give up in the halfway!";
-
+      "Naturally, goals that are more valuable to us When we achieve them, we feel more satisfied\n " +
+      "and successful than goals that are more material to us. At the same time, the goals we achieve\n" +
+      "at this stage of our lives can serve as the basis for larger goals. Like education\n" +
+      "that leads us to work in our field of interest. Meanwhile, As goals grow more, the path to achieve\n" +
+      "them become harder and more complex. We always have to be aware of barriers that are in our way.\n" +
+      "They may exhaust us to the extent that we give up in the halfway!\n\n" +
+      "How to win this step: Gain fifty points to win.";
+    // Game story third part
     this.storyPart3 = "After achieving our basic goals, such as gaining knowledge or work, it's time to pursue\n" +
-                      "the great goals of life like any other person. But we should remember that there are always big obstacles\n" +
-                      "in the way of achieving great goals. Obstacles that can sometimes, completely change our view of our purpose.\n" +
-                      "Or can be big enough to deter us from achieving our goal. In the meantime, Perhaps the only thing that can\n" +
-                      "encourage us to keep trying to achieve our big dreams, is the support we can get from the family!";
-
+      "the great goals of life like any other person. But we should remember that there are always big obstacles\n" +
+      "in the way of achieving great goals. Obstacles that can sometimes, completely change our view of our purpose.\n" +
+      "Or can be big enough to deter us from achieving our goal. In the meantime, Perhaps the only thing that can\n" +
+      "encourage us to keep trying to achieve our big dreams, is the support we can get from the family!\n\n" +
+      "How to win this step: Gain 60 points to win.";
   }
 
   // Displays start screen
@@ -134,46 +157,49 @@ class GameStructure {
   displayInstruction() {
     push();
     let instructionTitle = "INSTRUCTION";
-    let hintTitle = "Hint";
+    let hintTitle = "HINT";
     fill(this.instFillColor);
     textAlign(LEFT);
     textSize(30);
     text(instructionTitle, this.instructionX, this.instructionY);
-    text(hintTitle, this.instructionX, this.instructionY * 4.5);
+    textSize(25);
+    text(hintTitle, this.hintX, this.hintY);
     textSize(17);
     textLeading(30);
     text(this.startInstuction, this.instructionX, this.instructionY + 50);
-    text(this.hint, this.instructionX, (this.instructionY * 5));
+    text(this.hint, this.hintX, this.hintY + 40);
     pop();
     push();
     fill(0);
     textAlign(LEFT);
-    textSize(20);
-    text("Paddle", this.playerImgX - 150, this.playerImgY);
-    text("Ball", this.playerImgX + 150, this.playerImgY);
+    textSize(17);
+    text("Paddle", this.playerImgX, this.playerImgY);
+    text("Ball", this.playerImgX - 170, this.playerImgY);
+    // Ball and paddle
     imageMode(CENTER);
-    image(this.paddleImg, this.playerImgX, this.playerImgY, 100, 100);
-    image(this.ballImg, this.playerImgX + 250, this.playerImgY, 70, 70);
-
-    text("Health Reduction Barrier", this.playerImgX - 350, this.playerImgY + 120);
-    text("Touched Barrier", this.playerImgX - 100, this.playerImgY + 120);
-    text("Barrier that changes view angle", this.playerImgX + 70, this.playerImgY + 120);
+    image(this.paddleImg, this.playerImgX + 25, this.playerImgY + 55, 70, 70);
+    image(this.ballImg, this.playerImgX - 155, this.playerImgY + 55, 50, 50);
+    // Barriers
+    text("Health Reduction Barrier", this.playerImgX - 480, this.playerImgY);
+    text("Touched Barrier", this.playerImgX - 480, this.playerImgY + 140);
+    text("Barrier that changes view angle", this.playerImgX - 480, this.playerImgY + 250);
     imageMode(CENTER);
-    image(this.orangeBarrier, this.playerImgX - 240, this.playerImgY + 180, 140, 70);
-    image(this.redBarrier, this.playerImgX - 28, this.playerImgY + 180, 140, 70);
-    image(this.brownBarrier, this.playerImgX + 210, this.playerImgY + 180, 140, 70);
-
-    text("Left click on paddle to start", this.playerImgX + 100, this.playerImgY + 310);
-    image(this.mouse, this.playerImgX + 220, (this.playerImgY + 440), 200, 200);
-
-    text("Press Ctrl to reset jump height", this.playerImgX - 350, this.playerImgY + 310);
-    image(this.controlKey, this.playerImgX - 220, (this.playerImgY + 370), 100, 100);
-    text("Press Space to jump higher", this.playerImgX - 350, this.playerImgY + 455);
-    image(this.spaceKey, this.playerImgX - 227, (this.playerImgY + 510), 250, 250);
+    image(this.orangeBarrier, this.playerImgX - 430, this.playerImgY + 50, 100, 40);
+    image(this.redBarrier, this.playerImgX - 430, this.playerImgY + 190, 100, 40);
+    image(this.brownBarrier, this.playerImgX - 430, this.playerImgY + 300, 100, 40);
+    // Mouse
+    text("Left click on paddle to start", this.playerImgX - 155, this.playerImgY + 140);
+    image(this.mouse, this.playerImgX - 50, (this.playerImgY + 250), 160, 160);
+    // Keyboard keys
+    text("Press Ctrl to reset jump height", this.playerImgX - 480, this.playerImgY + 360);
+    image(this.controlKey, this.playerImgX - 430, (this.playerImgY + 420), 100, 100);
+    text("Press Space to jump higher", this.playerImgX - 160, this.playerImgY + 360);
+    image(this.spaceKey, this.playerImgX - 60, (this.playerImgY + 420), 250, 250);
     pop();
     this.next();
   }
 
+  // Display game story
   displayStory() {
     push();
     let title = this.gameStory;
@@ -187,6 +213,7 @@ class GameStructure {
     pop();
     this.next();
   }
+
   // Draw next button
   next() {
     // next button properties
@@ -256,10 +283,9 @@ class GameStructure {
       textSize(20);
       textLeading(35);
       if (turn === 1) {
-          text(this.storyPart2, this.storyOtherPartX, this.storyOtherPartY + 100);
-      }
-      else if (turn === 2) {
-            text(this.storyPart3, this.storyOtherPartX, this.storyOtherPartY + 100);
+        text(this.storyPart2, this.storyOtherPartX, this.storyOtherPartY + 100);
+      } else if (turn === 2) {
+        text(this.storyPart3, this.storyOtherPartX, this.storyOtherPartY + 100);
       }
       pop();
       this.continue();
@@ -272,7 +298,7 @@ class GameStructure {
   }
 
   // Draw continue button
-  continue() {
+  continue () {
     // continue button properties
     this.continueButton = {
       x: 200,
@@ -295,9 +321,12 @@ class GameStructure {
     textSize(this.continueButton.textSize);
     textAlign(CENTER, CENTER);
     let message = 0;
+    // If he won
     if (this.winned) {
       message = "Continue";
-    } else if (!this.failed) {
+    }
+    // If he failed
+    else if (!this.failed) {
       message = "Play Again";
     }
     text(message, this.continueButton.x, this.continueButton.y);
@@ -305,11 +334,11 @@ class GameStructure {
   }
 
   // The screen which is displayed between the two screens of rotated and not rotated
-  // and warns the player about what awaits them.
+  // and warns the player about what awaits him.
   displayWarningScreen() {
     background(0);
     let warningMessage = "There is always something to prevent you from reaching to your goal or disapoint you!\n" +
-                          "it may affect your point of view but cannot stop you from trying!";
+      "it may affect your point of view but cannot stop you from trying!";
     push();
     fill(255);
     textSize(25);
@@ -326,7 +355,7 @@ class GameStructure {
     image(this.outlet, this.outletX, this.outletY, this.outletSize, this.outletSize);
     pop();
     // Add to x position
-    this.plugX += 3;
+    this.plugX += 2.5;
   }
 
   // To specify a certain amount of time for the player to read the message
@@ -350,11 +379,14 @@ class GameStructure {
     pop();
     this.restart();
   }
+
+  // Update size of victory screen message
   updateVictoryTextSize() {
-    if (this.victoryTextSize < 70) {
+    if (this.victoryTextSize < this.textSizeLimit) {
       this.victoryTextSize += 1.5;
     }
   }
+
   // Displays game over screen
   gameOverDisplay() {
     push();

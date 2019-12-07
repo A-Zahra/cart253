@@ -50,13 +50,4 @@ class BallStraight extends Ball {
       }
     }
   }
-
-  // Display ball
-  //   display() {
-  //     push();
-  //     noStroke();
-  //     fill(255, 0, 0, this.opacity);
-  //     ellipse(this.x, this.y, this.size * 2, this.size * 2);
-  //     pop();
-  //   }
 }

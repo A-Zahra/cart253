@@ -12,10 +12,9 @@ class BarrierStraight {
     this.y = barrier.y;
     this.w = 100;
     this.h = 40;
-    this.fillColor = color(255, 76, 39);
     this.id = 1;
-    this.behaviour = barrier.behaviour;
     this.vx = 2;
+    this.behaviour = barrier.behaviour;
     this.image = barrier.image;
     this.image2 = barrier.image2;
     this.imageReturned = barrier.image;
@@ -37,7 +36,6 @@ class BarrierStraight {
       // If so, set x position to -50 and id to 1 so that it would be shown and could be counted again.
       this.x = -50;
       this.id = 1;
-      this.fillColor = color(255, 76, 39);
       this.image = this.imageReturned;
       this.imageReturne2 = this.secondBarrier;
     }
@@ -47,7 +45,7 @@ class BarrierStraight {
   ballFirstBarrierCollision(ball, player) {
     let distance = dist(ball.x, ball.y, this.x, this.y);
     if (distance < ((ball.size + this.h) / 1.7) && this.id === 1) {
-      // If ball overlapped first type of barriers, decrease health by 20 percent
+      // If ball overlapped first type of barriers, decreases health by 20 percent + play the sound
       if (this.behaviour === 1) {
         player.ballOpacity -= 51;
         this.id = 2;
@@ -62,15 +60,15 @@ class BarrierStraight {
   // Check if ball collided first type of barriers.
   ballBarrierCollision(ball, positioning, player) {
     let distance;
+    // Check if the screen rotated or not.
+    // Check distance based on their position in rotated or not rotated screen
     if (positioning === 1) {
       distance = dist(ball.x, ball.y - 15, this.x, this.y);
-      console.log("came in");
     } else if (positioning === 2) {
       distance = dist(ball.x, ball.y, this.x, this.y + 110);
     }
-    let barrierSize = (this.h + this.w) * 2;
     if (distance < ((ball.size + this.h) / 1.7) && this.id === 1) {
-      // If ball overlapped first type of barriers, decrease health by 20 percent
+      // If ball overlapped first type of barriers, decrease health by 20 percent + play the sound
       if (this.behaviour === 1) {
         player.ballOpacity -= 51;
         this.id = 2;
@@ -90,34 +88,36 @@ class BarrierStraight {
     } else if (positioning === 2) {
       d = dist(this.x, this.y + 110, ball.x, ball.y);
     }
-    let barrierSize = (this.h + this.w) * 2;
     if (d < ((ball.size + this.h) / 1.2) && this.id === 1 && this.behaviour === 2) {
-  //    this.image = this.image2;
       return true;
     } else {
       return false;
     }
   }
 
+  // Display barriers of second step
   displaySecond() {
     push();
     imageMode(CENTER);
-      image(this.image, this.x, this.y, this.w, this.h);
+    image(this.image, this.x, this.y, this.w, this.h);
     pop();
   }
 
-  // Display barrier
+  // Display barriers of third step
   display(positioning) {
     push();
     imageMode(CENTER);
-    // Differs barrier position based on game step
+    // Differs barrier position based on screen rotation condition
+    // Before rotation
     if (positioning === 1) {
       if (this.behaviour === 1) {
         image(this.image, this.x, this.y, this.w, this.h);
       } else if (this.behaviour === 2) {
         image(this.secondBarrier, this.x, this.y, this.w, this.h);
       }
-    } else if (positioning === 2) {
+    }
+    // After rotation
+    else if (positioning === 2) {
       if (this.behaviour === 1) {
         image(this.image, this.x, this.y + 130, this.w, this.h);
       } else if (this.behaviour === 2) {

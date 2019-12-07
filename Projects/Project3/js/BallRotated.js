@@ -1,4 +1,4 @@
-// Ball Straight
+// Ball Rotated
 //
 // A class that represents ball in it's rotated mode.
 class BallRotated extends Ball {
@@ -45,13 +45,4 @@ class BallRotated extends Ball {
       this.ySpeedRotated = this.maxJumpHeightRotated;
     }
   }
-
-  //   // Display ball
-  //   display() {
-  //     push();
-  //     noStroke();
-  //     fill(255, 0, 0, this.opacity);
-  //     ellipse(this.x, this.y, this.size * 2, this.size * 2);
-  //     pop();
-  //   }
 }

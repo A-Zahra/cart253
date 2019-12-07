@@ -20,14 +20,16 @@ class Ball {
     this.maxJumpHeightRotated = 25;
     this.numTargetsAchieved = 0;
     this.healthPercent = 100;
-    this.fillColor = color(255, 0, 0);
     this.image = stone;
+    this.PositionInFirstStep = 1;
+    this.PositionInNextSteps = 2;
   }
 
   // Handles ball input
   handleInput(step, ballHeight) {
     // jump when space is pressed
     if (keyIsDown(32) && this.maxJumpHeight > -62 || keyIsDown(32) && this.maxJumpHeight > -62) {
+      // Differs ball jump height based on the steps
       if (ballHeight === 1) {
         this.maxJumpHeight += -1.8;
       } else if (ballHeight === 2) {
@@ -61,21 +63,21 @@ class Ball {
   targetCollision(target, player) {
     let d = dist(target.x, target.y, this.x, this.y);
     if (d < (target.size + this.size) / 2 && target.id === 1) {
-      // If target size is between 40 and 50 add 5 points to score
+      // If target image id was equal 1 add five points to the player score
       if (target.imageId === 1) {
         player.score += 5;
         target.id = 0;
         target.sound.setVolume(0.05);
         target.sound.play();
       }
-      // If target size is more than or equal to 50 and less than 60 add 10 points to score
+      // If target image id was equal 2 add ten points to the player score
       else if (target.imageId === 2) {
         player.score += 10;
         target.id = 0;
         target.sound.setVolume(0.05);
         target.sound.play();
       }
-      // If target size is more than or equal to 60 increase health by 20%
+      // If target image id was equal 3 add 20% to player health
       else if (target.imageId === 3) {
         target.sound.setVolume(0.05);
         target.sound.play();
@@ -114,13 +116,12 @@ class Ball {
   // Display ball
   display(positioning) {
     push();
-    noStroke();
-    //fill(255, 0, 0, player.ballOpacity);
     imageMode(CENTER);
-    if (positioning === 1) {
-        image(this.image, this.x, this.y + 10, this.size * 2, this.size * 2);
-    } else if (positioning === 2) {
-        image(this.image, this.x, this.y + 30, this.size * 2, this.size * 2);
+    // Check the step and then display the ball
+    if (positioning === this.PositionInFirstStep) {
+      image(this.image, this.x, this.y + 10, this.size * 2, this.size * 2);
+    } else if (positioning === this.PositionInNextSteps) {
+      image(this.image, this.x, this.y + 30, this.size * 2, this.size * 2);
     }
     pop();
   }

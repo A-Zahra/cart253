@@ -2,6 +2,7 @@
 //
 // A class that represents second and third step targets
 class SecondStepTarget {
+  
   // Constructor
   //
   // Sets the initial values for the target's properties
@@ -9,7 +10,6 @@ class SecondStepTarget {
   constructor(target) {
     this.x = target.x;
     this.y = target.y;
-    this.fillColor = target.fillColor;
     this.size = target.radius;
     this.vx = 2;
     this.id = 1;
@@ -39,7 +39,7 @@ class SecondStepTarget {
   // Display target
   display() {
     push();
-//    fill(this.fillColor);
+    // Show targets images based on their Id
     imageMode(CENTER);
     if (this.imageId === 1) {
       image(this.lessValuable, this.x, this.y, this.size, this.size);

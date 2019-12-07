@@ -26,7 +26,7 @@ class FirstStepTarget {
   //
   // Check whether ball overlapped the target of first row, second row or third row.
   // If so, hide this target and assign the same id number to targetIdTrue that the target has
-  // And then hide it
+  // Hide it and play the sound
   goalAchieved(ball) {
     let d = dist(this.x, this.y, ball.x, ball.y);
     if (d < this.size / 2) {
