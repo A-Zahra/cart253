@@ -10,12 +10,61 @@
 // Reference
 //
 // --** Images **--
+// City background:
+// https://www.vectorstock.com/royalty-free-vector/city-game-background-2d-application-vector-10371679
+// Background 1:
+// https://www.everypixel.com/image-8345968771576165834
+// Background 2:
+// https://www.vectorstock.com/royalty-free-vector/cartoon-student-dormitory-room-interior-vector-20398761
+// Background 3:
+// http://desk.njfoa-raritan.org/flat-design-desk-8026
 
+// Slingshot:
+// https://www.vectorstock.com/royalty-free-vector/simple-slingshot-vector-8615170
+// Barriers:
+// https://opengameart.org/content/2d-platform-ground-stone-tiles
+// Work:
+// https://www.123rf.com/photo_47522656_stock-vector-modern-flat-icons-elements-business-office-equipment-office-work-marketing-colored-vector-illustrati.html
+// Bicycle:
+// https://www.freepik.com/free-vector/collection-colorful-bikes-flat-design_1270178.htm
+// Career advancement:
+// https://www.popicon.com/products/career-advancement-icon
+// Tourism, Camera:
+// https://www.vectorstock.com/royalty-free-vector/travel-icon-flat-vector-4305514
+// Family, Baby, Marriage, Pet:
+// https://icon-library.net/icon/families-icon-21.html
+// Home:
+// https://www.vectorstock.com/royalty-free-vector/home-icon-placed-in-blue-circle-vector-23387008
+// Keyboard keys:
+// https://www.freepik.com/premium-vector/main-keyboard-keys-vector_3790038.htm
+// Mouse:
+// https://www.svgrepo.com/svg/211759/technological-computer-mouse
+// Plug and outlet:
+// Not found
+// Graduation, sport, geography:
+// https://www.freepik.com/free-vector/collection-irregular-drawn-school-icons_725976.htm
+// Art, Computation, time-Management, experiment:
+// https://www.freepik.es/vector-gratis/coleccion-iconos-colegio_1024819.htm
+// friendShip:
+// https://www.freepik.com/free-vector/friendship-icons_771096.htm
+// Mathematics, MapReading, Calculation, Chemistry, Science, Achievement:
+// https://dribbble.com/shots/6354172-School-Vector-Freebie-Icon-Set
+// Car:
+// https://www.123rf.com/photo_59285177_stock-vector-car-icon-with-long-shadow.html
+// ContinueEducation:
+// https://www.123rf.com/photo_31479984_stock-vector-abstract-vector-collection-of-colorful-flat-education-and-knowledge-icons-design-elements-for-mobile.html
 
 // --** Audios **--
-//
+// Backgounds:
+// https://www.melodyloops.com/tracks/happiness-and-victory/
+// Victories:
+// https://freesound.org/people/xtrgamr/sounds/277441/
+// http://www.orangefreesounds.com/game-show-winning/
+// Barriers and targets:
+// https://www.noiseforfun.com/
 /****************************************************************************/
-let countTargets;   // The variable that decides which row turn is to be displayed in first step
+
+let countTargets; // The variable that decides which row turn is to be displayed in first step
 // All three steps background images + mouse, ctrl and space key images
 let startBackground;
 let firstStepBackground;
@@ -160,7 +209,7 @@ function preload() {
   firstStepBackground = loadImage("assets/images/classroom.jpg");
   secondStepBackground = loadImage("assets/images/secondStepBackground2.png");
   thirdStepBackground = loadImage("assets/images/office.jpg");
-  thirdStepBackgroundRotated =loadImage("assets/images/officeRotated.jpg");
+  thirdStepBackgroundRotated = loadImage("assets/images/officeRotated.jpg");
   mouse = loadImage("assets/images/mouse.png");
   controlKey = loadImage("assets/images/ctrlKey.png");
   spaceKey = loadImage("assets/images/spaceKey.png");
@@ -205,7 +254,7 @@ function preload() {
   tourism = loadImage("assets/images/tourism.png");
   // Time
   plug = loadImage("assets/images/plug.png");
-  outlet= loadImage("assets/images/outlet.png");
+  outlet = loadImage("assets/images/outlet.png");
   // Sounds
   soundFormats('mp3', 'ogg');
   backgroundSound = loadSound('assets/sounds/backgroundSound.mp3');
@@ -227,8 +276,9 @@ function setup() {
   setUpVictory();
 }
 
-// Sets up all initial values in an independent function
+// Sets up all initial values in independent functions
 // so that it can be used in functions like restart function.
+
 // setupPlayer()
 //
 // Sets up paddle and ball initial values
@@ -243,17 +293,22 @@ function setupPlayer() {
   // Makes paddle object and assign default values to
   paddleRotated = new PaddleRotated(width / 2, 130, slingShotRotated);
 }
- function setUpVictory() {
-   for (let s = 0; s < 500; s++) {
-     let bubbleProperties = {
-       y: random(10, height - 10),
-       x: random(10, width - 10),
-       radius: 8,
-       proximity: 2
-     }
-     bubbles.push(bubbleProperties);
-   }
- }
+
+// setUpVictory
+//
+// Set up victory screen visual elements
+function setUpVictory() {
+  for (let s = 0; s < 500; s++) {
+    let bubbleProperties = {
+      y: random(10, height - 10),
+      x: random(10, width - 10),
+      radius: 8,
+      proximity: 2
+    }
+    bubbles.push(bubbleProperties);
+  }
+}
+
 // setUpGame()
 //
 // Sets up all initial values other than paddle and ball
@@ -270,6 +325,24 @@ function setUpGame() {
   // Decides whether it's rotated screen's turn or not-rotated screen's turn to be displayed
   turnTracker = true;
 
+  // First step targets images arrays
+  firstStepImagesRow1 = [geography, sport, timeManagement, education, mathemathics, calculation];
+  firstStepImagesRow2 = [mapReading, art, chemistry, computation, experiments];
+  firstStepImagesRow3 = [achievement, graduation, science, ];
+  // Second step targets images arrays
+  let secondStepLessValuabeTargetImg = [camera, bicycle];
+  let secondStepMoreValuabeTargetImg = [work, continueEducation, friendship];
+  let secondStepImgTurn = [1, 2]; // To show randomly less or more valuable targets
+  // Third step targets images arrays
+  let thirdStepLessValuableTargetImg = [home, car, tourism, pet];
+  let thirdStepMoreValuableTargetImg = [marriage, baby, careerAdvancement];
+
+  // Makes an object of gameStructure which includes all screens other than the three main steps of the game
+  // and assign default values to
+  gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2, slingShot, stone, barrier1, barrierTouched, barrier2, mouse, spaceKey, controlKey, plug, outlet);
+
+  // Set up initial values of first step
+  //
   // First step target properties
   countTargets = 0;
   targetSum = [0, 0, 0];
@@ -279,35 +352,20 @@ function setUpGame() {
   isFalse = [2, 4, 6];
   isOver = [4, 3, 2];
   isSumTrue = [3, 2, 1];
-  firstStepImagesRow1 = [geography, sport, timeManagement, education, mathemathics, calculation];
-  firstStepImagesRow2 = [mapReading, art, chemistry, computation, experiments];
-  firstStepImagesRow3 = [achievement, graduation, science,];
-
-  let secondStepLessValuabeTargetImg = [camera, bicycle];
-  let secondStepMoreValuabeTargetImg = [work, continueEducation, friendship];
-
-  let thirdStepLessValuableTargetImg = [home, car, tourism, pet];
-  let thirdStepMoreValuableTargetImg = [marriage, baby, careerAdvancement];
-
-
-  let secondStepImgTurn = [1, 2];
-  // Second step target property
-  // Using this array, everytime targets are placed under a random number of barriers
-  targetPosition = [false, true, false, true, false, true];
-
-
-  // Makes an object of gameStructure and assign default values to
-  gameStructure = new GameStructure(width / 2, height / 2.5, width / 2, height / 2, slingShot, stone, barrier1, barrierTouched, barrier2, mouse, spaceKey, controlKey, plug, outlet);
 
   // Targets drawing code was borrowed from:
   // <Daniel Shiffman> (<15/March/2016>) <Random Circles with No Overlap> (https://www.youtube.com/watch?v=XATr_jdh-44).
   // However, most parts of it got modified.
+
+  // A variable that checks whether the number of generated targets reached to a certain number.
+  // If so, it breaks the loop
   let protection = 0;
   while (targets.length < maxTarget) {
-    // Declare and assign targets properties
-    let randomImages1 = floor(random(0,6));
+    // Use the available images of targets randomly
+    let randomImages1 = floor(random(0, 6));
     let randomImages2 = floor(random(0, 5));
     let randomImages3 = floor(random(0, 3));
+    // Declare and assign targets properties of each row
     let target = [{
       x: random(100, width - 100),
       y: random(370, (height / 2) + 50),
@@ -365,12 +423,16 @@ function setUpGame() {
     targets[i] = new FirstStepTarget(targetProperties[i]);
   }
 
+  // Set up second step initial values
+  //
   // Makes an array of barriers and targets objects and assign position, behaviour id, color and random sizes to objects.
   // Because the number of y positions is less than the number of barriers, an external value should be used.
   // Thus, after every five time of code execution, it would reuse the same positions for the next five barriers.
   let numBarriers = 0;
   // If 4 out of 10 targets got hidden, show the rest
   let numHiddenTargets = 0;
+  // Using this array, everytime second step targets are placed under a random number of barriers
+  targetPosition = [false, true, false, true, false, true];
 
   // Puts targets under random barriers
   // Number of targets should be less than 10
@@ -407,11 +469,11 @@ function setUpGame() {
     // Use targetPosition to place targets in random positions.
     // If target position was false, do not assign it to the array
     if (targetPosition[numBarriers] === true) {
-      // Assign number 1 or 2 randomly in order to have random images
+      // Assign numbers randomly in order to have random images
       let r = floor(random(0, 2));
       let randomImg1 = floor(random(0, 2));
       let randomImg2 = floor(random(0, 3));
-      // Assign targets properties to the relevent object
+      // Assign targets properties to the object
       // Targets x and y positions are in accordance with barriers y positions
       let secondTarget = {
         x: (i * 150.0),
@@ -430,6 +492,7 @@ function setUpGame() {
     else {
       secondStepTarget[i] = 0;
     }
+    // add one to the number of barriers that were assigned to the array
     numBarriers++;
     // Restart to use same y positions
     if (i === 5 || i === 10) {
@@ -437,13 +500,14 @@ function setUpGame() {
     }
   }
 
+  // Set up third step initial values
+  //
   // Assign third step barriers properties to barriers objects and the objects to the declared array
   // Assign third step targets properties to targets objects and the objects to the declared array
   // Specify limit of targets and barriers that should be generated
   let limit = 0;
-  // The variable that is multiplied with a certain amount to specify the distance between objects
+  // The variable that is multiplied with a certain amount to specify the distance between objects (That is used for x position)
   let t = 0;
-
   while (secondBarriers.length < MAX_SECONDBARRIERS) {
     let y = floor(random(10, (height - 150)));
     // Declare and assign barriers properties
@@ -457,7 +521,7 @@ function setUpGame() {
       secondBarrier: barrier2,
       sound: barrierSound
     };
-
+    // Choose random images of the available images to represent the third step targets
     let thirdStepImgTurn = [1, 2, 3, 1, 2, 3, 1, 2, 2, 1];
     let randomImgSelection1 = floor(random(0, 4));
     let randomImgSelection2 = floor(random(0, 3));
@@ -474,12 +538,13 @@ function setUpGame() {
       support: family,
       sound: targetSound
     }
+
     // To check whether the two objects overlapped.
     let inOneLine = false;
     // Check the distance between the new barrier and all the old ones. If the distance between
     // the two is less than sum of both radius, don't add the new one to the array.
     // If the new barrier y position was in the upper half of the previous barrier or
-    // if it was in the lower half of the previous one, don't add it to the array and break
+    // If it was in the lower half of the previous one, don't add it to the array and break
     for (let i = 0; i < secBarrierProp.length; i++) {
       let otherBarrier = secBarrierProp[i];
       let d = dist(secBar.x, secBar.y, otherBarrier.x, otherBarrier.y);
@@ -521,29 +586,26 @@ function draw() {
   if (startScreen) {
     background(startBackground);
     gameStructure.startScreenDisplay();
-  }
-  else if (instructionScreen) {
+  } else if (instructionScreen) {
     background(250, 242, 158);
     gameStructure.displayInstruction();
-  }
-  else if (storyScreen) {
+  } else if (storyScreen) {
     background(250, 242, 158);
     gameStructure.displayStory();
   }
   // Game first step
   else if (firstStep) {
     background(firstStepBackground);
-    // Resets paddle position and define play area
+    // Resets paddle position if isJumping is true and the paddle is inside the play area
     if (mouseY > (height / 2 + 200) && mouseY < (height) && ball.isJumping) {
-
       paddle.x = mouseX;
       paddle.y = mouseY;
     }
-    // Display targets
-    displayTargets();
-
     // Displays play area
     gameStructure.playArea();
+
+    // Display targets
+    displayTargets();
 
     // Handles ball input
     ball.handleInput(firstStep, ballHeight1);
@@ -573,7 +635,7 @@ function draw() {
   // Transition screen
   else if (stepIsOver) {
     background(250, 242, 158);
-    // Screens which are shown, when the player wins a step or loses.
+    // Screens which are shown when the player wins a step or loses.
     if (firstWin) {
       gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin, 1);
     } else if (!firstFailure) {
@@ -589,7 +651,7 @@ function draw() {
   // Game second step
   else if (secondStep) {
     background(secondStepBackground);
-    // Resets paddle position once ball jumping is true
+    // Resets paddle position once ball.isJumping is true
     if (ball.isJumping) {
       paddle.x = mouseX;
       paddle.y = mouseY;
@@ -634,16 +696,18 @@ function draw() {
     paddle.display();
     ball.display(positionBeforeRotation);
 
-    // If the player score reached to the specified amount, second step ends +
+    // If the player score reached a certain value, second step ends +
     // show transition screen to go to next step
     if (gameStructure.score > 10) {
       stepIsOver = true;
       secondWin = true;
       secondStep = false;
+      // Pause background sound play victory sound
       backgroundSound2.pause();
       stepsVictory.setVolume(0.1);
       stepsVictory.play();
     }
+
     // If ball goes off the bottom of screen or player lost his whole health, game is over.
     else if (ball.y > height || gameStructure.ballOpacity <= 0) {
       stepIsOver = true;
@@ -657,7 +721,6 @@ function draw() {
   else if (thirdStep) {
     if (notRotated) {
       background(thirdStepBackground);
-
       // Resets paddle position if ball.isJumping is true
       if (ball.isJumping) {
         paddle.x = mouseX;
@@ -676,6 +739,7 @@ function draw() {
           ball.isJumping = false;
           warning = true;
           turnTracker = true;
+          // If ball collided barrier pause the sound
           backgroundSound3.pause();
         }
         secondBarriers[i].updatePosition();
@@ -707,10 +771,11 @@ function draw() {
       paddle.display();
       ball.display(positionBeforeRotation);
 
-      // If player score reached to the specified amount, show victory screen
+      // If player score reached a certain value, show victory screen
       if (gameStructure.score > 20) {
         thirdStep = false;
         victoryScreen = true;
+        // Pause background sound and play victory sound
         backgroundSound3.pause();
         victorySound.setVolume(0.1);
         victorySound.play();
@@ -738,6 +803,7 @@ function draw() {
         gameStructure.outletX = width / 2 + 300;
         gameStructure.outletY = (height / 2) + 100;
         warning = false;
+        // Replay background sound
         backgroundSound3.setVolume(0.3);
         backgroundSound3.play();
         setupPlayer();
@@ -750,7 +816,7 @@ function draw() {
     } else if (rotated) {
       background(thirdStepBackgroundRotated);
 
-      // Resets paddle position if isJumping is true
+      // Resets paddle position if ballRotated.isJumping is true
       if (ballRotated.isJumping) {
         paddleRotated.x = mouseX;
         paddleRotated.y = mouseY;
@@ -767,6 +833,7 @@ function draw() {
           ballRotated.isJumping = false;
           warning = true;
           turnTracker = false;
+          // Pause background sound if ball collided barrier
           backgroundSound3.pause();
         }
         secondBarriers[i].updatePosition();
@@ -797,7 +864,7 @@ function draw() {
       paddleRotated.display();
       ballRotated.display(positionAfterRotation);
 
-      // If player score is more than the specified amount, shows victory screen
+      // If player score is more than a certain value, shows victory screen
       if (gameStructure.score > 20) {
         rotated = false;
         thirdStep = false;
@@ -868,7 +935,7 @@ function displayTargets() {
         // the isFalse array, so that it won't keep checking whether the ball overlapped the target and
         // therefore, won't play the sound
         for (let i = 0; i < targets.length; i++) {
-          if (targets[i].targetId === isTrue[countTargets]){
+          if (targets[i].targetId === isTrue[countTargets]) {
             targets[i].targetIdTrue = isFalse[countTargets];
           }
         }
@@ -890,6 +957,7 @@ function displayTargets() {
     firstStep = false;
     stepIsOver = true;
     firstWin = true;
+    // Play background sound
     backgroundSound.pause();
     stepsVictory.setVolume(0.1);
     stepsVictory.play();
@@ -902,34 +970,33 @@ function displayTargets() {
 function displayVictory() {
   let limitation = 0;
   let r = random(0, 1);
-  console.log("came in");
   for (let j = 0; j < bubbles.length; j++) {
     // To check whether the two circles overlapped.
     let overlapped = false;
     // Check the distance between the new circle and all the old ones. If the distance between
     // the two is less than sum of both radius, don't add the new circle to the array.
-      for (let i = 0; i < bubbles.length; i++) {
-        if (i !== j) {
-          let otherBubble = bubbles[i];
-          let d = dist(bubbles[j].x, bubbles[j].y, otherBubble.x, otherBubble.y);
-          if (d < (bubbles[j].radius + otherBubble.radius) / bubbles[j].proximity) {
-            overlapped = true;
-            break;
-          }
+    for (let i = 0; i < bubbles.length; i++) {
+      if (i !== j) {
+        let otherBubble = bubbles[i];
+        let d = dist(bubbles[j].x, bubbles[j].y, otherBubble.x, otherBubble.y);
+        if (d < (bubbles[j].radius + otherBubble.radius) / bubbles[j].proximity) {
+          overlapped = true;
+          break;
         }
       }
-      // If is not overlapping add to the array
-      if (!overlapped) {
-
-          push();
-          noStroke();
-          fill(random(0, 255), random(0, 255), random(0, 255), random(0, 255));
-          ellipse(CENTER, CENTER);
-          ellipse(bubbles[j].x, bubbles[j].y, bubbles[j].radius, bubbles[j].radius);
-          pop();
-      }
+    }
+    // If is not overlapping display bubble
+    if (!overlapped) {
+      push();
+      noStroke();
+      fill(random(0, 255), random(0, 255), random(0, 255), random(0, 255));
+      ellipse(CENTER, CENTER);
+      ellipse(bubbles[j].x, bubbles[j].y, bubbles[j].radius, bubbles[j].radius);
+      pop();
+    }
   }
 }
+
 // play()
 //
 // play the game
@@ -956,15 +1023,14 @@ function next() {
     if (instructionScreen) {
       instructionScreen = false;
       storyScreen = true;
-    }
-    else if (storyScreen) {
+    } else if (storyScreen) {
       storyScreen = false;
       firstStep = true;
       backgroundSound.setVolume(0.3);
       backgroundSound.loop();
     }
-      setupPlayer();
-      setUpGame();
+    setupPlayer();
+    setUpGame();
   }
 }
 
@@ -1004,7 +1070,7 @@ function playAgain() {
   // If the distance between mouse position and
   // the start button is less than the button size reset the following values.
   if (dist(mouseX, mouseY, gameStructure.continueButton.x, gameStructure.continueButton.y) < gameStructure.continueButton.w) {
-    // If player lost first layer, reset the following values
+    // If player lost first step, reset the following values
     // so that he can play the same step again
     if (!firstFailure) {
       firstStep = true;
@@ -1013,7 +1079,7 @@ function playAgain() {
       backgroundSound.setVolume(0.3);
       backgroundSound.loop();
     }
-    // If player lost second layer, reset the following values
+    // If player lost second step, reset the following values
     // so that he can play the same step again
     else if (!secondFailure) {
       secondStep = true;
@@ -1021,8 +1087,7 @@ function playAgain() {
       secondFailure = true;
       backgroundSound2.setVolume(0.3);
       backgroundSound2.loop();
-    }
-    else if (!thirdFailure) {
+    } else if (!thirdFailure) {
       thirdStep = true;
       stepIsOver = false;
       thirdFailure = true;
