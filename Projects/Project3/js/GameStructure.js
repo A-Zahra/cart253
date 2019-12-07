@@ -12,9 +12,9 @@ class GameStructure {
     // Sets positions and sizes
     this.startTitleX = startTitleX;
     this.startTitleY = startTitleY;
-    this.instructionX = 100;
+    this.instructionX = 90;
     this.instructionY = 100;
-    this.hintX = (width / 2) + 150;
+    this.hintX = (width / 2) + 130;
     this.hintY = (height / 2) + 215;
     this.storyX = width / 2;
     this.storyY = height / 4;
@@ -25,7 +25,7 @@ class GameStructure {
     this.victoryTextSize = 10;
     this.textSizeLimit = 70;
     this.playerImgY = 80;
-    this.playerImgX = (width - 150);
+    this.playerImgX = (width - 170);
     this.plugX = (width / 2) - 300;
     this.plugY = (height / 2) + 100;
     this.plugSize = 80;
@@ -80,8 +80,8 @@ class GameStructure {
       "10. In third step you have the family as well. Every time\nthat the ball overlaps family your health is retrieved by 20%";
 
     // Hints
-    this.hint = "1. Be careful of the barriers. not all them act the same!\n" +
-      "2. In first step stay away from the play area top border to not stick to it!\n" +
+    this.hint = "1. Be careful of barriers. not all them act the same!\n" +
+      "2. In 1st and 2nd step stay away from the play-area top border to not stick to it!\n" +
       "3. First step has been design for you to get trained and \nknow how to play the game. Make best use of it!";
 
     // Game story first part
@@ -89,7 +89,7 @@ class GameStructure {
       "The extent to which those goals are important to us changes as we grow up. The motive force of us in life\n" +
       "to achieve our goals is the extent of our will. However, the proper guidance and use of this force is a\n" +
       "prerequisite to achieve our goals. Most often, the best place, to learn how to control this power is school.\n" +
-      "We learn how to prioritize our goals and learn the extent of effort we make to achieve them should differ\n" +
+      "We learn how to prioritize our purposes and learn the extent of effort we make to achieve them should differ\n" +
       "based on their importance. That is, too much effort for small goals will result in exhaustion and too little\n" +
       "effort leads to failure.\n" +
       "By taking the first step, our goals become more realistic to us and we get one step closer to them!\n\n" +
@@ -98,7 +98,7 @@ class GameStructure {
     this.storyPart2 = "As we grow up, our goals and their importance grow and become more serious.\n" +
       "Naturally, goals that are more valuable to us When we achieve them, we feel more satisfied\n " +
       "and successful than goals that are more material to us. At the same time, the goals we achieve\n" +
-      "at this stage of our lives can serve as the basis for larger goals. Like education\n" +
+      "at this stage of our lives can serve as the basis for the larger ones. Like education\n" +
       "that leads us to work in our field of interest. Meanwhile, As goals grow more, the path to achieve\n" +
       "them become harder and more complex. We always have to be aware of barriers that are in our way.\n" +
       "They may exhaust us to the extent that we give up in the halfway!\n\n" +
@@ -107,7 +107,7 @@ class GameStructure {
     this.storyPart3 = "After achieving our basic goals, such as gaining knowledge or work, it's time to pursue\n" +
       "the great goals of life like any other person. But we should remember that there are always big obstacles\n" +
       "in the way of achieving great goals. Obstacles that can sometimes, completely change our view of our purpose.\n" +
-      "Or can be big enough to deter us from achieving our goal. In the meantime, Perhaps the only thing that can\n" +
+      "Or can be big enough to deter us from achieving them. In the meantime, Perhaps one of the thing that can\n" +
       "encourage us to keep trying to achieve our big dreams, is the support we can get from the family!\n\n" +
       "How to win this step: Gain more than 60 points to win.";
   }
@@ -244,7 +244,7 @@ class GameStructure {
   // Defines a specific play area for the paddle.
   playArea() {
     push();
-    strokeWeight(10);
+    strokeWeight(7);
     stroke(123, 47, 186, 255);
     noFill();
     rectMode(CENTER);

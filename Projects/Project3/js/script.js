@@ -665,11 +665,14 @@ function draw() {
   // Game second step
   else if (secondStep) {
     background(secondStepBackground);
-    // Resets paddle position once ball.isJumping is true
-    if (ball.isJumping) {
+    // Resets paddle position if isJumping is true and the paddle is inside the play area
+    if (mouseY > (height / 2 + 200) && mouseY < (height) && ball.isJumping) {
       paddle.x = mouseX;
       paddle.y = mouseY;
     }
+
+    // Displays play area
+    gameStructure.playArea();
 
     // Display barriers
     // Update barriers position. Make them loop
