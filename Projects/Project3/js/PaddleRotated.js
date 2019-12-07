@@ -12,7 +12,7 @@ class PaddleRotated extends Paddle {
     super(x, y, bow);
   }
 
-  // Methode to check if player collided with paddle.
+  // Check if player collided with paddle.
   collidesWithBall(ball) {
     if (ball.x > this.x && ball.x < this.x + this.paddleW &&
       ball.y - (ball.size / 2) < this.y && ball.y + (ball.size / 2) > this.y - this.paddleH) {

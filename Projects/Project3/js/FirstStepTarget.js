@@ -48,6 +48,7 @@ class FirstStepTarget {
 
   // Display target
   display() {
+    // Display if it was not already achieved
     if (this.targetIdTrue === 0) {
       push();
       noStroke();

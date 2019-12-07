@@ -139,14 +139,14 @@ let MAX_SECONDBARRIERS = 10; // Maximum number of barriers
 
 // Second step targets array of objects and properties declaration
 let secondStepTarget = [];
-let secondStepScoreLimit = 10;
+let secondStepScoreLimit = 50;
 // An array that is assigned random false and true values to position targets under random barriers
 let targetPosition = [];
 
 // Third step targets array of objects and properties declaration
 let thirdStepTarget = [];
 let thirdTargetProp = [];
-let thirdStepScoreLimit = 20;
+let thirdStepScoreLimit = 60;
 
 let numBubbles = 500;
 let connectingScreenFillColor = "#FAF29E";
@@ -362,8 +362,8 @@ function setUpGame() {
   hideRow = [false, false, false];
   isTrue = [1, 3, 5];
   isFalse = [2, 4, 6];
-  isOver = [4, 3, 2];
-  isSumTrue = [3, 2, 1];
+  isOver = [8, 7, 6];
+  isSumTrue = [7, 6, 5];
   numRows = 3;
   // Targets drawing code was borrowed from:
   // <Daniel Shiffman> (<15/March/2016>) <Random Circles with No Overlap> (https://www.youtube.com/watch?v=XATr_jdh-44).
@@ -475,7 +475,7 @@ function setUpGame() {
     };
 
     // Add barriers to the array
-    barriers[i] = new BarrierStraight(barrierProperties);
+    barriers[i] = new Barrier(barrierProperties);
 
     // Use targetPosition to place targets in random positions.
     // If target position was false, do not assign it to the array
@@ -584,7 +584,7 @@ function setUpGame() {
   }
   // Makes new target and barrier objects and assign their properties to
   for (let i = 0; i < secBarrierProp.length; i++) {
-    secondBarriers[i] = new BarrierStraight(secBarrierProp[i]);
+    secondBarriers[i] = new Barrier(secBarrierProp[i]);
     thirdStepTarget[i] = new SecondStepTarget(thirdTargetProp[i]);
   }
 }

@@ -76,7 +76,7 @@ class GameStructure {
       "5. If you Keep Ctrl pressed, ball sticks to the paddle (Might be needed!)\n" + "6. Use the experience you gain in first and second step\n" +
       "Otherwise you won't be able to win the game!\n" + "7. Use your jump power wisely, otherwise it hurts you more than helping you!\n" +
       "8. From the second step, the goals are divided into two groups:\n" + "Less valuable goals like bicycle or a house and\n" +
-      "More valuable goals like graduation or having  a baby\n" + "9. The first group of goals worth for 5 points and the second group for 10\n" +
+      "More valuable goals like graduation or having a baby\n" + "9. The first group of goals worth for 5 points and the second group for 10\n" +
       "10. In third step you have the family as well. Every time\nthat the ball overlaps family your health is retrieved by 20%";
 
     // Hints
@@ -85,12 +85,12 @@ class GameStructure {
       "3. First step has been design for you to get trained and \nknow how to play the game. Make best use of it!";
 
     // Game story first part
-    this.storyPart1 = "From childhood to death, the most important thing that we are all time trying to achieve is their goals.\n" +
+    this.storyPart1 = "From childhood to death, the most important thing that we are all time trying to achieve is our goals.\n" +
       "The extent to which those goals are important to us changes as we grow up. The motive force of us in life\n" +
       "to achieve our goals is the extent of our will. However, the proper guidance and use of this force is a\n" +
       "prerequisite to achieve our goals. Most often, the best place, to learn how to control this power is school.\n" +
       "We learn how to prioritize our goals and learn the extent of effort we make to achieve them should differ\n" +
-      "based on their importance.  That is, too much effort for small goals will result in exhaustion and too little\n" +
+      "based on their importance. That is, too much effort for small goals will result in exhaustion and too little\n" +
       "effort leads to failure.\n" +
       "By taking the first step, our goals become more realistic to us and we get one step closer to them!\n\n" +
       "How to win this step: Gain 7 goals out of first row, 6 out of second row and five out of last row.";
@@ -102,14 +102,14 @@ class GameStructure {
       "that leads us to work in our field of interest. Meanwhile, As goals grow more, the path to achieve\n" +
       "them become harder and more complex. We always have to be aware of barriers that are in our way.\n" +
       "They may exhaust us to the extent that we give up in the halfway!\n\n" +
-      "How to win this step: Gain fifty points to win.";
+      "How to win this step: Gain more than fifty points to win.";
     // Game story third part
     this.storyPart3 = "After achieving our basic goals, such as gaining knowledge or work, it's time to pursue\n" +
       "the great goals of life like any other person. But we should remember that there are always big obstacles\n" +
       "in the way of achieving great goals. Obstacles that can sometimes, completely change our view of our purpose.\n" +
       "Or can be big enough to deter us from achieving our goal. In the meantime, Perhaps the only thing that can\n" +
       "encourage us to keep trying to achieve our big dreams, is the support we can get from the family!\n\n" +
-      "How to win this step: Gain 60 points to win.";
+      "How to win this step: Gain more than 60 points to win.";
   }
 
   // Displays start screen
