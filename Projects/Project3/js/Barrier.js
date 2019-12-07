@@ -63,9 +63,9 @@ class Barrier {
     // Check if the screen rotated or not.
     // Check distance based on their position in rotated or not rotated screen
     if (positioning === 1) {
-      distance = dist(ball.x, ball.y - 15, this.x, this.y);
+      distance = dist(ball.x, ball.y, this.x, this.y - 15);
     } else if (positioning === 2) {
-      distance = dist(ball.x, ball.y, this.x, this.y + 110);
+      distance = dist(ball.x, ball.y, this.x, this.y + 100);
     }
     if (distance < ((ball.size + this.h) / 1.7) && this.id === 1) {
       // If ball overlapped first type of barriers, decrease health by 20 percent + play the sound
@@ -86,7 +86,7 @@ class Barrier {
     if (positioning === 1) {
       d = dist(this.x, this.y - 15, ball.x, ball.y);
     } else if (positioning === 2) {
-      d = dist(this.x, this.y + 110, ball.x, ball.y);
+      d = dist(this.x, this.y + 105, ball.x, ball.y);
     }
     if (d < ((ball.size + this.h) / 1.2) && this.id === 1 && this.behaviour === 2) {
       return true;

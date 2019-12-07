@@ -447,16 +447,19 @@ function setUpGame() {
   // Puts targets under random barriers
   // Number of targets should be less than 10
   // Choose randomly which targets to be shown(thus, most likely, by everytime code execution, they are placed under a new barrier)
-
-  for (let y = 0; y < MAX_BARRIERS - 1; y++) {
+  let u = 0;
+  while (u < MAX_BARRIERS - 1) {
     // Set targetPosition randomly to false and true values
     let r = random(1, 3);
     if (r < 2 && numHiddenTargets < 4) {
-      numHiddenTargets++;
+
       targetPosition.push(false);
-    } else if (r >= 2 ) {
+      u++;
+    } else if (r >= 2 || numHiddenTargets > 4 && numHiddenTargets <= 10) {
       targetPosition.push(true);
+      u++;
     }
+    numHiddenTargets++;
   }
   // Assign values to the variables, objects and arrays of second step elements
   for (let i = 0; i < MAX_BARRIERS; i++) {
