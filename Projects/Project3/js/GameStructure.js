@@ -36,7 +36,7 @@ class GameStructure {
     // Assigns game different screen names
     this.gameName = "GAME OF LIFE!";
     this.gameOver = "Game Over!";
-    this.victory = "HOORAY, YOU DID IT BUDDY!";
+    this.victory = "CONGRADULATION!!\nYOU WON THE GAME!!";
     this.gameStory = "GAME STORY";
 
     // Elements properties values
@@ -75,8 +75,8 @@ class GameStructure {
       "4. Don't keep SPACE pressed (I am sure you won't like the result!)\n" + "4. Press Ctrl to reset jump height\n" +
       "5. If you Keep Ctrl pressed, ball sticks to the paddle (Might be needed!)\n" + "6. Use the experience you gain in first and second step\n" +
       "Otherwise you won't be able to win the game!\n" + "7. Use your jump power wisely, otherwise it hurts you more than helping you!\n" +
-      "8. From the second step, the goals are divided into two groups:\n" + "Less valuable goals like Buying a bicycle or a house and\n" +
-      "More valuable goals like graduating or having baby\n" + "9. The first group of goals worth for 5 points and the second group for 10\n" +
+      "8. From the second step, the goals are divided into two groups:\n" + "Less valuable goals like bicycle or a house and\n" +
+      "More valuable goals like graduation or having  a baby\n" + "9. The first group of goals worth for 5 points and the second group for 10\n" +
       "10. In third step you have the family as well. Every time\nthat the ball overlaps family your health is retrieved by 20%";
 
     // Hints

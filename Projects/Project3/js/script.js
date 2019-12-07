@@ -2,9 +2,15 @@
 // by Zahra Ahmadi
 
 /****************************************************************************/
-
-/****************************************************************************/
-//
+// This game is a simulation of Pong game. It has three steps and the steps are complementary.
+// That is, the player should use the skills he gains in each step in the next ones.
+// At the beginning of the game there is an instruction screen which tells the player how to play
+// and what is expecting him.
+// At the beginning of the game there is an instruction screen which tells the player
+// how to play, and what is expecting him.
+// In victory screen of each step, a bit of the game story is narrated as well. There are also replay
+// screens which let the player to play again to finally move on to the next step.
+// There is also one victory screen at the end which is displayed, only once the player wins the last step.
 //
 /****************************************************************************/
 // Reference
@@ -122,7 +128,7 @@ let hideRow = [];
 let isOver = []; // Check if the number of achieved targets reached to the number of requested ones
 let targetSum = []; // A variable which keeps track of achieved targets
 let isSumTrue = []; // Check if the number of achieved targets reached to the number of requested ones (is used for inner if statement)
-
+let numRows;
 // Declare barriers arrays and their properties variables
 let barriers = [];
 let barrierY = [];
@@ -133,12 +139,18 @@ let MAX_SECONDBARRIERS = 10; // Maximum number of barriers
 
 // Second step targets array of objects and properties declaration
 let secondStepTarget = [];
+let secondStepScoreLimit = 10;
 // An array that is assigned random false and true values to position targets under random barriers
 let targetPosition = [];
 
 // Third step targets array of objects and properties declaration
 let thirdStepTarget = [];
 let thirdTargetProp = [];
+let thirdStepScoreLimit = 20;
+
+let numBubbles = 500;
+let connectingScreenFillColor = "#FAF29E";
+let timeOver = 50;
 
 // Balls and paddles images
 let slingShot;
@@ -298,7 +310,7 @@ function setupPlayer() {
 //
 // Set up victory screen visual elements
 function setUpVictory() {
-  for (let s = 0; s < 500; s++) {
+  for (let s = 0; s < numBubbles; s++) {
     let bubbleProperties = {
       y: random(10, height - 10),
       x: random(10, width - 10),
@@ -352,7 +364,7 @@ function setUpGame() {
   isFalse = [2, 4, 6];
   isOver = [4, 3, 2];
   isSumTrue = [3, 2, 1];
-
+  numRows = 3;
   // Targets drawing code was borrowed from:
   // <Daniel Shiffman> (<15/March/2016>) <Random Circles with No Overlap> (https://www.youtube.com/watch?v=XATr_jdh-44).
   // However, most parts of it got modified.
@@ -414,7 +426,7 @@ function setUpGame() {
       }
     }
     protection++;
-    if (protection > 200) {
+    if (protection > maxTarget) {
       break;
     }
   }
@@ -431,20 +443,19 @@ function setUpGame() {
   let numBarriers = 0;
   // If 4 out of 10 targets got hidden, show the rest
   let numHiddenTargets = 0;
-  // Using this array, everytime second step targets are placed under a random number of barriers
-  targetPosition = [false, true, false, true, false, true];
 
   // Puts targets under random barriers
   // Number of targets should be less than 10
   // Choose randomly which targets to be shown(thus, most likely, by everytime code execution, they are placed under a new barrier)
-  for (let k = 0; k < 10; k++) {
+
+  for (let y = 0; y < MAX_BARRIERS - 1; y++) {
     // Set targetPosition randomly to false and true values
-    let r = floor(random(1, 3));
-    if (r > 2 && numHiddenTargets < 4) {
+    let r = random(1, 3);
+    if (r < 2 && numHiddenTargets < 4) {
       numHiddenTargets++;
-      targetPosition[k] = false;
-    } else if (r < 2) {
-      targetPosition[k] = true;
+      targetPosition.push(false);
+    } else if (r >= 2 ) {
+      targetPosition.push(true);
     }
   }
   // Assign values to the variables, objects and arrays of second step elements
@@ -567,7 +578,7 @@ function setUpGame() {
       limit++;
     }
     // If the number of barriers reached to 10 stop the process of new objects assignment to the arrays
-    if (limit > 10) {
+    if (limit > MAX_SECONDBARRIERS) {
       break;
     }
   }
@@ -634,7 +645,7 @@ function draw() {
   }
   // Transition screen
   else if (stepIsOver) {
-    background(250, 242, 158);
+    background(connectingScreenFillColor);
     // Screens which are shown when the player wins a step or loses.
     if (firstWin) {
       gameStructure.TransitionScreenDisplay("Good job buddy!", firstWin, 1);
@@ -698,7 +709,7 @@ function draw() {
 
     // If the player score reached a certain value, second step ends +
     // show transition screen to go to next step
-    if (gameStructure.score > 10) {
+    if (gameStructure.score > secondStepScoreLimit) {
       stepIsOver = true;
       secondWin = true;
       secondStep = false;
@@ -772,7 +783,7 @@ function draw() {
       ball.display(positionBeforeRotation);
 
       // If player score reached a certain value, show victory screen
-      if (gameStructure.score > 20) {
+      if (gameStructure.score > thirdStepScoreLimit) {
         thirdStep = false;
         victoryScreen = true;
         // Pause background sound and play victory sound
@@ -797,7 +808,7 @@ function draw() {
       // Display warning message
       gameStructure.displayWarningScreen();
       // When time is over, reset time, reset paddle and ball properties, rotate screen
-      if (dist(gameStructure.plugX, gameStructure.plugY, gameStructure.outletX, gameStructure.outletY) < 50) {
+      if (dist(gameStructure.plugX, gameStructure.plugY, gameStructure.outletX, gameStructure.outletY) < timeOver) {
         gameStructure.plugX = (width / 2) - 300;
         gameStructure.plugY = (height / 2) + 100;
         gameStructure.outletX = width / 2 + 300;
@@ -865,7 +876,7 @@ function draw() {
       ballRotated.display(positionAfterRotation);
 
       // If player score is more than a certain value, shows victory screen
-      if (gameStructure.score > 20) {
+      if (gameStructure.score > thirdStepScoreLimit) {
         rotated = false;
         thirdStep = false;
         victoryScreen = true;
@@ -920,7 +931,7 @@ function displayTargets() {
         // Hide that row
         showRow[countTargets] = false;
         // In order not to exceed the number of existing rows
-        if (!((countTargets + 1) === 3)) {
+        if (!((countTargets + 1) === numRows)) {
           // Show next row
           showRow[countTargets + 1] = true;
         }
@@ -953,7 +964,7 @@ function displayTargets() {
     gameStructure.targetTracker(numTarget);
   }
   // If the player went through all three rows, goes to next step
-  if (countTargets === 3) {
+  if (countTargets === numRows) {
     firstStep = false;
     stepIsOver = true;
     firstWin = true;
