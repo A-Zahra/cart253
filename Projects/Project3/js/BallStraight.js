@@ -19,7 +19,7 @@ class BallStraight extends Ball {
       // it is not falling
       this.isFalling = false;
       // increase the y Speed of ball
-      this.ySpeed += 1.5;
+      this.ySpeed += 3;
       // update its y position
       this.y += this.ySpeed;
 
