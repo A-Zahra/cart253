@@ -15,7 +15,7 @@ class Ball {
     this.isFalling = false;
     this.ySpeed = 1;
     this.ySpeedRotated = -1;
-    this.maxJumpHeight = -35;
+    this.maxJumpHeight = -25;
     this.maxJumpHeight2 = -25;
     this.maxJumpHeightRotated = 25;
     this.numTargetsAchieved = 0;
