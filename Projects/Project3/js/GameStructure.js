@@ -80,8 +80,8 @@ class GameStructure {
       "10. In third step you have the family as well. Every time\nthat the ball overlaps family your health is retrieved by 20%";
 
     // Hints
-    this.hint = "1. Be careful of barriers. not all them act the same!\n" +
-      "2. In 1st and 2nd step stay away from the play-area top border to not stick to it!\n" +
+    this.hint = "1. Be careful of barriers. not all of them act the same!\n" +
+      "2. In 1st and 2nd steps stay away from the play-area top border to not stick to it!\n" +
       "3. First step has been design for you to get trained and \nknow how to play the game. Make best use of it!";
 
     // Game story first part
