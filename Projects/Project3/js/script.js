@@ -11,7 +11,10 @@
 // In victory screen of each step, a bit of the game story is narrated as well. There are also replay
 // screens which let the player to play again to finally move on to the next step.
 // There is also one victory screen at the end which is displayed, only once the player wins the last step.
-//
+// Note for Marker:
+// I have played my game on three different laptops and on each of them the speed of game elements like ball
+// or barriers and targets is different. Since I didn't know how to match the speed in all three models,
+// I preferred to keep my code as it is.
 /****************************************************************************/
 // Reference
 //
