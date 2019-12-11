@@ -15,6 +15,9 @@
 // I have played my game on three different laptops and on each of them the speed of game elements like ball
 // or barriers and targets is different. Since I didn't know how to match the speed in all three models,
 // I preferred to keep my code as it is.
+// Note for Marker:
+// Dr. Rosenberg provided me with the code of ball jumping behaviour. I am writing this here because otherwise I had to
+// repeat the same comment in more than two files.
 /****************************************************************************/
 // Reference
 //
