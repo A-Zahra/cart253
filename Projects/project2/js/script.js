@@ -95,13 +95,7 @@ let numBarriers = 4;
 let barrier;
 // Barriers sound
 let hitBarrier;
-
-// Declare variables to assign rotating images properties
-let rotatingImgX;
-let rotatingImgY;
-let numRotatingImg;
-let spinningImg;
-let angleSize;
+let barrierImg;
 
 // preload()
 //
@@ -124,6 +118,9 @@ function preload() {
   familyLeft = loadImage("assets/images/familyLeft.png");
   familyRight = loadImage("assets/images/familyRight.png");
   friends = loadImage("assets/images/friends.png");
+
+  // I am using the same barrier image that I did for my third project barriers
+  barrierImg = loadImage("assets/images/Barrier1.png");
 
   // Audios
   //
@@ -157,14 +154,6 @@ function setUpGame() {
   goals = [];
   barrier = [];
   successEssentials = [];
-  // Declare arrays to assign victory screen player images positions
-  rotatingImgX = [];
-  rotatingImgY = [];
-  // Assign a default value
-  angleSize = 0;
-  // Random positions
-  let rx;
-  let ry;
 
   // Assign start screen images to an object
   startScreenImages = {
@@ -181,14 +170,14 @@ function setUpGame() {
   };
 
   // Game features object declaration and value assignment.
-  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages);
+  game = new GameFeatures(width / 11, 120, 180, color(128, 89, 76), startScreenImages, barrierImg);
 
   // Players objects declaration and value assignment
   leftPlayer = new Player(width / 4, height / 3, 7, 70, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, width / 6, height / 2, 12, SHIFT, leftPlayerImg, 1, hitGoal);
   rightPlayer = new Player(width - 450, height / 3, 7, 70, 87, 83, 65, 68, width / 2 + 235, height / 2, 12, 20, rightPlayerImg, 2, hitGoal);
 
   // Goals properties assignment to an object and objects assignment to the main array
-  let speed = [15, 25, 20, 55, 30];
+  let speed = [15, 25, 20, 50, 30];
   let radius = [35, 45, 50, 35, 55];
   let name = [championship, education, marriage, toBeScientist, toBeArtist];
   for (let i = 0; i < numGoals; i++) {
@@ -245,13 +234,15 @@ function setUpGame() {
         x: barrierx[i],
         y: barriery[i],
         w: random(120, 140),
-        h: random(60, 75)
+        h: random(60, 75),
+        img: barrierImg
       },
       {
         x: barrierx[4 + i],
         y: barriery[4 + i],
         w: random(60, 75),
-        h: random(120, 140)
+        h: random(120, 140),
+        img: barrierImg
       }
     ];
     // Declare and assign new horizental barrier object
@@ -264,23 +255,6 @@ function setUpGame() {
     barrier.push(verticalBarrier);
   }
 
-  // number of rotating and enlarging images
-  numRotatingImg = 200;
-  // Victory screen spinning images positions
-  for (let i = 0; i < numRotatingImg; i++) {
-    rx = floor(random(0, width));
-    ry = floor(random(0, height));
-    rotatingImgX.push(rx);
-    rotatingImgY.push(ry);
-  }
-  // Assign properties to spinning image object
-  spinningImg = {
-    centerX: 0,
-    centerY: 0,
-    w: 150,
-    h: 150,
-    maxAngleSize: 360
-  };
 }
 
 // draw()
@@ -302,12 +276,12 @@ function draw() {
     background(0);
     // If the left player won
     if (leftPlayer.goalGained > rightPlayer.goalGained) {
-      leftWinnerPrize();
+      game.leftWinnerPrize();
       game.leftPlayerVictory();
     }
     // If the right player won
     else if (leftPlayer.goalGained < rightPlayer.goalGained) {
-      rightWinnerPrize();
+      game.rightWinnerPrize();
       game.rightPlayerVictory();
     }
     // If both players died
@@ -328,7 +302,27 @@ function draw() {
       goals[i].move();
     }
 
-    // Check if either of the players acheived the goal and if so the the acheived goal won't be shown to the other one.
+    // Display goals
+    goalDisplay();
+
+    // If the player overlapped family, his health is refreshed.
+    successEssentials[0].giveSupport(leftPlayer, hitFamily);
+    successEssentials[2].giveSupport(rightPlayer, hitFamily);
+
+    // If either of the players overlapped their friends, the goals become visible again.
+    friendsOverlapped();
+
+    // If players overlapped a barrier...
+    barrierHit();
+
+    // Display all the elements
+    displayElements();
+  }
+
+  // goalDisplay
+  //
+  // Check if either of the players acheived the goal and if so the the acheived goal won't be shown to the other one.
+  function goalDisplay() {
     for (let i = 0; i < goals.length; i++) {
       if (goals[i].isCaught === leftPlayer.playerId) {
         leftPlayer.checkAcheivement(goals[i]);
@@ -339,12 +333,12 @@ function draw() {
         rightPlayer.checkAcheivement(goals[i]);
       }
     }
+  }
 
-    // If the player overlapped family, his health is refreshed.
-    successEssentials[0].giveSupport(leftPlayer, hitFamily);
-    successEssentials[2].giveSupport(rightPlayer, hitFamily);
-
-    // If either of the players overlapped their friends, the goals become visible again.
+  // friendsOverlapped
+  //
+  // If player overlapped friend's image, makes goals visible to both of them again
+  function friendsOverlapped() {
     if (successEssentials[1].consultFriends(leftPlayer, hitFriend) === true) {
       for (let i = 0; i < goals.length; i++) {
         goals[i].goalDisappeared = false;
@@ -354,8 +348,12 @@ function draw() {
         goals[i].goalDisappeared = false;
       }
     }
+  }
 
-    // If either of the players overlapped barrier, all goals become invisible to both of the players.
+  // barrierHit
+  //
+  // If either of the players overlapped barrier, all goals become invisible to both of the players.
+  function barrierHit() {
     for (let i = 0; i < barrier.length; i++) {
       // If player overlapped barrier, send true
       let leftHit = barrier[i].lostGoal(leftPlayer, hitBarrier);
@@ -373,8 +371,12 @@ function draw() {
         break;
       }
     }
+  }
 
-    // Display all the elements
+  // displayElements
+  //
+  // Display all elements of the game
+  function displayElements() {
     // Barriers
     for (let i = 0; i < barrier.length; i++) {
       barrier[i].display();
@@ -401,45 +403,6 @@ function draw() {
       // Death sound
       bothDied.play();
     }
-  }
-}
-
-// leftWinnerPrize
-//
-// This is the prize of the winner.
-// 200 hundred images rotating and enlarging.
-function leftWinnerPrize() {
-    for (let i = 0; i < numRotatingImg; i++) {
-      push();
-      translate(rotatingImgX[i],rotatingImgY[i]);
-      rotate(radians(angleSize));
-      scale(radians(angleSize / 3));
-      imageMode(CENTER);
-      image(leftPlayerImg, spinningImg.centerX, spinningImg.centerY, spinningImg.w, spinningImg.h);
-      // add 0.05 to angle and size each round
-      // Constrain the value of angleSize to a reasonable number
-        angleSize += 0.05;
-        angleSize = constrain(angleSize, 100, spinningImg.maxAngleSize);
-      pop();
-  }
-}
-// rightWinnerPrize
-//
-// This is the rpize of the winner.
-// 200 hundred images rotating and enlarging.
-function rightWinnerPrize() {
-  for (let i = 0; i < numRotatingImg; i++) {
-    push();
-    translate(rotatingImgX[i],rotatingImgY[i]);
-    rotate(radians(angleSize));
-    scale(radians(angleSize / 3));
-    imageMode(CENTER);
-    image(rightPlayerImg, spinningImg.centerX, spinningImg.centerY, spinningImg.w, spinningImg.h);
-    // add 0.05 to angle and size each round
-    // Constrain the value of angleSize to a reasonable number
-      angleSize += 0.05;
-      angleSize = constrain(angleSize, 0, spinningImg.maxAngleSize);
-    pop();
   }
 }
 

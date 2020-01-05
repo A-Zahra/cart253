@@ -16,6 +16,7 @@ class Barriers {
     this.y = barrier.y;
     this.w = barrier.w;
     this.h = barrier.h;
+    this.img = barrier.img;
     this.fillColor = color(179, 81, 8);
     // If player overlapped barrier, makes this sound.
     this.sound = 0;
@@ -40,10 +41,8 @@ class Barriers {
   // Draw the barrier as an image on the canvas.
   display() {
     push()
-    noStroke();
-    fill(this.fillColor);
-    rectMode(CENTER);
-    rect(this.x, this.y, this.w, this.h);
+    imageMode(CENTER);
+    image(this.img, this.x, this.y, this.w, this.h);
     pop()
   }
 }

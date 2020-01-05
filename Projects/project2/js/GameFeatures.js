@@ -8,7 +8,7 @@ class GameFeatures {
   //
   // Sets the initial values for the screen's properties
   // Either sets default values or uses the arguments provided.
-  constructor(textx, titley, descy, fillColor, startScreenImages) {
+  constructor(textx, titley, descy, fillColor, startScreenImages, barrierImg) {
     // Titles and description position
     this.textX = textx;
     this.introX = width - 310;
@@ -26,7 +26,7 @@ class GameFeatures {
 
     // Description, barrier, keys and victory screen text colors
     this.fillColor = fillColor;
-    this.barrierColor = color(179, 81, 8);
+    this.barrierImg = barrierImg;
     this.keysColor = color(200, 180, 120);
 
     // Add sample images to arrays
@@ -52,7 +52,28 @@ class GameFeatures {
       backgroundw: 600,
       backgroundh: 200
     };
-
+    
+    // Declare variables to assign rotating images properties
+    // Declare arrays to assign victory screen player images positions
+    this.rotatingImgX = [];
+    this.rotatingImgY = [];
+    this.angleSize = 0;
+    // number of rotating and enlarging images
+    this.numRotatingImg = 200;
+    // Victory screen spinning images positions
+    for (let i = 0; i < this.numRotatingImg; i++) {
+      this.rotatingImgX.push(floor(random(0, width)));
+      this.rotatingImgY.push(floor(random(0, height)));
+    }
+    // Assign properties to spinning image object
+    this.spinningImg = {
+      centerX: 0,
+      centerY: 0,
+      w: 150,
+      h: 150,
+      maxAngleSize: 360
+    };
+    
     // Control keys positions, sizes, number of them and names
     this.controlsx = [width / 4.1, width / 3.36, width / 3 + 30, width / 2.23, width / 2 + 5, width / 2 + 89, width / 3.36, width / 2 + 5];
     this.controlsy = [height - 60, height - 120];
@@ -103,10 +124,10 @@ class GameFeatures {
   displayElements() {
     push();
     noStroke();
-    // Barrier shape
-    rectMode(CENTER);
-    fill(this.barrierColor);
-    rect(this.barrierx, this.barriery, this.radius * 2, this.radius);
+    // Barrier image
+    imageMode(CENTER);
+    image(this.barrierImg, this.barrierx, this.barriery, this.radius * 2, this.radius);
+    
     imageMode(CENTER);
     // Players images
     for (let i = 0; i < this.numImages - 3; i++) {
@@ -205,7 +226,27 @@ class GameFeatures {
     pop();
     this.restartButton();
   }
-
+  
+  // leftWinnerPrize()
+  //
+  // This is the prize of the winner.
+  // 200 hundred images rotating and enlarging.
+  leftWinnerPrize() {
+      for (let i = 0; i < this.numRotatingImg; i++) {
+        push();
+        translate(this.rotatingImgX[i],this.rotatingImgY[i]);
+        rotate(radians(this.angleSize));
+        scale(radians(this.angleSize / 3));
+        imageMode(CENTER);
+        image(this.playersEssentialsImgs[0], this.spinningImg.centerX, this.spinningImg.centerY, this.spinningImg.w, this.spinningImg.h);
+        // add 0.05 to angle and size each round
+        // Constrain the value of angleSize to a reasonable number
+          this.angleSize += 0.05;
+          this.angleSize = constrain(this.angleSize, 100, this.spinningImg.maxAngleSize);
+        pop();
+    }
+  }
+  
   // rightPlayerVictory()
   //
   // right Player victory screen
@@ -223,7 +264,27 @@ class GameFeatures {
     pop();
     this.restartButton();
   }
-
+  
+  // rightWinnerPrize()
+  //
+  // This is the rpize of the winner.
+  // 200 hundred images rotating and enlarging.
+  rightWinnerPrize() {
+    for (let i = 0; i < this.numRotatingImg; i++) {
+      push();
+      translate(this.rotatingImgX[i], this.rotatingImgY[i]);
+      rotate(radians(this.angleSize));
+      scale(radians(this.angleSize / 3));
+      imageMode(CENTER);
+      image(this.playersEssentialsImgs[1], this.spinningImg.centerX, this.spinningImg.centerY, this.spinningImg.w, this.spinningImg.h);
+      // add 0.05 to angle and size each round
+      // Constrain the value of angleSize to a reasonable number
+        this.angleSize += 0.05;
+        this.angleSize = constrain(this.angleSize, 0, this.spinningImg.maxAngleSize);
+      pop();
+    }
+  }
+  
   // displayEndScreen
   //
   // Display end screen

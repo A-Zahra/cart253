@@ -25,7 +25,7 @@ class Player {
     this.maxHealth = radius;
     this.minHealth = 1;
     this.health = this.maxHealth; // Must be AFTER defining this.maxHealth
-    this.healthLossPerMove = 0.3;
+    this.healthLossPerMove = 0.1;
     this.healthGainPerEat = 1;
     // Display properties
     this.playerImage = playerImage;
