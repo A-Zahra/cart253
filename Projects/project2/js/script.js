@@ -254,7 +254,6 @@ function setUpGame() {
     // Add the new vertical barrier object to the barriers array
     barrier.push(verticalBarrier);
   }
-
 }
 
 // draw()
@@ -311,98 +310,97 @@ function draw() {
 
     // If either of the players overlapped their friends, the goals become visible again.
     friendsOverlapped();
-
     // If players overlapped a barrier...
     barrierHit();
 
     // Display all the elements
     displayElements();
   }
+}
 
-  // goalDisplay
-  //
-  // Check if either of the players acheived the goal and if so the the acheived goal won't be shown to the other one.
-  function goalDisplay() {
+// goalDisplay
+//
+// Check if either of the players acheived the goal and if so the the acheived goal won't be shown to the other one.
+function goalDisplay() {
+  for (let i = 0; i < goals.length; i++) {
+    if (goals[i].isCaught === leftPlayer.playerId) {
+      leftPlayer.checkAcheivement(goals[i]);
+    } else if (goals[i].isCaught === rightPlayer.playerId) {
+      rightPlayer.checkAcheivement(goals[i]);
+    } else {
+      leftPlayer.checkAcheivement(goals[i]);
+      rightPlayer.checkAcheivement(goals[i]);
+    }
+  }
+}
+
+// friendsOverlapped
+//
+// If player overlapped friend's image, makes goals visible to both of them again
+function friendsOverlapped() {
+  if (successEssentials[1].consultFriends(leftPlayer, hitFriend) === true) {
     for (let i = 0; i < goals.length; i++) {
-      if (goals[i].isCaught === leftPlayer.playerId) {
-        leftPlayer.checkAcheivement(goals[i]);
-      } else if (goals[i].isCaught === rightPlayer.playerId) {
-        rightPlayer.checkAcheivement(goals[i]);
-      } else {
-        leftPlayer.checkAcheivement(goals[i]);
-        rightPlayer.checkAcheivement(goals[i]);
-      }
+      goals[i].goalDisappeared = false;
+    }
+  } else if (successEssentials[3].consultFriends(rightPlayer, hitFriend) === true) {
+    for (let i = 0; i < goals.length; i++) {
+      goals[i].goalDisappeared = false;
     }
   }
+}
 
-  // friendsOverlapped
-  //
-  // If player overlapped friend's image, makes goals visible to both of them again
-  function friendsOverlapped() {
-    if (successEssentials[1].consultFriends(leftPlayer, hitFriend) === true) {
+// barrierHit
+//
+// If either of the players overlapped barrier, all goals become invisible to both of the players.
+function barrierHit() {
+  for (let i = 0; i < barrier.length; i++) {
+    // If player overlapped barrier, send true
+    let leftHit = barrier[i].lostGoal(leftPlayer, hitBarrier);
+    let rightHit = barrier[i].lostGoal(rightPlayer, hitBarrier);
+    // If either of the hits is true, goals disappear
+    if (leftHit === true) {
       for (let i = 0; i < goals.length; i++) {
-        goals[i].goalDisappeared = false;
+        goals[i].goalDisappeared = true;
       }
-    } else if (successEssentials[3].consultFriends(rightPlayer, hitFriend) === true) {
+      break;
+    } else if (rightHit === true) {
       for (let i = 0; i < goals.length; i++) {
-        goals[i].goalDisappeared = false;
+        goals[i].goalDisappeared = true;
       }
+      break;
     }
   }
+}
 
-  // barrierHit
-  //
-  // If either of the players overlapped barrier, all goals become invisible to both of the players.
-  function barrierHit() {
-    for (let i = 0; i < barrier.length; i++) {
-      // If player overlapped barrier, send true
-      let leftHit = barrier[i].lostGoal(leftPlayer, hitBarrier);
-      let rightHit = barrier[i].lostGoal(rightPlayer, hitBarrier);
-      // If either of the hits is true, goals disappear
-      if (leftHit === true) {
-        for (let i = 0; i < goals.length; i++) {
-          goals[i].goalDisappeared = true;
-        }
-        break;
-      } else if (rightHit === true) {
-        for (let i = 0; i < goals.length; i++) {
-          goals[i].goalDisappeared = true;
-        }
-        break;
-      }
-    }
+// displayElements
+//
+// Display all elements of the game
+function displayElements() {
+  // Barriers
+  for (let i = 0; i < barrier.length; i++) {
+    barrier[i].display();
   }
+  // Success essentials
+  for (let i = 0; i < successEssentials.length; i++) {
+    successEssentials[i].display();
+  }
+  // Goals
+  for (let j = 0; j < goals.length; j++) {
+    goals[j].display();
+  }
+  // Players
+  leftPlayer.display();
+  rightPlayer.display();
 
-  // displayElements
-  //
-  // Display all elements of the game
-  function displayElements() {
-    // Barriers
-    for (let i = 0; i < barrier.length; i++) {
-      barrier[i].display();
-    }
-    // Success essentials
-    for (let i = 0; i < successEssentials.length; i++) {
-      successEssentials[i].display();
-    }
-    // Goals
-    for (let j = 0; j < goals.length; j++) {
-      goals[j].display();
-    }
-    // Players
-    leftPlayer.display();
-    rightPlayer.display();
-
-    // If all goals were acheived by players, or one of them died, the game ends.
-    if (leftPlayer.goalGained + rightPlayer.goalGained === sumGoals) {
-      victoryScreen = true;
-      // Victory sound
-      victorySound.play();
-    } else if (leftPlayer.health < healthRate || rightPlayer.health < healthRate) {
-      victoryScreen = true;
-      // Death sound
-      bothDied.play();
-    }
+  // If all goals were acheived by players, or one of them died, the game ends.
+  if (leftPlayer.goalGained + rightPlayer.goalGained === sumGoals) {
+    victoryScreen = true;
+    // Victory sound
+    victorySound.play();
+  } else if (leftPlayer.health < healthRate || rightPlayer.health < healthRate) {
+    victoryScreen = true;
+    // Death sound
+    bothDied.play();
   }
 }
 
