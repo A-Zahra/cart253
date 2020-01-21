@@ -1,3 +1,4 @@
+"use strict";
 // Predator-Prey Simulation
 // by Zahra Ahmadi
 
