@@ -45,6 +45,8 @@
 // Background image
 let cityBackground;
 
+// Variable which gameFeatures object would be assigned to
+let game;
 // Our players and their images
 let leftPlayer;
 let rightPlayer;
